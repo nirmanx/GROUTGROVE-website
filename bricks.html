@@ -3,55 +3,62 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Steel / TMT Bars – GroutGrove</title>
+  <title>Bricks – GroutGrove</title>
   <link rel="stylesheet" href="../style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Hind:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
-    .cat-hero{background:linear-gradient(135deg,#001A10,#004225,#1B3A4B);padding:50px 24px;text-align:center;position:relative;overflow:hidden}
-    .cat-hero::before{content:'⚙️';position:absolute;right:5%;top:50%;transform:translateY(-50%);font-size:120px;opacity:.08}
-    .cat-hero h1{font-family:'Baloo 2';font-size:42px;font-weight:800;color:white;margin-bottom:8px}
-    .cat-hero h1 span{color:#50C878}
-    .cat-hero p{color:#9DC183;font-size:16px;max-width:500px;margin:0 auto 20px}
+    .cat-hero{background:linear-gradient(135deg,#1A0A00,#3D1500,#0F172A);padding:50px 24px;text-align:center;position:relative;overflow:hidden}
+    .cat-hero::before{content:'🧱';position:absolute;right:5%;top:50%;transform:translateY(-50%);font-size:120px;opacity:.06}
+    .cat-hero h1{font-family:'Playfair Display',serif;font-size:40px;font-weight:800;color:white;margin-bottom:8px}
+    .cat-hero h1 span{color:#F59E0B}
+    .cat-hero p{color:rgba(255,255,255,.5);font-size:16px;max-width:500px;margin:0 auto 20px}
     .cat-hero-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-    .hero-badge-item{background:rgba(80,200,120,.15);border:1px solid rgba(80,200,120,.3);color:#9DC183;font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px}
-    .cat-page{max-width:1100px;margin:40px auto;padding:0 24px}
-    .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}
-    .f-btn{background:white;border:1.5px solid #C8DDD0;color:#1A2E20;font-family:'Hind';font-size:13px;font-weight:600;padding:8px 16px;border-radius:25px;cursor:pointer;transition:all .2s}
-    .f-btn:hover,.f-btn.active{background:#2D7A50;border-color:#2D7A50;color:white}
-    .info-section{background:white;border:1.5px solid #C8DDD0;border-radius:20px;padding:28px;margin-bottom:32px}
-    .info-section h2{font-family:'Baloo 2';font-size:22px;font-weight:800;margin-bottom:16px;color:#1A2E20}
-    .info-section h2 span{color:#2D7A50}
-    .brand-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:10px}
-    .brand-card{background:#F0F7F2;border-radius:14px;padding:14px;text-align:center;cursor:pointer;transition:all .2s;border:1.5px solid transparent}
-    .brand-card:hover,.brand-card.sel{border-color:#2D7A50;background:#E0EFE8}
-    .brand-ico{font-size:26px;margin-bottom:6px}
-    .brand-name{font-family:'Baloo 2';font-size:13px;font-weight:700}
-    .brand-tag{font-size:11px;color:#5A7A65;margin-top:2px}
-    .info-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
-    .info-card{background:#F0F7F2;border-radius:14px;padding:16px;border-left:3px solid #2D7A50}
-    .info-card h4{font-family:'Baloo 2';font-size:14px;font-weight:800;margin-bottom:6px}
-    .info-card p{font-size:13px;color:#5A7A65;line-height:1.5}
-    .prod-count{font-size:14px;color:#5A7A65;margin-bottom:18px}
-    .prod-count span{color:#2D7A50;font-weight:700}
-    .empty-state{text-align:center;padding:60px;background:white;border-radius:20px;border:1.5px solid #C8DDD0}
-    .loading-state{text-align:center;padding:60px;color:#5A7A65}
+    .hb{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.8);font-size:12px;font-weight:600;padding:7px 16px;border-radius:50px}
+    .cat-page{max-width:1200px;margin:36px auto;padding:0 24px 80px}
+    .info-section{background:white;border:1.5px solid #E2E8F0;border-radius:20px;padding:26px;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+    .info-section h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:16px;color:#1E293B}
+    .info-section h2 span{color:#D97706}
+    .type-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+    .type-card{background:#F8FAFC;border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;border:2px solid #E2E8F0}
+    .type-card:hover,.type-card.sel{border-color:#1E293B;background:#F1F5F9}
+    .type-card.sel{background:#1E293B}
+    .type-card.sel .t-name{color:white}
+    .type-card.sel .t-sub{color:rgba(255,255,255,.6)}
+    .t-ico{font-size:26px;margin-bottom:8px}
+    .t-name{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;color:#1E293B;margin-bottom:3px}
+    .t-sub{font-size:11px;color:#64748B}
+    .size-grid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+    .size-btn{background:white;border:1.5px solid #E2E8F0;color:#1E293B;font-family:'DM Sans';font-size:12px;font-weight:600;padding:8px 14px;border-radius:50px;cursor:pointer;transition:all .2s;white-space:nowrap}
+    .size-btn:hover,.size-btn.active{background:#1E293B;border-color:#1E293B;color:white}
+    .guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:16px}
+    .guide-card{background:#F8FAFC;border-radius:14px;padding:16px;border-left:3px solid #F59E0B}
+    .guide-card h4{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:6px;color:#1E293B}
+    .guide-card p{font-size:13px;color:#64748B;line-height:1.5}
+    .prod-count{font-size:14px;color:#64748B;margin-bottom:16px}
+    .prod-count span{color:#D97706;font-weight:700}
+    .empty-state{text-align:center;padding:60px 20px;background:white;border-radius:20px;border:1.5px solid #E2E8F0;grid-column:1/-1}
+    .loading-state{text-align:center;padding:60px;color:#64748B;grid-column:1/-1}
   </style>
 </head>
 <body>
-
-<div class="ticker-wrap"><div class="ticker"><span>⚙️ TMT Bars — BIS Certified</span><span>TATA • JSW • SAIL • Jindal</span><span>8mm to 32mm available</span><span>Bulk Orders: +91 96541 71005</span><span>Same Day Delivery Delhi NCR</span><span>⚙️ TMT Bars — BIS Certified</span></div></div>
+<div class="ticker-wrap"><div class="ticker">
+  <span>🧱 Burnt Clay Bricks · Fly Ash · AAC Blocks</span>
+  <span>First Class & Second Class Available</span>
+  <span>Bulk Orders Welcome — Min 500 Bricks</span>
+  <span>UP/NCR Bhatta Direct Supply</span>
+  <span>Call: +91 96541 71005</span>
+  <span>🧱 Burnt Clay Bricks · Fly Ash · AAC Blocks</span>
+</div></div>
 
 <nav>
   <div class="nav-inner">
     <a href="../index.html" class="logo">Grout<span>Grove</span></a>
     <div class="nav-links" id="navLinks">
-      <a href="../index.html">Home</a>
-      <a href="products.html">Products</a>
-      <a href="track.html">Track Order</a>
-      <a href="contact.html">Contact</a>
+      <a href="../index.html">Home</a><a href="products.html">Products</a>
+      <a href="track.html">Track Order</a><a href="contact.html">Contact</a>
       <a href="login.html" id="loginNavBtn">Login</a>
-      <span id="userBadge" style="display:none;background:#2D7A50;color:white;font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px;cursor:pointer;" onclick="logoutUser()">👤 <span id="userName"></span> ✕</span>
+      <span id="userBadge" style="display:none;background:#1E293B;color:white;font-size:13px;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer;" onclick="logoutUser()">👤 <span id="userName"></span> ✕</span>
       <a href="cart.html" class="nav-cta">🛒 Cart</a>
     </div>
     <button class="hamburger" onclick="toggleNav()">☰</button>
@@ -59,104 +66,152 @@
 </nav>
 
 <div class="cat-hero">
-  <h1>⚙️ Buy <span>Steel / TMT Bars</span></h1>
-  <p>BIS certified TMT bars from top brands. Best rates for builders & contractors.</p>
+  <h1>🧱 Buy <span>Bricks</span> Online</h1>
+  <p>All types of quality bricks — delivered directly from UP/NCR bhattas at wholesale prices.</p>
   <div class="cat-hero-badges">
-    <div class="hero-badge-item">✅ BIS Certified</div>
-    <div class="hero-badge-item">🚚 Same Day Delivery</div>
-    <div class="hero-badge-item">💰 Best Rate Guaranteed</div>
-    <div class="hero-badge-item">📦 8mm to 32mm Available</div>
+    <div class="hb">✅ First Class Quality</div>
+    <div class="hb">🚚 Bhatta Direct Supply</div>
+    <div class="hb">💰 Wholesale Prices</div>
+    <div class="hb">📦 Min 500 Bricks</div>
   </div>
 </div>
 
 <div class="cat-page">
+
+  <!-- BRICK TYPES -->
   <div class="info-section">
-    <h2>Top Steel <span>Brands</span></h2>
-    <div class="brand-grid">
-      <div class="brand-card" onclick="filterBrand('all',this)"><div class="brand-ico">🏪</div><div class="brand-name">All Brands</div></div>
-      <div class="brand-card" onclick="filterBrand('TATA',this)"><div class="brand-ico">🏆</div><div class="brand-name">TATA Steel</div><div class="brand-tag">Tiscon</div></div>
-      <div class="brand-card" onclick="filterBrand('JSW',this)"><div class="brand-ico">⭐</div><div class="brand-name">JSW Steel</div><div class="brand-tag">Neosteel</div></div>
-      <div class="brand-card" onclick="filterBrand('SAIL',this)"><div class="brand-ico">💪</div><div class="brand-name">SAIL</div><div class="brand-tag">Govt of India</div></div>
-      <div class="brand-card" onclick="filterBrand('Jindal',this)"><div class="brand-ico">🔵</div><div class="brand-name">Jindal</div><div class="brand-tag">Panther</div></div>
-      <div class="brand-card" onclick="filterBrand('Kamdhenu',this)"><div class="brand-ico">🌟</div><div class="brand-name">Kamdhenu</div><div class="brand-tag">Popular</div></div>
+    <h2>Brick <span>Types — Select</span></h2>
+    <div class="type-grid">
+      <div class="type-card" onclick="filterType('all',this)"><div class="t-ico">🏪</div><div class="t-name">All Types</div><div class="t-sub">Show all</div></div>
+      <div class="type-card" onclick="filterType('Burnt Clay',this)"><div class="t-ico">🧱</div><div class="t-name">Burnt Clay Bricks</div><div class="t-sub">Traditional red bricks</div></div>
+      <div class="type-card" onclick="filterType('Fly Ash',this)"><div class="t-ico">⬛</div><div class="t-name">Fly Ash Bricks</div><div class="t-sub">Eco-friendly, strong</div></div>
+      <div class="type-card" onclick="filterType('AAC',this)"><div class="t-ico">⬜</div><div class="t-name">AAC Blocks</div><div class="t-sub">Lightweight, fast</div></div>
+      <div class="type-card" onclick="filterType('Concrete',this)"><div class="t-ico">🔲</div><div class="t-name">Concrete Bricks</div><div class="t-sub">High strength</div></div>
+      <div class="type-card" onclick="filterType('Sand Lime',this)"><div class="t-ico">🟫</div><div class="t-name">Sand Lime Bricks</div><div class="t-sub">Calcium silicate</div></div>
+      <div class="type-card" onclick="filterType('Engineering',this)"><div class="t-ico">🏗️</div><div class="t-name">Engineering Bricks</div><div class="t-sub">Industrial use</div></div>
+      <div class="type-card" onclick="filterType('Fire',this)"><div class="t-ico">🔥</div><div class="t-name">Fire Bricks</div><div class="t-sub">Heat resistant</div></div>
+      <div class="type-card" onclick="filterType('First Class',this)"><div class="t-ico">⭐</div><div class="t-name">First Class</div><div class="t-sub">Premium quality</div></div>
+      <div class="type-card" onclick="filterType('Second Class',this)"><div class="t-ico">🔸</div><div class="t-name">Second Class</div><div class="t-sub">Budget friendly</div></div>
     </div>
   </div>
 
-  <div class="filter-row">
-    <button class="f-btn active" onclick="filterType('all',this)">All Sizes</button>
-    <button class="f-btn" onclick="filterType('8mm',this)">8mm</button>
-    <button class="f-btn" onclick="filterType('10mm',this)">10mm</button>
-    <button class="f-btn" onclick="filterType('12mm',this)">12mm</button>
-    <button class="f-btn" onclick="filterType('16mm',this)">16mm</button>
-    <button class="f-btn" onclick="filterType('Fe-500',this)">Fe-500D</button>
-    <button class="f-btn" onclick="filterType('Fe-550',this)">Fe-550D</button>
+  <!-- STANDARD SIZES -->
+  <div class="info-section">
+    <h2>Standard <span>Sizes (IS Code)</span></h2>
+    <div class="size-grid">
+      <button class="size-btn active" onclick="filterSize('all',this)">All Sizes</button>
+      <button class="size-btn" onclick="filterSize('190x90x90',this)">190×90×90 mm (Standard)</button>
+      <button class="size-btn" onclick="filterSize('230x110x70',this)">230×110×70 mm (Modular)</button>
+      <button class="size-btn" onclick="filterSize('230x110x30',this)">230×110×30 mm (Thin)</button>
+      <button class="size-btn" onclick="filterSize('230x76x76',this)">230×76×76 mm (Common)</button>
+      <button class="size-btn" onclick="filterSize('300x200x100',this)">300×200×100 mm (Block)</button>
+      <button class="size-btn" onclick="filterSize('400x200x200',this)">400×200×200 mm (AAC Block)</button>
+      <button class="size-btn" onclick="filterSize('600x200x200',this)">600×200×200 mm (Large AAC)</button>
+      <button class="size-btn" onclick="filterSize('9x4x3',this)">9×4×3 inch (Traditional)</button>
+    </div>
   </div>
 
   <div class="prod-count" id="prodCount"></div>
   <div class="prod-grid" id="productGrid">
-    <div class="loading-state">⏳ Loading steel products...</div>
+    <div class="loading-state">⏳ Loading brick products...</div>
   </div>
 
-  <div class="info-section" style="margin-top:40px">
-    <h2>Steel <span>Buying Guide</span></h2>
-    <div class="info-cards">
-      <div class="info-card"><h4>Fe-500D vs Fe-550D?</h4><p>Fe-500D is standard for residential construction. Fe-550D is stronger — use for high rise & commercial buildings.</p></div>
-      <div class="info-card"><h4>How much steel?</h4><p>For 1000 sqft house approximately 4–5 tonnes of TMT bars needed. Consult structural engineer for exact quantity.</p></div>
-      <div class="info-card"><h4>Check Authenticity</h4><p>Always check BIS mark on bars. Look for brand name, grade, and manufacturer code on each bar.</p></div>
-      <div class="info-card"><h4>Bulk Pricing</h4><p>Order 1 tonne+ for special rates. We offer competitive pricing for contractors & builders. Call us!</p></div>
+  <!-- BUYING GUIDE -->
+  <div class="info-section" style="margin-top:32px">
+    <h2>Brick <span>Buying Guide</span></h2>
+    <div class="guide-grid">
+      <div class="guide-card"><h4>Burnt Clay vs Fly Ash?</h4><p>Burnt clay bricks are traditional and widely used. Fly ash bricks are stronger, eco-friendly and more uniform in shape.</p></div>
+      <div class="guide-card"><h4>AAC Blocks Benefits</h4><p>3× lighter than clay bricks, better insulation, faster laying — ideal for high-rise buildings. More expensive but saves labor cost.</p></div>
+      <div class="guide-card"><h4>First vs Second Class?</h4><p>First class: uniform shape, hard, no cracks. Use for main walls. Second class: partition walls and non-load bearing areas.</p></div>
+      <div class="guide-card"><h4>How Many Bricks?</h4><p>For 1000 sqft house (9-inch wall): approx 55,000 bricks. Use our calculator on homepage for exact estimate.</p></div>
+      <div class="guide-card"><h4>Standard IS Sizes</h4><p>190×90×90 mm is IS standard. 230×110×70 mm is modular size. Always verify with engineer for load-bearing walls.</p></div>
+      <div class="guide-card"><h4>Minimum Order</h4><p>Minimum 500 bricks. Delivery by tractor or truck. Unloading at site included. Bulk orders get extra discount.</p></div>
     </div>
   </div>
 </div>
 
 <div class="wa-float">
-  <div class="wa-bubble" id="waBubble">💬 <strong>Steel rate check?</strong><br><small>+91 96541 71005</small></div>
-  <a href="https://wa.me/919654171005?text=I need TMT steel bars — please share rates." target="_blank" class="wa-btn" id="waBtn">💬</a>
+  <div class="wa-bubble" id="waBubble">💬 <strong>Brick price query?</strong><br><small>+91 96541 71005</small></div>
+  <a href="https://wa.me/919654171005?text=I need bricks — please share prices and availability." target="_blank" class="wa-btn" id="waBtn">💬</a>
 </div>
-<div class="call-float"><a href="tel:+919654171005" class="call-btn">📞 Get Best Steel Rate</a></div>
+<div class="call-float"><a href="tel:+919654171005" class="call-btn">📞 Get Bulk Brick Price</a></div>
 
 <script src="../script.js"></script>
 <script>
-  const{createClient}=supabase;
-  const sb=createClient('https://ddgwdesqicrneikxrcnj.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo');
-  const nxUser=JSON.parse(localStorage.getItem('nx_user'));
-  if(nxUser){const lb=document.getElementById('loginNavBtn');const ub=document.getElementById('userBadge');const un=document.getElementById('userName');if(lb)lb.style.display='none';if(ub)ub.style.display='inline-flex';if(un)un.textContent=nxUser.name.split(' ')[0];}
-  function logoutUser(){localStorage.removeItem('nx_user');window.location.reload();}
-  let allProds=[];
-  async function loadProducts(){
-    const{data}=await sb.from('products').select('*').eq('category','steel').eq('status','active').order('created_at',{ascending:false});
-    allProds=data||[];renderProducts(allProds);
+const { createClient } = supabase;
+const sb = createClient(
+  'https://ddgwdesqicrneikxrcnj.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo'
+);
+const nxUser = JSON.parse(localStorage.getItem('nx_user'));
+if(nxUser){const lb=document.getElementById('loginNavBtn');const ub=document.getElementById('userBadge');const un=document.getElementById('userName');if(lb)lb.style.display='none';if(ub)ub.style.display='inline-flex';if(un)un.textContent=nxUser.name.split(' ')[0];}
+function logoutUser(){localStorage.removeItem('nx_user');window.location.reload();}
+
+let allProds = [];
+async function loadProducts() {
+  const { data } = await sb.from('products').select('*').eq('category','bricks').eq('status','active').order('created_at',{ascending:false});
+  allProds = data || [];
+  renderProducts(allProds);
+}
+
+function renderProducts(prods) {
+  const grid = document.getElementById('productGrid');
+  const count = document.getElementById('prodCount');
+  if(!prods || !prods.length) {
+    count.innerHTML = '';
+    grid.innerHTML = `<div class="empty-state">
+      <div style="font-size:60px;margin-bottom:16px">🧱</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:22px;margin-bottom:10px;color:#1E293B">No brick products listed yet</h3>
+      <p style="color:#64748B;margin-bottom:20px">Be the first to list bricks from your bhatta!</p>
+      <a href="seller.html" class="btn-primary" style="text-decoration:none;display:inline-flex">🏭 Register as Seller</a>
+    </div>`;
+    return;
   }
-  function renderProducts(prods){
-    const grid=document.getElementById('productGrid');
-    const count=document.getElementById('prodCount');
-    if(!prods||!prods.length){
-      count.innerHTML='';
-      grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div style="font-size:60px">⚙️</div><h3>No steel products listed yet</h3><p>Be the first to list your steel!</p><a href="seller.html" class="btn-primary" style="text-decoration:none;display:inline-block;margin-top:12px">🏭 Become a Seller</a></div>`;
-      return;
-    }
-    count.innerHTML=`<span>${prods.length}</span> steel products available`;
-    grid.innerHTML=prods.map(p=>{
-      const orig=p.discount>0?Math.round(p.price*100/(100-p.discount)):null;
-      return`<div class="prod-card">
-        <div class="prod-img">${p.photo_url&&p.photo_url.length>100?`<img src="${p.photo_url}" style="width:100%;height:100%;object-fit:cover">`:'⚙️'}${p.discount>0?`<span class="badge-sale">-${p.discount}%</span>`:''}<span class="badge-best">${p.delivery_time||'Fast'}</span></div>
-        <div class="prod-body">
-          <div class="prod-brand">${p.brand_name}</div>
-          <div class="prod-name">${p.product_name}</div>
-          <div class="prod-specs">${p.specs||''}</div>
-          ${p.offer_text?`<div style="background:#E8F5EE;color:#2D7A50;font-size:11px;font-weight:700;padding:4px 10px;border-radius:15px;display:inline-block;margin-top:4px">🔥 ${p.offer_text}</div>`:''}
-          ${p.min_order?`<div style="font-size:11px;color:#5A7A65;margin-top:4px">📦 Min: ${p.min_order}</div>`:''}
-          <div class="prod-price"><span class="price-now">₹${parseFloat(p.price).toLocaleString('en-IN')}</span>${orig?`<span class="price-old">₹${orig.toLocaleString('en-IN')}</span>`:''}<span class="price-unit">${p.unit}</span></div>
-          <div class="prod-actions">
-            <button class="btn-cart" onclick="addToCart('${p.product_name.replace(/'/g,"\\'")}',${p.price})">🛒 Add to Cart</button>
-            <a href="https://wa.me/919654171005?text=I need ${encodeURIComponent(p.product_name)}" target="_blank" class="btn-wa">💬</a>
-          </div>
+  count.innerHTML = `<span>${prods.length}</span> brick products available`;
+  grid.innerHTML = prods.map(p => {
+    const orig = p.discount > 0 ? Math.round(p.price * 100 / (100 - p.discount)) : null;
+    return `<div class="prod-card">
+      <div class="prod-img">
+        ${p.photo_url && p.photo_url.length > 100 ? `<img src="${p.photo_url}" style="width:100%;height:100%;object-fit:cover">` : '🧱'}
+        ${p.discount > 0 ? `<span class="badge-sale">-${p.discount}%</span>` : ''}
+        <span class="badge-best">${p.delivery_time || 'Bulk Supply'}</span>
+      </div>
+      <div class="prod-body">
+        <div class="prod-brand">${p.brand_name}</div>
+        <div class="prod-name">${p.product_name}</div>
+        <div class="prod-specs">${p.specs || ''}</div>
+        ${p.offer_text ? `<div style="background:#FFFBEB;color:#D97706;font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;display:inline-block;margin-top:4px">🔥 ${p.offer_text}</div>` : ''}
+        ${p.min_order ? `<div style="font-size:11px;color:#64748B;margin-top:4px">📦 Min: ${p.min_order}</div>` : ''}
+        <div class="prod-price">
+          <span class="price-now">₹${parseFloat(p.price).toLocaleString('en-IN')}</span>
+          ${orig ? `<span class="price-old">₹${orig.toLocaleString('en-IN')}</span>` : ''}
+          <span class="price-unit">${p.unit}</span>
         </div>
-      </div>`;
-    }).join('');
-  }
-  function filterBrand(brand,btn){document.querySelectorAll('.brand-card').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');renderProducts(brand==='all'?allProds:allProds.filter(p=>p.brand_name&&p.brand_name.toLowerCase().includes(brand.toLowerCase())));}
-  function filterType(type,btn){document.querySelectorAll('.f-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderProducts(type==='all'?allProds:allProds.filter(p=>(p.product_name+' '+(p.specs||'')).toLowerCase().includes(type.toLowerCase())));}
-  loadProducts();
+        <div class="prod-actions">
+          <button class="btn-cart" onclick="addToCart('${p.product_name.replace(/'/g,"\\'")}',${p.price})">🛒 Add to Cart</button>
+          <a href="https://wa.me/919654171005?text=I need ${encodeURIComponent(p.product_name)}" target="_blank" class="btn-wa">💬</a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterType(type, btn) {
+  document.querySelectorAll('.type-card').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  renderProducts(type === 'all' ? allProds : allProds.filter(p =>
+    (p.product_name + ' ' + (p.specs||'')).toLowerCase().includes(type.toLowerCase())
+  ));
+}
+
+function filterSize(size, btn) {
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(size === 'all' ? allProds : allProds.filter(p =>
+    (p.product_name + ' ' + (p.specs||'')).toLowerCase().includes(size.toLowerCase())
+  ));
+}
+loadProducts();
 </script>
 </body>
 </html>

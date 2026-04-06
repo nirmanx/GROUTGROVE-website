@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,84 +6,108 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cart – GroutGrove</title>
   <link rel="stylesheet" href="../style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=DM+Sans:wght@300;400;500;600;700&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
-    .page-hero{background:linear-gradient(135deg,#020D06,#004225);padding:44px 24px;text-align:center}
-    .page-hero h1{font-family:'Playfair Display',serif;font-size:38px;font-weight:800;color:white}
-    .page-hero h1 span{color:#FF6B47}
-    .page-hero p{color:rgba(255,255,255,.5);margin-top:8px}
-    .cart-page{max-width:960px;margin:40px auto;padding:0 24px 100px}
-    .cart-empty{text-align:center;padding:70px 20px;background:white;border-radius:24px;border:1.5px solid #E2E8F0}
+    .page-hero{background:linear-gradient(135deg,#0F172A,#1E293B);padding:44px 24px;text-align:center}
+    .page-hero h1{font-family:'Playfair Display',serif;font-size:36px;font-weight:800;color:white}
+    .page-hero h1 span{color:#F59E0B}
+    .page-hero p{color:rgba(255,255,255,.45);margin-top:8px;font-size:14px}
+    .cart-page{max-width:960px;margin:36px auto;padding:0 24px 120px}
+    .cart-empty{text-align:center;padding:70px 20px;background:white;border-radius:24px;border:1.5px solid #E2E8F0;box-shadow:0 2px 12px rgba(0,0,0,.06)}
     .cart-empty .e-icon{font-size:70px;margin-bottom:20px}
-    .cart-empty h2{font-family:'Playfair Display',serif;font-size:28px;margin-bottom:12px;color:#1E293B}
+    .cart-empty h2{font-family:'Playfair Display',serif;font-size:26px;margin-bottom:12px;color:#1E293B}
     .cart-empty p{color:#64748B;margin-bottom:24px}
-    .cart-item{background:white;border:1.5px solid #E2E8F0;border-radius:20px;padding:18px 20px;display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap;transition:all .2s}
-    .cart-item:hover{border-color:#50C878;box-shadow:0 4px 16px rgba(0,66,37,.08)}
-    .ci-icon{font-size:36px;width:60px;height:60px;background:linear-gradient(135deg,#004225,#1B5E3A);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .cart-item{background:white;border:1.5px solid #E2E8F0;border-radius:18px;padding:18px 20px;display:flex;align-items:center;gap:16px;margin-bottom:12px;flex-wrap:wrap;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+    .cart-item:hover{border-color:#F59E0B;box-shadow:0 4px 16px rgba(245,158,11,.1)}
+    .ci-icon{font-size:32px;width:56px;height:56px;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
     .ci-info{flex:1;min-width:120px}
-    .ci-name{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:#1E293B;margin-bottom:4px}
-    .ci-price{color:#2D7A50;font-family:'Playfair Display',serif;font-size:16px;font-weight:700}
+    .ci-name{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:#1E293B;margin-bottom:3px}
+    .ci-price{color:#0F172A;font-family:'Playfair Display',serif;font-size:15px;font-weight:700}
     .qty-row{display:flex;align-items:center;gap:10px}
     .q-btn{width:34px;height:34px;border-radius:10px;border:1.5px solid #E2E8F0;background:white;font-size:18px;font-weight:800;cursor:pointer;color:#1E293B;transition:all .2s;display:flex;align-items:center;justify-content:center}
-    .q-btn:hover{background:#004225;color:white;border-color:#004225}
+    .q-btn:hover{background:#1E293B;color:white;border-color:#1E293B}
     .q-num{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;min-width:28px;text-align:center;color:#1E293B}
-    .rm-btn{background:#FEE2E2;color:#DC2626;border:none;border-radius:10px;padding:8px 14px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s}
+    .rm-btn{background:#FEF2F2;color:#DC2626;border:none;border-radius:10px;padding:8px 14px;cursor:pointer;font-size:12px;font-weight:700;transition:all .2s}
     .rm-btn:hover{background:#DC2626;color:white}
-    .cart-summary{background:white;border:1.5px solid #E2E8F0;border-radius:24px;padding:28px;margin-top:22px}
-    .cart-summary h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:18px;color:#1E293B}
-    .s-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F1F5F9;font-size:14px;color:#475569}
-    .s-row.total{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#004225;border-bottom:none;padding-top:14px}
-    .free-del{color:#27AE60;font-weight:700}
-    .co-btns{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
-    .btn-co{flex:1;background:linear-gradient(135deg,#004225,#1B5E3A);color:white;border:none;border-radius:50px;padding:15px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;min-width:200px;transition:all .2s}
-    .btn-co:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,66,37,.3)}
-    .btn-wa-co{background:#25D366;color:white;border:none;border-radius:50px;padding:15px 22px;font-size:20px;cursor:pointer;text-decoration:none;display:flex;align-items:center;transition:all .2s;flex-shrink:0}
+
+    /* DELIVERY CHARGES — VISIBLE */
+    .delivery-section{background:white;border:1.5px solid #E2E8F0;border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+    .delivery-section h3{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:800;margin-bottom:14px;color:#1E293B}
+    .delivery-options{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .del-opt{border:2px solid #E2E8F0;border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s}
+    .del-opt:hover,.del-opt.sel{border-color:#1E293B;background:#F8FAFC}
+    .del-opt.sel{border-color:#F59E0B;background:#FFFBEB}
+    .del-ico{font-size:24px;margin-bottom:6px}
+    .del-name{font-size:12px;font-weight:700;color:#1E293B;margin-bottom:3px}
+    .del-price{font-family:'Playfair Display',serif;font-size:15px;font-weight:800}
+    .del-free{color:#22C55E}
+    .del-paid{color:#EF4444}
+    .del-time{font-size:11px;color:#64748B}
+
+    .cart-summary{background:white;border:1.5px solid #E2E8F0;border-radius:18px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+    .cart-summary h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:16px;color:#1E293B}
+    .s-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F1F5F9;font-size:14px;color:#475569;align-items:center}
+    .s-row:last-child{border-bottom:none}
+    .s-row.total{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#1E293B;padding-top:14px}
+    .del-tag{background:#D1FAE5;color:#065F46;font-size:11px;font-weight:700;padding:3px 8px;border-radius:8px}
+    .del-tag.paid{background:#FEE2E2;color:#DC2626}
+    .savings-badge{background:#FFFBEB;border:1px solid #F59E0B;border-radius:10px;padding:10px 14px;font-size:13px;color:#92400E;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .co-btns{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .btn-co{flex:1;background:#1E293B;color:white;border:none;border-radius:50px;padding:14px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;min-width:200px;transition:all .2s}
+    .btn-co:hover{background:#0F172A;transform:translateY(-1px)}
+    .btn-wa-co{background:#25D366;color:white;border:none;border-radius:50px;padding:14px 20px;font-size:20px;cursor:pointer;text-decoration:none;display:flex;align-items:center;transition:all .2s;flex-shrink:0}
     .btn-wa-co:hover{background:#128C7E}
 
     /* CHECKOUT OVERLAY */
     .co-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9998;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
     .co-overlay.show{display:flex}
-    .co-box{background:white;border-radius:24px;padding:32px;max-width:500px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-    .co-box h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;margin-bottom:20px;color:#1E293B}
-    .co-box h3 span{color:#FF6B47}
-    .co-section{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:#2D7A50;margin:18px 0 12px;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:8px}
-    .co-section::after{content:'';flex:1;height:1px;background:#F1F5F9}
-    .co-field{margin-bottom:14px}
-    .co-field label{display:block;font-size:12px;font-weight:600;color:#475569;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
-    .co-field input,.co-field select,.co-field textarea{width:100%;border:1.5px solid #E2E8F0;border-radius:12px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;background:#FAFCFB;color:#1E293B;transition:border .2s}
-    .co-field input:focus,.co-field select:focus,.co-field textarea:focus{border-color:#2D7A50;background:white}
-    .co-field textarea{height:80px;resize:vertical}
+    .co-box{background:white;border-radius:24px;padding:28px;max-width:520px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+    .co-box h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;margin-bottom:18px;color:#1E293B}
+    .co-box h3 span{color:#F59E0B}
+    .co-sec{font-size:11px;font-weight:700;color:#94A3B8;margin:16px 0 10px;text-transform:uppercase;letter-spacing:1px;padding-bottom:6px;border-bottom:1px solid #F1F5F9}
+    .co-field{margin-bottom:13px}
+    .co-field label{display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+    .co-field input,.co-field select,.co-field textarea{width:100%;border:1.5px solid #E2E8F0;border-radius:10px;padding:11px 13px;font-family:'DM Sans';font-size:14px;outline:none;background:#FAFCFB;color:#1E293B;transition:border .2s}
+    .co-field input:focus,.co-field select:focus{border-color:#1E293B;background:white}
+    .co-field textarea{height:70px;resize:vertical}
     .co-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
-    .pay-card{border:2px solid #E2E8F0;border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s}
-    .pay-card:hover,.pay-card.sel{border-color:#2D7A50;background:#E8F5EE}
-    .pay-card .p-ico{font-size:24px;margin-bottom:6px}
+    .pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .pay-card{border:2px solid #E2E8F0;border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s}
+    .pay-card:hover,.pay-card.sel{border-color:#F59E0B;background:#FFFBEB}
+    .pay-card .p-ico{font-size:22px;margin-bottom:5px}
     .pay-card .p-lbl{font-size:12px;font-weight:700;color:#1E293B}
-    .order-mini{background:#F0F7F2;border-radius:14px;padding:14px 16px;margin-bottom:16px}
-    .order-mini h4{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;color:#2D7A50;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
-    .order-mini p{margin-bottom:5px;color:#1E293B;font-size:13px}
-    .order-mini .o-total{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#004225;margin-top:8px}
-    .btn-place{width:100%;background:linear-gradient(135deg,#FF6B47,#E55534);color:white;border:none;border-radius:50px;padding:16px;font-family:'DM Sans',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:16px;box-shadow:0 6px 20px rgba(255,107,71,.35);transition:all .2s}
-    .btn-place:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,107,71,.45)}
-    .btn-place:disabled{background:#94A3B8;box-shadow:none;cursor:not-allowed;transform:none}
-    .btn-back-co{width:100%;background:#F1F5F9;color:#64748B;border:none;border-radius:50px;padding:13px;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;margin-top:10px}
+    .order-mini{background:#F8FAFC;border-radius:12px;padding:14px;margin-bottom:14px}
+    .order-mini h4{font-size:12px;font-weight:700;color:#64748B;margin-bottom:8px;text-transform:uppercase}
+    .order-mini p{font-size:13px;color:#1E293B;margin-bottom:4px}
+    .order-mini .o-total{font-family:'Playfair Display',serif;font-size:18px;font-weight:800;color:#1E293B;margin-top:8px}
+    .order-mini .o-del{font-size:12px;color:#64748B;margin-top:2px}
 
-    /* SUCCESS OVERLAY */
+    /* AI MATCHING INDICATOR */
+    .ai-match{background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+    .ai-match .ai-ico{font-size:24px;flex-shrink:0}
+    .ai-match p{font-size:13px;color:rgba(255,255,255,.7);margin:0}
+    .ai-match strong{color:#F59E0B}
+
+    .btn-place{width:100%;background:linear-gradient(135deg,#F59E0B,#D97706);color:#1E293B;border:none;border-radius:50px;padding:16px;font-family:'DM Sans';font-size:17px;font-weight:800;cursor:pointer;margin-top:14px;transition:all .2s}
+    .btn-place:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,158,11,.4)}
+    .btn-place:disabled{background:#94A3B8;color:white;cursor:not-allowed;transform:none;box-shadow:none}
+    .btn-back-co{width:100%;background:#F1F5F9;color:#64748B;border:none;border-radius:50px;padding:12px;font-family:'DM Sans';font-size:14px;cursor:pointer;margin-top:8px}
+
+    /* SUCCESS */
     .success-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
     .success-overlay.show{display:flex}
-    .success-box{background:white;border-radius:28px;padding:44px 32px;text-align:center;max-width:420px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.4);animation:scaleIn .4s ease}
-    @keyframes scaleIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+    .success-box{background:white;border-radius:28px;padding:44px 32px;text-align:center;max-width:440px;width:100%}
     .s-ico{font-size:64px;margin-bottom:16px;display:block}
-    .s-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:800;color:#1E293B;margin-bottom:8px}
-    .s-title span{color:#27AE60}
-    .oid{background:#E8F5EE;border:2px solid #27AE60;border-radius:12px;padding:12px 22px;font-family:'Playfair Display',serif;font-size:20px;font-weight:800;color:#004225;margin:14px 0;display:inline-block}
-    .s-details{background:#F8FAFC;border-radius:14px;padding:16px;margin-bottom:20px;text-align:left;font-size:13px;color:#475569;line-height:1.8}
+    .s-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:#1E293B;margin-bottom:8px}
+    .s-title span{color:#22C55E}
+    .oid{background:#F0FDF4;border:2px solid #22C55E;border-radius:12px;padding:10px 20px;font-family:'Playfair Display',serif;font-size:20px;font-weight:800;color:#166534;margin:12px 0;display:inline-block}
+    .s-details{background:#F8FAFC;border-radius:12px;padding:14px;margin:12px 0;text-align:left;font-size:13px;color:#475569;line-height:1.8}
     .s-details strong{color:#1E293B}
-    .s-note{background:#FFF3CD;border-radius:12px;padding:12px 16px;font-size:13px;color:#856404;margin-bottom:20px;text-align:left}
+    .s-note{background:#FFFBEB;border-radius:10px;padding:12px;font-size:13px;color:#92400E;margin-bottom:18px;text-align:left}
     .s-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-    .s-btn-home{background:linear-gradient(135deg,#004225,#1B5E3A);color:white;border:none;border-radius:50px;padding:13px 30px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s}
-    .s-btn-track{background:#F1F5F9;color:#475569;border:1px solid #E2E8F0;border-radius:50px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none;transition:all .2s}
+    .s-btn-home{background:#1E293B;color:white;border:none;border-radius:50px;padding:12px 28px;font-family:'DM Sans';font-size:15px;font-weight:700;cursor:pointer}
+    .s-btn-track{background:#F1F5F9;color:#475569;border:1px solid #E2E8F0;border-radius:50px;padding:11px 22px;font-family:'DM Sans';font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block}
   </style>
 </head>
 <body>
@@ -91,38 +116,39 @@
 <div class="co-overlay" id="coOverlay">
   <div class="co-box">
     <h3>Complete Your <span>Order</span></h3>
-
-    <!-- Order Summary -->
     <div class="order-mini" id="orderMini"></div>
+    <div class="ai-match">
+      <div class="ai-ico">🤖</div>
+      <p>Our <strong>AI system</strong> will automatically match your order to the nearest verified seller in your area for fastest delivery.</p>
+    </div>
 
-    <!-- Customer Details -->
-    <div class="co-section">👤 Your Details</div>
+    <div class="co-sec">👤 Your Details</div>
     <div class="co-field"><label>Full Name *</label><input type="text" id="coName" placeholder="Your full name"/></div>
     <div class="co-row">
-      <div class="co-field"><label>Phone *</label><input type="tel" id="coPhone" placeholder="+91 XXXXX XXXXX"/></div>
+      <div class="co-field"><label>Phone *</label><input type="tel" id="coPhone" placeholder="10-digit number"/></div>
       <div class="co-field"><label>City *</label>
         <select id="coCity">
           <option value="">Select City</option>
-          <option>Delhi</option><option>Noida</option><option>Greater Noida</option><option>Gurugram</option><option>Ghaziabad</option><option>Faridabad</option><option>Other</option>
+          <option>Delhi</option><option>Noida</option><option>Greater Noida</option>
+          <option>Gurugram</option><option>Ghaziabad</option><option>Faridabad</option><option>Other</option>
         </select>
       </div>
     </div>
     <div class="co-field"><label>Delivery Address *</label><textarea id="coAddr" placeholder="Plot no, Street, Area, Landmark..."></textarea></div>
     <div class="co-row">
       <div class="co-field"><label>Pincode *</label><input type="text" id="coPincode" placeholder="201301" maxlength="6"/></div>
-      <div class="co-field"><label>Delivery Date</label><input type="date" id="coDate"/></div>
+      <div class="co-field"><label>Preferred Delivery Date</label><input type="date" id="coDate"/></div>
     </div>
 
-    <!-- Payment -->
-    <div class="co-section">💳 Payment Method</div>
+    <div class="co-sec">💳 Payment Method</div>
     <div class="pay-grid">
       <div class="pay-card" id="p-upi" onclick="selPay('upi')"><div class="p-ico">📱</div><div class="p-lbl">UPI / GPay</div></div>
       <div class="pay-card" id="p-cash" onclick="selPay('cash')"><div class="p-ico">💵</div><div class="p-lbl">Cash on Delivery</div></div>
-      <div class="pay-card" id="p-card" onclick="selPay('card')"><div class="p-ico">💳</div><div class="p-lbl">Card Payment</div></div>
+      <div class="pay-card" id="p-card" onclick="selPay('card')"><div class="p-ico">💳</div><div class="p-lbl">Card</div></div>
       <div class="pay-card" id="p-wa" onclick="selPay('wa')"><div class="p-ico">💬</div><div class="p-lbl">WhatsApp Order</div></div>
     </div>
 
-    <button class="btn-place" id="placeBtn" onclick="placeOrder()">🚀 Place Order Now</button>
+    <button class="btn-place" id="placeBtn" onclick="placeOrder()">🚀 Confirm Order</button>
     <button class="btn-back-co" onclick="closeCheckout()">← Back to Cart</button>
   </div>
 </div>
@@ -130,88 +156,117 @@
 <!-- SUCCESS OVERLAY -->
 <div class="success-overlay" id="successOverlay">
   <div class="success-box">
-    <span class="s-ico">🎉</span>
+    <span class="s-ico">✅</span>
     <div class="s-title">Order <span>Placed!</span></div>
     <div class="oid" id="sOrderId">GG-XXXXXX</div>
     <div class="s-details" id="sDetails"></div>
-    <div class="s-note">⏰ GroutGrove team will confirm your order within <strong>30 minutes</strong> on WhatsApp!</div>
+    <div class="s-note">⏰ You will receive WhatsApp confirmation within <strong>30 minutes</strong>. Save your Order ID for tracking!</div>
     <div class="s-btns">
-      <button class="s-btn-home" onclick="window.location.href='../index.html'">🏠 Go Home</button>
-      <a class="s-btn-track" href="track.html">📦 Track Order</a>
+      <button class="s-btn-home" onclick="window.location.href='../index.html'">🏠 Home</button>
+      <a class="s-btn-track" id="trackLink" href="track.html">📦 Track Order</a>
     </div>
   </div>
 </div>
 
-<!-- NAVBAR -->
-<div class="ticker-wrap"><div class="ticker"><span>Free Delivery on orders above ₹5000</span><span>Same Day Delivery in Delhi NCR</span><span>WhatsApp: +91 96541 71005</span><span>100% Genuine Material</span><span>Free Delivery on orders above ₹5000</span></div></div>
+<div class="ticker-wrap"><div class="ticker">
+  <span>Free Delivery on orders above ₹5000</span>
+  <span>Same Day Delivery in Delhi NCR</span>
+  <span>WhatsApp: +91 96541 71005</span>
+  <span>100% Genuine Material — Best Prices Guaranteed</span>
+  <span>Free Delivery on orders above ₹5000</span>
+</div></div>
+
 <nav>
   <div class="nav-inner">
     <a href="../index.html" class="logo">Grout<span>Grove</span></a>
     <div class="nav-links" id="navLinks">
-      <a href="../index.html">Home</a><a href="products.html">Products</a><a href="track.html">Track Order</a><a href="contact.html">Contact</a>
+      <a href="../index.html">Home</a><a href="products.html">Products</a>
+      <a href="track.html">Track Order</a><a href="contact.html">Contact</a>
       <a href="login.html" id="loginNavBtn">Login</a>
-      <span id="userBadge" style="display:none;background:#2D7A50;color:white;font-size:13px;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer;" onclick="logoutUser()">👤 <span id="userName"></span> ✕</span>
+      <span id="userBadge" style="display:none;background:#1E293B;color:white;font-size:13px;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer;" onclick="logoutUser()">👤 <span id="userName"></span> ✕</span>
       <a href="cart.html" class="nav-cta">🛒 Cart</a>
     </div>
     <button class="hamburger" onclick="toggleNav()">☰</button>
   </div>
 </nav>
 
-<div class="page-hero"><h1>Your <span>Cart</span></h1><p>Review your items and complete your order</p></div>
+<div class="page-hero">
+  <h1>Your <span>Cart</span></h1>
+  <p>Review your items and complete your order</p>
+</div>
 
 <div class="cart-page" id="cartPage">
   <div style="text-align:center;padding:50px;color:#64748B">⏳ Loading cart...</div>
 </div>
 
 <div class="wa-float">
-  <div class="wa-bubble" id="waBubble">💬 <strong>Need help with order?</strong><br><small>+91 96541 71005</small></div>
-  <a href="https://wa.me/919654171005?text=Hi! I need help with my order." target="_blank" class="wa-btn" id="waBtn">💬</a>
+  <div class="wa-bubble" id="waBubble">💬 <strong>Need order help?</strong><br><small>+91 96541 71005</small></div>
+  <a href="https://wa.me/919654171005" target="_blank" class="wa-btn" id="waBtn">💬</a>
 </div>
 
 <script src="../script.js"></script>
 <script>
-const{createClient}=supabase;
-const sb=createClient('https://ddgwdesqicrneikxrcnj.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo');
+const { createClient } = supabase;
+const sb = createClient(
+  'https://ddgwdesqicrneikxrcnj.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo'
+);
 
-// User data
-const nxUser=JSON.parse(localStorage.getItem('nx_user'));
-window.addEventListener('load',function(){
-  if(nxUser){
+// Delivery pricing config
+const DELIVERY = {
+  free: { name: 'Free Delivery', price: 0, time: 'Tomorrow', minOrder: 5000, icon: '🆓' },
+  express: { name: 'Express Same Day', price: 299, time: 'Today by 6PM', icon: '⚡' },
+  standard: { name: 'Standard Delivery', price: 149, time: '2-3 Days', icon: '🚚' }
+};
+let selectedDelivery = 'standard';
+let selPayment = '';
+
+// User
+const nxUser = JSON.parse(localStorage.getItem('nx_user'));
+window.addEventListener('load', function() {
+  if(nxUser) {
     const lb=document.getElementById('loginNavBtn');const ub=document.getElementById('userBadge');const un=document.getElementById('userName');
     if(lb)lb.style.display='none';if(ub)ub.style.display='inline-flex';if(un)un.textContent=nxUser.name.split(' ')[0];
-    // Auto-fill checkout form
     setTimeout(()=>{
       const cn=document.getElementById('coName');const cp=document.getElementById('coPhone');
       if(cn&&nxUser.name)cn.value=nxUser.name;
       if(cp&&nxUser.phone)cp.value=nxUser.phone;
-    },300);
+    },500);
   }
   renderCart();
-  // Set min date for delivery
-  const dateInput=document.getElementById('coDate');
-  if(dateInput){const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);dateInput.min=tomorrow.toISOString().split('T')[0];}
+  const di=document.getElementById('coDate');
+  if(di){const t=new Date();t.setDate(t.getDate()+1);di.min=t.toISOString().split('T')[0];}
 });
 function logoutUser(){localStorage.removeItem('nx_user');window.location.reload();}
 
 // ===== RENDER CART =====
-function renderCart(){
-  const cart=JSON.parse(localStorage.getItem('nirmanx_cart'))||[];
-  const container=document.getElementById('cartPage');
-  if(!cart||cart.length===0){
-    container.innerHTML=`<div class="cart-empty"><div class="e-icon">🛒</div><h2>Your Cart is Empty</h2><p>You haven't added any products yet.</p><a href="products.html" class="btn-primary" style="text-decoration:none;display:inline-flex">📦 Browse Products</a></div>`;
+function renderCart() {
+  const cart = JSON.parse(localStorage.getItem('nirmanx_cart')) || [];
+  const container = document.getElementById('cartPage');
+  if(!cart || cart.length === 0) {
+    container.innerHTML = `<div class="cart-empty">
+      <div class="e-icon">🛒</div>
+      <h2>Your Cart is Empty</h2>
+      <p>You haven't added any products yet.</p>
+      <a href="products.html" class="btn-primary" style="text-decoration:none;display:inline-flex">📦 Browse Products</a>
+    </div>`;
     return;
   }
-  const icons={cement:'🏗️',steel:'⚙️',sariya:'⚙️',bricks:'🧱',eent:'🧱',tiles:'🪟',farshi:'🪟',sand:'🪣',paint:'🎨',hardware:'🔩',plumbing:'🪛'};
-  let total=0;let html='<div id="cartItems">';
-  cart.forEach((item,i)=>{
-    const sub=item.price*item.qty;total+=sub;
-    const key=Object.keys(icons).find(k=>item.name.toLowerCase().includes(k));
-    const ico=key?icons[key]:'📦';
-    html+=`<div class="cart-item">
+
+  const icons = {cement:'🏗️',steel:'⚙️',sariya:'⚙️',bricks:'🧱',tiles:'🪟',sand:'🪣',paint:'🎨',hardware:'🔩',plumbing:'🚿',pipe:'🔵',electrical:'⚡',chemical:'🧪',bath:'🛁'};
+  let subtotal = 0;
+  let html = '<div id="cartItems">';
+
+  cart.forEach((item, i) => {
+    const sub = item.price * item.qty;
+    subtotal += sub;
+    const key = Object.keys(icons).find(k => item.name.toLowerCase().includes(k));
+    const ico = key ? icons[key] : '📦';
+    html += `<div class="cart-item">
       <div class="ci-icon">${ico}</div>
       <div class="ci-info">
         <div class="ci-name">${item.name}</div>
-        <div class="ci-price">₹${item.price.toLocaleString('en-IN')} × ${item.qty} = ₹${sub.toLocaleString('en-IN')}</div>
+        <div class="ci-price">₹${item.price.toLocaleString('en-IN')} × ${item.qty} = <strong>₹${sub.toLocaleString('en-IN')}</strong></div>
       </div>
       <div class="qty-row">
         <button class="q-btn" onclick="chQty(${i},-1)">−</button>
@@ -221,170 +276,267 @@ function renderCart(){
       <button class="rm-btn" onclick="rmItem(${i})">🗑️ Remove</button>
     </div>`;
   });
-  html+='</div>';
-  const del=total>=5000?0:200;const grand=total+del;
-  const waItems=cart.map(i=>`• ${i.name} ×${i.qty} = ₹${(i.price*i.qty).toLocaleString('en-IN')}`).join('\n');
-  const waMsg=encodeURIComponent(`Hi GroutGrove! I want to place an order:\n${waItems}\nSubtotal: ₹${total.toLocaleString('en-IN')}\nDelivery: ${del===0?'FREE':'₹'+del}\nTotal: ₹${grand.toLocaleString('en-IN')}`);
-  html+=`<div class="cart-summary">
+  html += '</div>';
+
+  // DELIVERY OPTIONS — clearly visible
+  html += `<div class="delivery-section">
+    <h3>🚚 Select Delivery Option</h3>
+    <div class="delivery-options">
+      <div class="del-opt ${subtotal >= 5000 ? 'sel' : ''}" id="del-free" onclick="selectDelivery('free',this)">
+        <div class="del-ico">🆓</div>
+        <div class="del-name">Free Delivery</div>
+        <div class="del-price del-free">${subtotal >= 5000 ? 'FREE ✅' : '₹0'}</div>
+        <div class="del-time">On orders ₹5000+</div>
+        ${subtotal < 5000 ? `<div style="font-size:10px;color:#EF4444;margin-top:3px">Add ₹${(5000-subtotal).toLocaleString('en-IN')} more</div>` : ''}
+      </div>
+      <div class="del-opt" id="del-express" onclick="selectDelivery('express',this)">
+        <div class="del-ico">⚡</div>
+        <div class="del-name">Express</div>
+        <div class="del-price del-paid">₹299</div>
+        <div class="del-time">Today by 6 PM</div>
+      </div>
+      <div class="del-opt ${subtotal < 5000 ? 'sel' : ''}" id="del-standard" onclick="selectDelivery('standard',this)">
+        <div class="del-ico">🚚</div>
+        <div class="del-name">Standard</div>
+        <div class="del-price del-paid">₹149</div>
+        <div class="del-time">2–3 Working Days</div>
+      </div>
+    </div>
+  </div>`;
+
+  // Auto-select free if eligible
+  if(subtotal >= 5000) selectedDelivery = 'free';
+  else selectedDelivery = 'standard';
+
+  const delPrice = subtotal >= 5000 ? 0 : DELIVERY[selectedDelivery].price;
+  const grand = subtotal + delPrice;
+
+  const waItems = cart.map(i => `• ${i.name} ×${i.qty} = ₹${(i.price*i.qty).toLocaleString('en-IN')}`).join('\n');
+  const waMsg = encodeURIComponent(`Hi GroutGrove!\n\nCart Order:\n${waItems}\n\nSubtotal: ₹${subtotal.toLocaleString('en-IN')}\nDelivery: ${delPrice === 0 ? 'FREE' : '₹'+delPrice}\nTotal: ₹${grand.toLocaleString('en-IN')}`);
+
+  html += `<div class="cart-summary">
     <h3>Order Summary</h3>
-    <div class="s-row"><span>Subtotal (${cart.length} item${cart.length>1?'s':''})</span><span>₹${total.toLocaleString('en-IN')}</span></div>
-    <div class="s-row"><span>Delivery</span><span>${del===0?'<span class="free-del">FREE ✅</span>':'₹'+del}</span></div>
-    ${del>0?`<div class="s-row" style="color:#F5C518"><span>💡 Add ₹${(5000-total).toLocaleString('en-IN')} more for FREE delivery</span><span></span></div>`:''}
-    <div class="s-row total"><span>Total Amount</span><span>₹${grand.toLocaleString('en-IN')}</span></div>
+    ${subtotal >= 5000 ? '<div class="savings-badge">🎉 You saved ₹149 — Free Delivery Unlocked!</div>' : `<div class="savings-badge" style="background:#FEF2F2;border-color:#FCA5A5;color:#991B1B">💡 Add ₹${(5000-subtotal).toLocaleString('en-IN')} more to unlock FREE delivery!</div>`}
+    <div class="s-row"><span>Subtotal (${cart.length} item${cart.length>1?'s':''})</span><span>₹${subtotal.toLocaleString('en-IN')}</span></div>
+    <div class="s-row"><span>Delivery Charges</span>
+      <span id="delChargeDisplay">
+        ${delPrice === 0 ? '<span class="del-tag">FREE ✅</span>' : `<span class="del-tag paid">₹${delPrice}</span>`}
+      </span>
+    </div>
+    <div class="s-row"><span>GST (included)</span><span style="color:#22C55E">✅ Included</span></div>
+    <div class="s-row total"><span>Total Amount</span><span id="grandTotal">₹${grand.toLocaleString('en-IN')}</span></div>
     <div class="co-btns">
-      <button class="btn-co" onclick="openCheckout()">📋 Proceed to Checkout</button>
+      <button class="btn-co" onclick="openCheckout()">📋 Proceed to Checkout →</button>
       <a href="https://wa.me/919654171005?text=${waMsg}" target="_blank" class="btn-wa-co" title="Order via WhatsApp">💬</a>
     </div>
   </div>`;
-  container.innerHTML=html;
+
+  container.innerHTML = html;
 }
 
-function chQty(i,d){
-  let cart=JSON.parse(localStorage.getItem('nirmanx_cart'))||[];
-  cart[i].qty+=d;
-  if(cart[i].qty<=0)cart.splice(i,1);
-  localStorage.setItem('nirmanx_cart',JSON.stringify(cart));
-  renderCart();
-  if(typeof updateCartBadge==='function')updateCartBadge();
+function selectDelivery(type, el) {
+  selectedDelivery = type;
+  document.querySelectorAll('.del-opt').forEach(d => d.classList.remove('sel'));
+  el.classList.add('sel');
+  updateSummary();
 }
-function rmItem(i){
-  let cart=JSON.parse(localStorage.getItem('nirmanx_cart'))||[];
-  const name=cart[i].name;
-  cart.splice(i,1);
-  localStorage.setItem('nirmanx_cart',JSON.stringify(cart));
+
+function updateSummary() {
+  const cart = JSON.parse(localStorage.getItem('nirmanx_cart')) || [];
+  const subtotal = cart.reduce((s,i) => s+(i.price*i.qty), 0);
+  const delPrice = subtotal >= 5000 && selectedDelivery === 'free' ? 0 : DELIVERY[selectedDelivery].price;
+  const grand = subtotal + delPrice;
+  const el = document.getElementById('grandTotal');
+  const dc = document.getElementById('delChargeDisplay');
+  if(el) el.textContent = '₹' + grand.toLocaleString('en-IN');
+  if(dc) dc.innerHTML = delPrice === 0 ? '<span class="del-tag">FREE ✅</span>' : `<span class="del-tag paid">₹${delPrice}</span>`;
+}
+
+function chQty(i, d) {
+  let cart = JSON.parse(localStorage.getItem('nirmanx_cart')) || [];
+  cart[i].qty += d;
+  if(cart[i].qty <= 0) cart.splice(i, 1);
+  localStorage.setItem('nirmanx_cart', JSON.stringify(cart));
   renderCart();
-  if(typeof updateCartBadge==='function')updateCartBadge();
-  showToast(`🗑️ ${name} removed!`);
+  if(typeof updateCartBadge === 'function') updateCartBadge();
+}
+function rmItem(i) {
+  let cart = JSON.parse(localStorage.getItem('nirmanx_cart')) || [];
+  const name = cart[i].name;
+  cart.splice(i, 1);
+  localStorage.setItem('nirmanx_cart', JSON.stringify(cart));
+  renderCart();
+  if(typeof updateCartBadge === 'function') updateCartBadge();
+  if(typeof showToast === 'function') showToast('🗑️ ' + name + ' removed!');
 }
 
 // ===== CHECKOUT =====
-function openCheckout(){
-  const cart=JSON.parse(localStorage.getItem('nirmanx_cart'))||[];
-  if(!cart.length){showToast('⚠️ Cart is empty!');return;}
-  const total=cart.reduce((s,i)=>s+(i.price*i.qty),0);
-  const del=total>=5000?0:200;const grand=total+del;
-  document.getElementById('orderMini').innerHTML=`
+function openCheckout() {
+  const cart = JSON.parse(localStorage.getItem('nirmanx_cart')) || [];
+  if(!cart.length) { if(typeof showToast==='function')showToast('⚠️ Cart is empty!'); return; }
+  const subtotal = cart.reduce((s,i) => s+(i.price*i.qty), 0);
+  const delPrice = subtotal >= 5000 && selectedDelivery === 'free' ? 0 : DELIVERY[selectedDelivery].price;
+  const grand = subtotal + delPrice;
+  const delName = DELIVERY[selectedDelivery].name;
+
+  document.getElementById('orderMini').innerHTML = `
     <h4>📦 Order Summary</h4>
     ${cart.map(i=>`<p>• ${i.name} ×${i.qty} = <strong>₹${(i.price*i.qty).toLocaleString('en-IN')}</strong></p>`).join('')}
-    <div class="o-total">Total: ₹${grand.toLocaleString('en-IN')} ${del===0?'(Free Delivery ✅)':'(Delivery: ₹'+del+')'}</div>`;
+    <div class="o-total">Total: ₹${grand.toLocaleString('en-IN')}</div>
+    <div class="o-del">🚚 ${delName}: ${delPrice === 0 ? 'FREE ✅' : '₹'+delPrice}</div>`;
+
   document.getElementById('coOverlay').classList.add('show');
 }
-function closeCheckout(){document.getElementById('coOverlay').classList.remove('show');}
+function closeCheckout() { document.getElementById('coOverlay').classList.remove('show'); }
 
-let selPayment='';
-function selPay(m){
-  selPayment=m;
-  ['upi','cash','card','wa'].forEach(x=>{
-    const el=document.getElementById('p-'+x);
-    if(el)el.classList.remove('sel');
+function selPay(m) {
+  selPayment = m;
+  ['upi','cash','card','wa'].forEach(x => {
+    const el = document.getElementById('p-'+x);
+    if(el) el.classList.remove('sel');
   });
-  const sel=document.getElementById('p-'+m);
-  if(sel)sel.classList.add('sel');
+  const sel = document.getElementById('p-'+m);
+  if(sel) sel.classList.add('sel');
 }
 
 // ===== PLACE ORDER =====
-async function placeOrder(){
-  const name=document.getElementById('coName').value.trim();
-  const phone=document.getElementById('coPhone').value.trim();
-  const city=document.getElementById('coCity').value;
-  const addr=document.getElementById('coAddr').value.trim();
-  const pin=document.getElementById('coPincode').value.trim();
-  const date=document.getElementById('coDate').value;
+async function placeOrder() {
+  const name = document.getElementById('coName').value.trim();
+  const phone = document.getElementById('coPhone').value.trim().replace(/\D/g,'');
+  const city = document.getElementById('coCity').value;
+  const addr = document.getElementById('coAddr').value.trim();
+  const pin = document.getElementById('coPincode').value.trim();
 
-  if(!name){showToast('⚠️ Please enter your name!');return;}
-  if(!phone||phone.replace(/\D/g,'').length<10){showToast('⚠️ Please enter valid phone number!');return;}
-  if(!city){showToast('⚠️ Please select your city!');return;}
-  if(!addr){showToast('⚠️ Please enter delivery address!');return;}
-  if(!pin||pin.length<6){showToast('⚠️ Please enter 6-digit pincode!');return;}
-  if(!selPayment){showToast('⚠️ Please select payment method!');return;}
+  if(!name){if(typeof showToast==='function')showToast('⚠️ Enter your name!');return;}
+  if(!phone||phone.length<10){if(typeof showToast==='function')showToast('⚠️ Enter valid phone number!');return;}
+  if(!city){if(typeof showToast==='function')showToast('⚠️ Select your city!');return;}
+  if(!addr){if(typeof showToast==='function')showToast('⚠️ Enter delivery address!');return;}
+  if(!pin||pin.length<6){if(typeof showToast==='function')showToast('⚠️ Enter 6-digit pincode!');return;}
+  if(!selPayment){if(typeof showToast==='function')showToast('⚠️ Select payment method!');return;}
 
-  const btn=document.getElementById('placeBtn');
-  btn.textContent='⏳ Placing order...';btn.disabled=true;
+  const btn = document.getElementById('placeBtn');
+  btn.textContent = '⏳ Placing order...'; btn.disabled = true;
 
-  const cart=JSON.parse(localStorage.getItem('nirmanx_cart'))||[];
-  const total=cart.reduce((s,i)=>s+(i.price*i.qty),0);
-  const del=total>=5000?0:200;
-  const grand=total+del;
-  const items=cart.map(i=>`${i.name} ×${i.qty}`).join(', ');
-  const orderId='GG-'+Date.now().toString().slice(-6);
-  const fullAddr=`${addr}, ${city} - ${pin}`;
-  const payNames={upi:'UPI/GPay',cash:'Cash on Delivery',card:'Card Payment',wa:'WhatsApp Order'};
-  const deliveryDate=date?new Date(date).toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'}):'As soon as possible';
+  const cart = JSON.parse(localStorage.getItem('nirmanx_cart')) || [];
+  const subtotal = cart.reduce((s,i) => s+(i.price*i.qty), 0);
+  const delPrice = subtotal >= 5000 && selectedDelivery === 'free' ? 0 : DELIVERY[selectedDelivery].price;
+  const grand = subtotal + delPrice;
+  const items = cart.map(i => `${i.name} ×${i.qty}`).join(', ');
+  const orderId = 'GG-' + Date.now().toString().slice(-6);
+  const fullAddr = `${addr}, ${city} - ${pin}`;
+  const payNames = {upi:'UPI/GPay',cash:'Cash on Delivery',card:'Card Payment',wa:'WhatsApp Order'};
 
-  try{
-    // 1. Save to Supabase
-    const{error}=await sb.from('orders').insert([{
-      order_id:orderId,
-      customer_phone:phone,
-      customer_name:name,
-      items:items,
-      total:grand,
-      delivery_address:fullAddr,
-      status:'pending'
+  // AI: Find nearest seller by city/category
+  let matchedSeller = null;
+  try {
+    const primaryCat = cart[0]?.name?.toLowerCase();
+    let catKey = 'cement';
+    if(primaryCat?.includes('steel')||primaryCat?.includes('tmt')) catKey='steel';
+    else if(primaryCat?.includes('brick')||primaryCat?.includes('eet')) catKey='bricks';
+    else if(primaryCat?.includes('tile')||primaryCat?.includes('farshi')) catKey='tiles';
+
+    const { data: sellers } = await sb.from('sellers')
+      .select('*')
+      .eq('status','active')
+      .ilike('categories', '%'+catKey+'%')
+      .or(`city.ilike.%${city}%,delivery_area.ilike.%${city}%`);
+
+    if(sellers && sellers.length > 0) {
+      matchedSeller = sellers[0]; // Pick first matched seller
+    }
+  } catch(e) { console.log('Seller match skipped:', e); }
+
+  try {
+    // Save order to Supabase
+    const { error } = await sb.from('orders').insert([{
+      order_id: orderId,
+      customer_phone: phone,
+      customer_name: name,
+      items: items,
+      total: grand,
+      delivery_address: fullAddr,
+      delivery_type: DELIVERY[selectedDelivery].name,
+      delivery_charge: delPrice,
+      payment_method: payNames[selPayment],
+      matched_seller_phone: matchedSeller ? matchedSeller.phone : null,
+      status: 'pending'
     }]);
-    if(error)throw error;
+    if(error) throw error;
 
-    // 2. WhatsApp to YOU (GroutGrove Admin)
-    const adminMsg=encodeURIComponent(
+    // Save order to localStorage for tracking
+    const orderData = {
+      order_id: orderId,
+      items: cart,
+      total: grand,
+      subtotal: subtotal,
+      delivery: DELIVERY[selectedDelivery],
+      delivery_charge: delPrice,
+      customer_name: name,
+      customer_phone: phone,
+      delivery_address: fullAddr,
+      payment: payNames[selPayment],
+      status: 'pending',
+      placed_at: new Date().toISOString()
+    };
+    // Save last 5 orders in localStorage
+    const myOrders = JSON.parse(localStorage.getItem('my_orders')) || [];
+    myOrders.unshift(orderData);
+    localStorage.setItem('my_orders', JSON.stringify(myOrders.slice(0, 5)));
+
+    // Admin WhatsApp notification
+    const adminMsg = encodeURIComponent(
 `🔔 *NEW ORDER — GROUTGROVE!*
 
-━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━
 📋 *Order ID:* ${orderId}
-⏰ *Time:* ${new Date().toLocaleString('en-IN')}
-━━━━━━━━━━━━━━━━━━
+⏰ ${new Date().toLocaleString('en-IN')}
+━━━━━━━━━━━━━━━━
 
-👤 *CUSTOMER DETAILS:*
-• Name: ${name}
-• Phone: ${phone}
-• City: ${city}
-• Address: ${fullAddr}
+👤 *CUSTOMER:*
+Name: ${name}
+Phone: ${phone}
+City: ${city}
+Address: ${fullAddr}
 
-━━━━━━━━━━━━━━━━━━
-📦 *ORDER ITEMS:*
-${cart.map(i=>`• ${i.name}\n  Qty: ${i.qty} | Rate: ₹${i.price} | Total: ₹${(i.price*i.qty).toLocaleString('en-IN')}`).join('\n')}
+📦 *ITEMS:*
+${cart.map(i=>`• ${i.name} ×${i.qty} = ₹${(i.price*i.qty).toLocaleString('en-IN')}`).join('\n')}
 
-━━━━━━━━━━━━━━━━━━
-🚚 Delivery: ${deliveryDate}
-💳 Payment: ${payNames[selPayment]||selPayment}
-🚛 Delivery Charge: ${del===0?'FREE ✅':'₹'+del}
+🚚 Delivery: ${DELIVERY[selectedDelivery].name}
+💳 Payment: ${payNames[selPayment]}
+💰 *TOTAL: ₹${grand.toLocaleString('en-IN')}*
+${delPrice === 0 ? '✅ Free Delivery' : `🚚 Delivery: ₹${delPrice}`}
 
-💰 *GRAND TOTAL: ₹${grand.toLocaleString('en-IN')}*
-━━━━━━━━━━━━━━━━━━
-⚡ Action Required:
-1. Confirm order to customer
-2. Contact relevant seller
-3. Arrange delivery
+${matchedSeller ? `🤖 AI MATCH: ${matchedSeller.business_name} (${matchedSeller.phone})` : '⚠️ No seller matched — assign manually'}
 
-Reply CONFIRM to accept order`
+━━━━━━━━━━━━━━━━
+⚡ Reply CONFIRM to admin panel`
     );
 
     // Clear cart
     localStorage.removeItem('nirmanx_cart');
-    if(typeof updateCartBadge==='function')updateCartBadge();
+    if(typeof updateCartBadge === 'function') updateCartBadge();
 
     // Close checkout
     closeCheckout();
 
     // Show success
-    document.getElementById('sOrderId').textContent=orderId;
-    document.getElementById('sDetails').innerHTML=`
-      <p>👤 <strong>${name}</strong></p>
-      <p>📱 <strong>${phone}</strong></p>
+    document.getElementById('sOrderId').textContent = orderId;
+    document.getElementById('sDetails').innerHTML = `
+      <p>👤 <strong>${name}</strong> | 📱 <strong>${phone}</strong></p>
       <p>📍 <strong>${fullAddr}</strong></p>
       <p>📦 <strong>${items}</strong></p>
-      <p>💳 <strong>${payNames[selPayment]||selPayment}</strong></p>
+      <p>🚚 <strong>${DELIVERY[selectedDelivery].name}</strong> ${delPrice === 0 ? '(FREE ✅)' : '(₹'+delPrice+')'}</p>
+      <p>💳 <strong>${payNames[selPayment]}</strong></p>
       <p>💰 Total: <strong>₹${grand.toLocaleString('en-IN')}</strong></p>`;
+    document.getElementById('trackLink').href = `track.html?id=${orderId}`;
     document.getElementById('successOverlay').classList.add('show');
 
-    // Open WhatsApp to admin
-    setTimeout(()=>{
-      window.open('https://wa.me/919654171005?text='+adminMsg,'_blank');
-    },1000);
+    // WhatsApp to admin
+    setTimeout(() => { window.open('https://wa.me/919654171005?text='+adminMsg,'_blank'); }, 1000);
 
-  }catch(err){
-    showToast('❌ Error placing order. Try WhatsApp!');
-    btn.textContent='🚀 Place Order Now';
-    btn.disabled=false;
+  } catch(err) {
+    if(typeof showToast==='function') showToast('❌ Error: ' + err.message);
+    btn.textContent = '🚀 Confirm Order'; btn.disabled = false;
   }
 }
 </script>

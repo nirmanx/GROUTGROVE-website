@@ -1,200 +1,229 @@
-!DOCTYPE html>
-<html lang="hi">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Invoice – NirmanX</title>
-  <link rel="stylesheet" href="../style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Hind:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>Invoice – GroutGrove</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
-    .inv-page { max-width: 820px; margin: 40px auto; padding: 0 24px 60px; }
-    .inv-topbar { display: flex; gap: 12px; justify-content: flex-end; margin-bottom: 20px; flex-wrap: wrap; }
-    .btn-print { background: var(--dark); color: white; border: none; border-radius: 10px; padding: 11px 22px; font-family: 'Baloo 2'; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all .2s; }
-    .btn-print:hover { background: var(--black); }
-    .btn-wa-inv { background: var(--whatsapp); color: white; border: none; border-radius: 10px; padding: 11px 22px; font-family: 'Baloo 2'; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all .2s; text-decoration: none; }
-    .btn-wa-inv:hover { background: #1EB858; }
-    .invoice-box { background: white; border: 2px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
-    .inv-header { background: linear-gradient(135deg, #1A1208, #2D2010); padding: 32px 36px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; }
-    .inv-logo { font-family: 'Baloo 2'; font-size: 34px; font-weight: 800; color: var(--orange); }
-    .inv-logo span { color: white; }
-    .inv-logo p { font-size: 13px; color: #C4B5A5; font-family: 'Hind'; margin-top: 4px; }
-    .inv-title { text-align: right; }
-    .inv-title h2 { font-family: 'Baloo 2'; font-size: 28px; font-weight: 800; color: white; letter-spacing: 2px; }
-    .inv-title p { color: #C4B5A5; font-size: 13px; margin-top: 4px; }
-    .inv-title .inv-num { color: var(--orange); font-size: 18px; font-weight: 700; margin-top: 6px; }
-    .inv-body { padding: 32px 36px; }
-    .inv-parties { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 28px; }
-    .party-box h4 { font-family: 'Baloo 2'; font-size: 13px; font-weight: 700; color: var(--orange); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
-    .party-box p { font-size: 14px; line-height: 1.8; color: var(--dark); }
-    .party-box strong { font-family: 'Baloo 2'; font-size: 16px; }
-    .inv-details { display: flex; gap: 24px; flex-wrap: wrap; background: var(--light); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; }
-    .inv-detail-item { font-size: 13px; }
-    .inv-detail-item span { display: block; color: var(--gray); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 3px; }
-    .inv-detail-item strong { font-family: 'Baloo 2'; font-size: 15px; color: var(--dark); }
-    .inv-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 14px; }
-    .inv-table th { background: var(--orange); color: white; padding: 12px 14px; text-align: left; font-family: 'Baloo 2'; font-size: 14px; }
-    .inv-table th:last-child, .inv-table td:last-child { text-align: right; }
-    .inv-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--dark); }
-    .inv-table tr:hover td { background: var(--orange-light); }
-    .inv-table .item-name { font-weight: 600; }
-    .inv-table .item-spec { font-size: 12px; color: var(--gray); margin-top: 2px; }
-    .inv-totals { display: flex; justify-content: flex-end; }
-    .totals-box { min-width: 280px; }
-    .total-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; border-bottom: 1px solid var(--border); }
-    .total-row:last-child { border-bottom: none; }
-    .total-row.grand { font-family: 'Baloo 2'; font-size: 20px; font-weight: 800; color: var(--orange); padding-top: 12px; margin-top: 4px; border-top: 2px solid var(--orange); }
-    .inv-footer { background: var(--light); border-top: 2px solid var(--border); padding: 22px 36px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
-    .inv-footer p { font-size: 13px; color: var(--gray); }
-    .inv-footer .thank { font-family: 'Baloo 2'; font-size: 16px; font-weight: 700; color: var(--orange); }
-    .status-badge { display: inline-flex; align-items: center; gap: 6px; background: #D1FAE5; color: #065F46; font-size: 13px; font-weight: 700; padding: 5px 14px; border-radius: 20px; }
-    @media print {
-      .inv-topbar { display: none; }
-      .inv-page { margin: 0; padding: 0; }
-      .invoice-box { border: none; box-shadow: none; border-radius: 0; }
-      nav, .ticker-wrap { display: none; }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'DM Sans',sans-serif;background:#F1F5F9;color:#1E293B;padding:20px}
+    .controls{display:flex;gap:12px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+    .ctrl-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border:none;border-radius:50px;font-family:'DM Sans';font-size:15px;font-weight:700;cursor:pointer;transition:all .2s}
+    .btn-print{background:#1E293B;color:white}
+    .btn-print:hover{background:#0F172A}
+    .btn-back{background:#F1F5F9;color:#475569;border:1px solid #E2E8F0}
+    .invoice{background:white;max-width:800px;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.12)}
+    .inv-header{background:#0F172A;padding:32px 36px;display:flex;justify-content:space-between;align-items:flex-start}
+    .inv-logo{font-family:'Playfair Display',serif;font-size:32px;font-weight:800;color:white}
+    .inv-logo span{color:#F59E0B}
+    .inv-tagline{color:rgba(255,255,255,.45);font-size:13px;margin-top:4px}
+    .inv-contact{color:rgba(255,255,255,.5);font-size:12px;margin-top:6px;line-height:1.6}
+    .inv-right{text-align:right}
+    .inv-label{color:rgba(255,255,255,.4);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+    .inv-num{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:#F59E0B}
+    .inv-type{color:rgba(255,255,255,.5);font-size:12px;margin-top:4px}
+    .inv-body{padding:32px 36px}
+    .addr-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px}
+    .addr-box h4{font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #F1F5F9}
+    .addr-box p{font-size:14px;color:#1E293B;line-height:1.7}
+    .addr-box strong{display:block;font-size:16px;font-weight:700;margin-bottom:4px}
+    .meta-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid #E2E8F0;border-radius:12px;overflow:hidden;margin-bottom:28px}
+    .meta-cell{padding:14px 16px;border-right:1px solid #E2E8F0}
+    .meta-cell:last-child{border-right:none}
+    .meta-cell label{display:block;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+    .meta-cell span{font-size:13px;font-weight:700;color:#1E293B}
+    .status-delivered{color:#22C55E}
+    table{width:100%;border-collapse:collapse;margin-bottom:24px}
+    thead tr{background:#0F172A}
+    thead th{padding:12px 14px;text-align:left;font-size:11px;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.5px}
+    tbody tr{border-bottom:1px solid #F1F5F9}
+    tbody tr:last-child{border-bottom:none}
+    tbody tr:hover{background:#F8FAFC}
+    td{padding:14px;font-size:14px;color:#1E293B}
+    td.num{text-align:right;font-family:'Playfair Display',serif;font-weight:700}
+    .totals{margin-left:auto;max-width:320px}
+    .t-row{display:flex;justify-content:space-between;padding:9px 0;font-size:14px;color:#475569;border-bottom:1px solid #F1F5F9}
+    .t-row.grand{font-family:'Playfair Display',serif;font-size:20px;font-weight:800;color:#1E293B;border-bottom:none;padding-top:14px;margin-top:4px}
+    .inv-footer{background:#F8FAFC;border-top:1px solid #E2E8F0;padding:22px 36px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .inv-footer p{font-size:13px;color:#64748B}
+    .inv-footer strong{color:#1E293B}
+    .paid-stamp{background:#D1FAE5;border:2px solid #22C55E;border-radius:10px;padding:8px 18px;font-size:14px;font-weight:800;color:#166534}
+    @media print{
+      body{background:white;padding:0}
+      .controls{display:none}
+      .invoice{box-shadow:none;border-radius:0}
     }
-    @media(max-width:600px) { .inv-header, .inv-body { padding: 20px; } .inv-parties { grid-template-columns: 1fr; } .inv-totals { justify-content: stretch; } .totals-box { width: 100%; } }
   </style>
 </head>
 <body>
+<div class="controls">
+  <button class="ctrl-btn btn-back" onclick="history.back()">← Back</button>
+  <button class="ctrl-btn btn-print" onclick="window.print()">🖨️ Print / Save PDF</button>
+</div>
 
-  <div class="ticker-wrap"><div class="ticker"><span>📄 NirmanX Invoice — GST Compliant</span><span>Print ya PDF save karo</span><span>Help: +91 96541 71005</span><span>📄 NirmanX Invoice — GST Compliant</span><span>Print ya PDF save karo</span><span>Help: +91 96541 71005</span></div></div>
-
-  <nav>
-    <div class="nav-inner">
-      <a href="../index.html" class="logo">Nirman<span>X</span></a>
-      <div class="nav-links" id="navLinks">
-        <a href="../index.html">🏠 Home</a>
-        <a href="products.html">📦 Products</a>
-        <a href="track.html">🔄 Track Order</a>
-        <a href="contact.html">📞 Contact</a>
-        <a href="cart.html" class="nav-cta">🛒 Cart</a>
+<div class="invoice" id="invoiceBox">
+  <div class="inv-header">
+    <div>
+      <div class="inv-logo">Grout<span>Grove</span></div>
+      <div class="inv-tagline">India's Construction Marketplace</div>
+      <div class="inv-contact">
+        support@groutgrove.in | +91 96541 71005<br>
+        Delhi NCR, India | GSTIN: 07XXXXX1234X1Z5
       </div>
-      <button class="hamburger" onclick="toggleNav()">☰</button>
     </div>
-  </nav>
-
-  <div class="inv-page">
-    <div class="inv-topbar">
-      <span class="status-badge">✅ Payment Received</span>
-      <button class="btn-print" onclick="window.print()">🖨️ Print / Save PDF</button>
-      <a href="https://wa.me/919654171005?text=Namaste! Mujhe invoice NX-INV-2026-1234 ki copy chahiye." target="_blank" class="btn-wa-inv">💬 WhatsApp Copy</a>
-    </div>
-
-    <div class="invoice-box">
-      <!-- HEADER -->
-      <div class="inv-header">
-        <div class="inv-logo">
-          Nirman<span>X</span>
-          <p>India's Construction Marketplace<br>support@nirmanx.in | +91 96541 71005<br>Delhi NCR, India | GSTIN: 07XXXXX1234X1Z5</p>
-        </div>
-        <div class="inv-title">
-          <h2>INVOICE</h2>
-          <p>Tax Invoice / Bill of Supply</p>
-          <div class="inv-num">#NX-INV-2026-1234</div>
-        </div>
-      </div>
-
-      <!-- BODY -->
-      <div class="inv-body">
-
-        <!-- PARTIES -->
-        <div class="inv-parties">
-          <div class="party-box">
-            <h4>Bill To / Khareednaar</h4>
-            <p><strong>Rajesh Sharma</strong><br>+91 98765 43210<br>rajesh@email.com<br>Plot 45, Sector 62<br>Noida, Uttar Pradesh — 201309<br>GSTIN: N/A (Individual)</p>
-          </div>
-          <div class="party-box">
-            <h4>Delivery Address</h4>
-            <p><strong>Construction Site</strong><br>Plot 45, Sector 62, Noida<br>Near Sector 62 Metro Station<br>Uttar Pradesh — 201309<br><br>📞 Driver Contact: +91 96541 71005</p>
-          </div>
-        </div>
-
-        <!-- INVOICE DETAILS -->
-        <div class="inv-details">
-          <div class="inv-detail-item"><span>Invoice No.</span><strong>#NX-INV-2026-1234</strong></div>
-          <div class="inv-detail-item"><span>Invoice Date</span><strong>15 March 2026</strong></div>
-          <div class="inv-detail-item"><span>Due Date</span><strong>15 March 2026</strong></div>
-          <div class="inv-detail-item"><span>Payment Mode</span><strong>UPI / Online</strong></div>
-          <div class="inv-detail-item"><span>Order Status</span><strong style="color:var(--green)">✅ Delivered</strong></div>
-        </div>
-
-        <!-- ITEMS TABLE -->
-        <table class="inv-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Product</th>
-              <th>Qty</th>
-              <th>Rate</th>
-              <th>GST (18%)</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td><div class="item-name">UltraTech PPC Cement</div><div class="item-spec">50 Kg bag • OPC 53 Grade • ISI Certified</div></td>
-              <td>50 bags</td>
-              <td>₹380</td>
-              <td>₹3,420</td>
-              <td>₹22,420</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td><div class="item-name">TATA TMT Sariya Fe-500D</div><div class="item-spec">12mm • BIS Certified • Per Kg</div></td>
-              <td>200 kg</td>
-              <td>₹65</td>
-              <td>₹2,340</td>
-              <td>₹15,340</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td><div class="item-name">River Sand (Fine)</div><div class="item-spec">Construction Grade • Per CFT</div></td>
-              <td>20 CFT</td>
-              <td>₹55</td>
-              <td>₹198</td>
-              <td>₹1,298</td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td><div class="item-name">Delivery Charge</div><div class="item-spec">Same Day Delivery — Noida Sector 62</div></td>
-              <td>1</td>
-              <td>₹0</td>
-              <td>—</td>
-              <td><span style="color:var(--green); font-weight:700;">FREE</span></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- TOTALS -->
-        <div class="inv-totals">
-          <div class="totals-box">
-            <div class="total-row"><span>Subtotal</span><span>₹38,000</span></div>
-            <div class="total-row"><span>GST Total (18%)</span><span>₹5,958</span></div>
-            <div class="total-row"><span>Discount (10% Offer)</span><span style="color:var(--green)">- ₹3,800</span></div>
-            <div class="total-row"><span>Delivery</span><span style="color:var(--green)">FREE ✅</span></div>
-            <div class="total-row grand"><span>Total Payable</span><span>₹40,158</span></div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- FOOTER -->
-      <div class="inv-footer">
-        <div>
-          <p class="thank">🙏 Dhanyawad! NirmanX chose karne ke liye shukriya.</p>
-          <p>Koi sawaal? Call: +91 96541 71005 | WhatsApp: wa.me/919654171005</p>
-        </div>
-        <div style="text-align:right;">
-          <p style="font-size:12px; color:var(--gray);">Authorized Signature</p>
-          <p style="font-family:'Baloo 2'; font-size:18px; color:var(--orange); margin-top:18px;">NirmanX</p>
-          <p style="font-size:12px; color:var(--gray);">Verified Digital Invoice</p>
-        </div>
-      </div>
+    <div class="inv-right">
+      <div class="inv-label">Invoice</div>
+      <div class="inv-num" id="invNum">GG-INV-2026-XXXX</div>
+      <div class="inv-type">Tax Invoice / Bill of Supply</div>
     </div>
   </div>
 
-  <script src="../script.js"></script>
+  <div class="inv-body">
+    <div class="addr-row">
+      <div class="addr-box">
+        <h4>Bill To / Customer</h4>
+        <p><strong id="custName">Customer Name</strong>
+          <span id="custPhone"></span><br>
+          <span id="custAddr"></span>
+        </p>
+      </div>
+      <div class="addr-box">
+        <h4>Delivery Address</h4>
+        <p><strong>Construction Site</strong>
+          <span id="delAddr"></span><br>
+          Driver Contact: +91 96541 71005
+        </p>
+      </div>
+    </div>
+
+    <div class="meta-row">
+      <div class="meta-cell"><label>Invoice No.</label><span id="metaInv">—</span></div>
+      <div class="meta-cell"><label>Invoice Date</label><span id="metaDate">—</span></div>
+      <div class="meta-cell"><label>Payment Mode</label><span id="metaPay">—</span></div>
+      <div class="meta-cell"><label>Order Status</label><span class="status-delivered" id="metaStatus">—</span></div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Product / Description</th>
+          <th style="text-align:center">Qty</th>
+          <th style="text-align:right">Rate</th>
+          <th style="text-align:right">Amount</th>
+        </tr>
+      </thead>
+      <tbody id="itemsBody">
+        <tr><td colspan="5" style="text-align:center;color:#94A3B8;padding:30px">Loading...</td></tr>
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <div class="t-row"><span>Subtotal</span><span id="tSub">₹0</span></div>
+      <div class="t-row"><span>Delivery Charges</span><span id="tDel">₹0</span></div>
+      <div class="t-row"><span>GST (Included)</span><span>Inclusive</span></div>
+      <div class="t-row grand"><span>Total Amount</span><span id="tTotal">₹0</span></div>
+    </div>
+  </div>
+
+  <div class="inv-footer">
+    <div>
+      <p>Thank you for choosing <strong>GroutGrove!</strong></p>
+      <p>Building Trust, Brick by Brick. 🏗️</p>
+    </div>
+    <div class="paid-stamp" id="paidStamp">✅ Delivered</div>
+  </div>
+</div>
+
+<script>
+const { createClient } = supabase;
+const sb = createClient(
+  'https://ddgwdesqicrneikxrcnj.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo'
+);
+
+async function loadInvoice() {
+  const orderId = new URLSearchParams(window.location.search).get('id');
+  if(!orderId) {
+    // Load from localStorage (most recent order)
+    const myOrders = JSON.parse(localStorage.getItem('my_orders')) || [];
+    if(myOrders.length > 0) renderInvoice(myOrders[0], true);
+    return;
+  }
+
+  // Try Supabase first
+  try {
+    const { data } = await sb.from('orders').select('*').eq('order_id', orderId).single();
+    if(data) { renderInvoice(data, false); return; }
+  } catch(e) {}
+
+  // Fallback to localStorage
+  const myOrders = JSON.parse(localStorage.getItem('my_orders')) || [];
+  const local = myOrders.find(o => o.order_id === orderId);
+  if(local) renderInvoice(local, true);
+}
+
+function renderInvoice(order, isLocal) {
+  const invNum = 'GG-INV-2026-' + (order.order_id || '').replace('GG-','');
+  const date = new Date(order.placed_at || order.created_at || Date.now());
+  const dateStr = date.toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'});
+
+  document.getElementById('invNum').textContent = invNum;
+  document.getElementById('metaInv').textContent = invNum;
+  document.getElementById('metaDate').textContent = dateStr;
+  document.getElementById('metaPay').textContent = order.payment_method || order.payment || 'UPI/Online';
+  document.getElementById('metaStatus').textContent = order.status === 'delivered' ? '✅ Delivered' : order.status || 'Pending';
+  document.getElementById('paidStamp').textContent = order.status === 'delivered' ? '✅ Delivered' : '⏳ Pending';
+
+  document.getElementById('custName').textContent = order.customer_name || 'Customer';
+  document.getElementById('custPhone').textContent = order.customer_phone || '';
+  document.getElementById('custAddr').textContent = order.delivery_address || '';
+  document.getElementById('delAddr').textContent = order.delivery_address || '';
+
+  // Items
+  let itemsHtml = '';
+  let subtotal = 0;
+
+  if(isLocal && order.items && Array.isArray(order.items)) {
+    order.items.forEach((item, i) => {
+      const amt = item.price * item.qty;
+      subtotal += amt;
+      itemsHtml += `<tr>
+        <td>${i+1}</td>
+        <td>${item.name}</td>
+        <td class="num" style="text-align:center">${item.qty}</td>
+        <td class="num">₹${parseFloat(item.price).toLocaleString('en-IN')}</td>
+        <td class="num">₹${amt.toLocaleString('en-IN')}</td>
+      </tr>`;
+    });
+  } else {
+    const items = (order.items || '').split(',');
+    items.forEach((item, i) => {
+      itemsHtml += `<tr>
+        <td>${i+1}</td>
+        <td>${item.trim()}</td>
+        <td class="num" style="text-align:center">—</td>
+        <td class="num">—</td>
+        <td class="num">—</td>
+      </tr>`;
+    });
+    subtotal = parseFloat(order.total || 0);
+  }
+
+  document.getElementById('itemsBody').innerHTML = itemsHtml;
+
+  const total = parseFloat(order.total || subtotal);
+  const delCharge = order.delivery_charge ?? (total > 5000 ? 0 : 149);
+  const sub = subtotal || (total - delCharge);
+
+  document.getElementById('tSub').textContent = '₹' + sub.toLocaleString('en-IN');
+  document.getElementById('tDel').textContent = delCharge === 0 ? 'FREE ✅' : '₹' + delCharge;
+  document.getElementById('tTotal').textContent = '₹' + total.toLocaleString('en-IN');
+}
+
+loadInvoice();
+</script>
 </body>
 </html>
