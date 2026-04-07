@@ -10,53 +10,74 @@
   <style>
     body{background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);min-height:100vh;display:flex;flex-direction:column}
     .auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:30px 20px}
-    .auth-box{background:white;border-radius:24px;padding:40px 36px;width:100%;max-width:440px;box-shadow:0 24px 80px rgba(0,0,0,.4)}
-    .auth-logo{font-family:'Playfair Display',serif;font-size:32px;font-weight:800;color:#004225;text-align:center;margin-bottom:4px}
+    .auth-box{background:white;border-radius:24px;padding:40px 36px;width:100%;max-width:480px;box-shadow:0 24px 80px rgba(0,0,0,.4)}
+    .auth-logo{font-family:'Playfair Display',serif;font-size:34px;font-weight:800;color:#004225;text-align:center;margin-bottom:4px}
     .auth-logo span{color:#EF4444}
     .auth-sub{text-align:center;color:#64748B;font-size:14px;margin-bottom:24px}
     .tabs{display:flex;background:#F1F5F9;border-radius:12px;padding:4px;margin-bottom:24px;gap:4px}
     .tab-btn{flex:1;padding:10px;border:none;border-radius:9px;font-family:'DM Sans';font-size:14px;font-weight:600;cursor:pointer;background:transparent;color:#64748B;transition:all .2s}
     .tab-btn.active{background:white;color:#1E293B;box-shadow:0 1px 6px rgba(0,0,0,.1)}
-    .f-field{margin-bottom:16px}
-    .f-field label{display:block;font-size:12px;font-weight:700;color:#475569;margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px}
+    .f-field{margin-bottom:14px}
+    .f-field label{display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
     .f-field input,.f-field select{width:100%;border:1.5px solid #E2E8F0;border-radius:12px;padding:13px 15px;font-family:'DM Sans';font-size:15px;outline:none;background:#FAFCFB;color:#1E293B;transition:border .2s}
     .f-field input:focus,.f-field select:focus{border-color:#1E293B;background:white}
     .f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .err-box{background:#FEF2F2;border:1.5px solid #EF4444;border-radius:12px;padding:13px;font-size:13px;color:#DC2626;margin-bottom:16px;display:none;line-height:1.5}
-    .ok-box{background:#F0FDF4;border:1.5px solid #22C55E;border-radius:12px;padding:13px;font-size:13px;color:#166534;margin-bottom:16px;display:none}
+    .f-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    .err-box{background:#FEF2F2;border:1.5px solid #EF4444;border-radius:12px;padding:13px;font-size:13px;color:#DC2626;margin-bottom:14px;display:none;line-height:1.6}
+    .ok-box{background:#F0FDF4;border:1.5px solid #22C55E;border-radius:12px;padding:13px;font-size:13px;color:#166534;margin-bottom:14px;display:none}
     .btn-main{width:100%;background:#1E293B;color:white;border:none;border-radius:50px;padding:15px;font-family:'DM Sans';font-size:17px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px}
     .btn-main:hover{background:#0F172A;transform:translateY(-1px)}
     .btn-main:disabled{background:#94A3B8;cursor:not-allowed;transform:none}
-    .link-text{text-align:center;font-size:13px;color:#64748B;margin-top:16px}
+    .link-text{text-align:center;font-size:13px;color:#64748B;margin-top:14px}
+    .link-text a{color:#1E293B;font-weight:700;text-decoration:none;cursor:pointer}
     .back-link{display:block;text-align:center;margin-top:16px;color:#94A3B8;font-size:13px;text-decoration:none}
+    .back-link:hover{color:#1E293B}
+    .divider{display:flex;align-items:center;gap:12px;margin:16px 0}
+    .divider hr{flex:1;border:none;height:1px;background:#E2E8F0}
+    .divider span{font-size:12px;color:#94A3B8;white-space:nowrap}
+    .pincode-info{background:#F0FDF4;border-radius:10px;padding:10px 14px;font-size:12px;color:#166534;margin-top:-8px;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+    .pincode-info span{font-size:16px;flex-shrink:0}
+
+    /* SUCCESS OVERLAY */
     .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
     .overlay.show{display:flex}
     .ov-card{background:white;border-radius:24px;padding:44px 32px;text-align:center;max-width:380px;width:100%}
     .ov-ico{font-size:64px;margin-bottom:16px;display:block}
     .ov-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:#1E293B;margin-bottom:8px}
-    .ov-name{font-size:18px;font-weight:700;color:#F59E0B;margin-bottom:12px;font-family:'DM Sans'}
+    .ov-name{font-size:18px;font-weight:700;color:#F59E0B;margin-bottom:10px;font-family:'DM Sans'}
+    .ov-city{font-size:13px;color:#64748B;margin-bottom:6px}
     .ov-msg{color:#64748B;font-size:14px;line-height:1.7;margin-bottom:24px}
-    .ov-btn{background:#1E293B;color:white;border:none;border-radius:50px;padding:14px 36px;font-family:'DM Sans';font-size:16px;font-weight:700;cursor:pointer}
+    .ov-btn{background:#1E293B;color:white;border:none;border-radius:50px;padding:14px 36px;font-family:'DM Sans';font-size:16px;font-weight:700;cursor:pointer;transition:all .2s}
+    .ov-btn:hover{background:#0F172A;transform:translateY(-1px)}
+
+    @media(max-width:480px){
+      .auth-box{padding:28px 20px}
+      .f-row,.f-row3{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
 
+<!-- SUCCESS OVERLAY -->
 <div class="overlay" id="successOverlay">
   <div class="ov-card">
     <span class="ov-ico" id="ovIco">🎉</span>
     <div class="ov-title" id="ovTitle">Welcome!</div>
     <div class="ov-name" id="ovName"></div>
+    <div class="ov-city" id="ovCity"></div>
     <div class="ov-msg" id="ovMsg">You are logged in successfully!</div>
-    <button class="ov-btn" onclick="window.location.href='../index.html'">🛒 Go Shopping!</button>
+    <button class="ov-btn" onclick="goHome()">🛒 Start Shopping!</button>
   </div>
 </div>
 
+<!-- NAVBAR -->
 <nav>
   <div class="nav-inner">
     <a href="../index.html" class="logo">Grout<span>Grove</span></a>
     <div class="nav-links" id="navLinks">
       <a href="../index.html">Home</a>
       <a href="products.html">Products</a>
+      <a href="track.html">Track Order</a>
       <a href="contact.html">Contact</a>
       <a href="cart.html" class="nav-cta">🛒 Cart</a>
     </div>
@@ -69,67 +90,119 @@
     <div class="auth-logo">Grout<span>Grove</span></div>
     <div class="auth-sub">India's Construction Marketplace</div>
 
+    <!-- TABS -->
     <div class="tabs">
       <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">👤 Login</button>
-      <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">✨ Sign Up</button>
+      <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">✨ Sign Up Free</button>
     </div>
 
     <div class="err-box" id="errBox"></div>
     <div class="ok-box" id="okBox"></div>
 
-    <!-- LOGIN -->
+    <!-- ===== LOGIN FORM ===== -->
     <div id="loginForm">
       <div class="f-field">
         <label>Phone Number *</label>
-        <input type="tel" id="loginPhone" placeholder="Enter registered phone number"/>
+        <input type="tel" id="loginPhone" placeholder="Enter your registered phone number" maxlength="10"/>
       </div>
       <div class="f-field">
         <label>Password *</label>
-        <input type="password" id="loginPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/>
+        <input type="password" id="loginPass" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()"/>
       </div>
-      <button class="btn-main" id="loginBtn" onclick="doLogin()">🔐 Login</button>
-      <div class="link-text">No account? <a onclick="switchTab('signup')" style="cursor:pointer;color:#1E293B;font-weight:700">Sign Up Free →</a></div>
+      <button class="btn-main" id="loginBtn" onclick="doLogin()">🔐 Login to My Account</button>
+      <div class="link-text">
+        New to GroutGrove? <a onclick="switchTab('signup')">Sign Up Free →</a>
+      </div>
     </div>
 
-    <!-- SIGNUP -->
+    <!-- ===== SIGNUP FORM ===== -->
     <div id="signupForm" style="display:none">
       <div class="f-row">
-        <div class="f-field"><label>First Name *</label><input type="text" id="sFirst" placeholder="Rajesh"/></div>
-        <div class="f-field"><label>Last Name *</label><input type="text" id="sLast" placeholder="Kumar"/></div>
+        <div class="f-field">
+          <label>First Name *</label>
+          <input type="text" id="sFirst" placeholder="Rajesh"/>
+        </div>
+        <div class="f-field">
+          <label>Last Name *</label>
+          <input type="text" id="sLast" placeholder="Kumar"/>
+        </div>
       </div>
+
       <div class="f-field">
-        <label>Phone Number *</label>
+        <label>Phone Number * (Used for Login & Orders)</label>
         <input type="tel" id="sPhone" placeholder="10-digit mobile number" maxlength="10"/>
       </div>
+
+      <div class="f-field">
+        <label>Email (Optional)</label>
+        <input type="email" id="sEmail" placeholder="your@email.com"/>
+      </div>
+
       <div class="f-row">
-        <div class="f-field"><label>City *</label>
+        <div class="f-field">
+          <label>City *</label>
           <select id="sCity">
             <option value="">Select City</option>
-            <option>Delhi</option><option>Noida</option><option>Greater Noida</option>
-            <option>Gurugram</option><option>Ghaziabad</option><option>Faridabad</option><option>Other</option>
+            <option>Delhi</option>
+            <option>Noida</option>
+            <option>Greater Noida</option>
+            <option>Gurugram</option>
+            <option>Ghaziabad</option>
+            <option>Faridabad</option>
+            <option>Meerut</option>
+            <option>Hapur</option>
+            <option>Other NCR/UP</option>
           </select>
         </div>
-        <div class="f-field"><label>You Are *</label>
-          <select id="sType">
-            <option value="">Select</option>
-            <option>Home Owner</option><option>Contractor</option>
-            <option>Builder</option><option>Architect</option><option>Other</option>
-          </select>
+        <div class="f-field">
+          <label>Area Pincode * (For Nearby Products)</label>
+          <input type="text" id="sPincode" placeholder="e.g. 201301" maxlength="6"/>
         </div>
       </div>
-      <div class="f-field">
-        <label>Password * (min 6 chars)</label>
-        <input type="password" id="sPass" placeholder="Create password"/>
+
+      <div class="pincode-info">
+        <span>📍</span>
+        <div>Your pincode helps us show <strong>nearest sellers</strong> and ensure <strong>fastest delivery</strong> to your area!</div>
       </div>
+
       <div class="f-field">
-        <label>Confirm Password *</label>
-        <input type="password" id="sCPass" placeholder="Repeat password" onkeydown="if(event.key==='Enter')doSignup()"/>
+        <label>You Are *</label>
+        <select id="sType">
+          <option value="">Select Your Role</option>
+          <option>Home Owner / Self Construction</option>
+          <option>Contractor</option>
+          <option>Builder / Developer</option>
+          <option>Architect / Interior Designer</option>
+          <option>Civil Engineer</option>
+          <option>Other</option>
+        </select>
       </div>
+
+      <div class="f-row">
+        <div class="f-field">
+          <label>Password * (Min 6 chars)</label>
+          <input type="password" id="sPass" placeholder="Create a strong password"/>
+        </div>
+        <div class="f-field">
+          <label>Confirm Password *</label>
+          <input type="password" id="sCPass" placeholder="Repeat password" onkeydown="if(event.key==='Enter')doSignup()"/>
+        </div>
+      </div>
+
       <button class="btn-main" id="signupBtn" onclick="doSignup()">✅ Create Free Account</button>
-      <div class="link-text">Already registered? <a onclick="switchTab('login')" style="cursor:pointer;color:#1E293B;font-weight:700">Login →</a></div>
+
+      <div class="link-text">
+        Already registered? <a onclick="switchTab('login')">Login →</a>
+      </div>
     </div>
 
-    <a href="../index.html" class="back-link">← Back to GroutGrove</a>
+    <div class="divider"><hr><span>Need help?</span><hr></div>
+    <a href="https://wa.me/919654171005?text=I need help with GroutGrove account." target="_blank"
+      style="display:flex;align-items:center;justify-content:center;gap:8px;background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:12px;padding:12px;color:#166534;font-size:14px;font-weight:700;text-decoration:none">
+      💬 WhatsApp Support: +91 96541 71005
+    </a>
+
+    <a href="../index.html" class="back-link">← Back to GroutGrove Home</a>
   </div>
 </div>
 
@@ -142,23 +215,26 @@ const sb = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo'
 );
 
-// Tab switch
+// ===== TAB SWITCH =====
 function switchTab(tab) {
-  document.getElementById('loginForm').style.display = tab==='login' ? 'block' : 'none';
-  document.getElementById('signupForm').style.display = tab==='signup' ? 'block' : 'none';
-  document.getElementById('tabLogin').classList.toggle('active', tab==='login');
-  document.getElementById('tabSignup').classList.toggle('active', tab==='signup');
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('signupForm').style.display = tab === 'signup' ? 'block' : 'none';
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
   clearMsgs();
 }
 
-// Check URL
-if(new URLSearchParams(window.location.search).get('tab')==='signup') switchTab('signup');
+// Check URL for ?tab=signup
+const urlP = new URLSearchParams(window.location.search);
+if(urlP.get('tab') === 'signup') switchTab('signup');
 
+// ===== MESSAGES =====
 function showErr(msg) {
   const e = document.getElementById('errBox');
   e.innerHTML = '❌ ' + msg;
   e.style.display = 'block';
   document.getElementById('okBox').style.display = 'none';
+  e.scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
 function showOk(msg) {
   const o = document.getElementById('okBox');
@@ -170,20 +246,28 @@ function clearMsgs() {
   document.getElementById('errBox').style.display = 'none';
   document.getElementById('okBox').style.display = 'none';
 }
-function showSuccess(ico, title, name, msg) {
+
+function showSuccess(ico, title, name, city, pincode, msg) {
   document.getElementById('ovIco').textContent = ico;
   document.getElementById('ovTitle').textContent = title;
   document.getElementById('ovName').textContent = name;
+  document.getElementById('ovCity').textContent = city + (pincode ? ' — ' + pincode : '');
   document.getElementById('ovMsg').textContent = msg;
   document.getElementById('successOverlay').classList.add('show');
+}
+
+function goHome() {
+  const redirectTo = urlP.get('redirect') || '../index.html';
+  window.location.href = redirectTo;
 }
 
 // ===== LOGIN =====
 async function doLogin() {
   const phone = document.getElementById('loginPhone').value.trim().replace(/\D/g,'');
   const pass = document.getElementById('loginPass').value;
-  if (!phone || phone.length < 10) { showErr('Please enter valid 10-digit phone number!'); return; }
-  if (!pass) { showErr('Please enter your password!'); return; }
+
+  if(!phone || phone.length < 10) { showErr('Please enter a valid 10-digit phone number!'); return; }
+  if(!pass) { showErr('Please enter your password!'); return; }
 
   const btn = document.getElementById('loginBtn');
   btn.textContent = '⏳ Logging in...'; btn.disabled = true; clearMsgs();
@@ -195,23 +279,39 @@ async function doLogin() {
       .eq('phone', phone)
       .single();
 
-    if (error || !data) {
-      showErr('Phone not registered! Please sign up first.');
-      btn.textContent = '🔐 Login'; btn.disabled = false; return;
-    }
-    if (data.password !== pass) {
-      showErr('Wrong password! Please try again.');
-      btn.textContent = '🔐 Login'; btn.disabled = false; return;
+    if(error || !data) {
+      showErr('Phone number not registered! Please sign up first.');
+      btn.textContent = '🔐 Login to My Account'; btn.disabled = false; return;
     }
 
+    if(data.password !== pass) {
+      showErr('Wrong password! Please try again.');
+      btn.textContent = '🔐 Login to My Account'; btn.disabled = false; return;
+    }
+
+    // Save to localStorage
     localStorage.setItem('nx_user', JSON.stringify({
-      name: data.full_name, phone: data.phone, city: data.city, id: data.id
+      name: data.full_name,
+      phone: data.phone,
+      city: data.city,
+      pincode: data.pincode || '',
+      email: data.email || '',
+      user_type: data.user_type || '',
+      id: data.id
     }));
-    showSuccess('🎉', 'Welcome Back!', 'Hello, ' + data.full_name.split(' ')[0] + '! 👋', 'Logged in successfully. Happy shopping!');
+
+    showSuccess(
+      '🎉',
+      'Welcome Back!',
+      'Hello, ' + data.full_name.split(' ')[0] + '! 👋',
+      data.city || '',
+      data.pincode || '',
+      'You are logged in. Showing products near you!'
+    );
 
   } catch(err) {
-    showErr('Connection error: ' + err.message);
-    btn.textContent = '🔐 Login'; btn.disabled = false;
+    showErr('Connection error: ' + err.message + '. Please check internet and try again.');
+    btn.textContent = '🔐 Login to My Account'; btn.disabled = false;
   }
 }
 
@@ -220,18 +320,23 @@ async function doSignup() {
   const fn = document.getElementById('sFirst').value.trim();
   const ln = document.getElementById('sLast').value.trim();
   const phone = document.getElementById('sPhone').value.trim().replace(/\D/g,'');
+  const email = document.getElementById('sEmail').value.trim();
   const city = document.getElementById('sCity').value;
+  const pincode = document.getElementById('sPincode').value.trim();
   const utype = document.getElementById('sType').value;
   const pw = document.getElementById('sPass').value;
   const cp = document.getElementById('sCPass').value;
 
-  if (!fn) { showErr('Enter your first name!'); return; }
-  if (!ln) { showErr('Enter your last name!'); return; }
-  if (!phone || phone.length < 10) { showErr('Enter valid 10-digit phone number!'); return; }
-  if (!city) { showErr('Select your city!'); return; }
-  if (!utype) { showErr('Select what you are!'); return; }
-  if (!pw || pw.length < 6) { showErr('Password must be at least 6 characters!'); return; }
-  if (pw !== cp) { showErr('Passwords do not match!'); return; }
+  // Validations
+  if(!fn) { showErr('Please enter your first name!'); return; }
+  if(!ln) { showErr('Please enter your last name!'); return; }
+  if(!phone || phone.length < 10) { showErr('Please enter a valid 10-digit phone number!'); return; }
+  if(!city) { showErr('Please select your city!'); return; }
+  if(!pincode || pincode.length < 6) { showErr('Please enter a valid 6-digit pincode!'); return; }
+  if(!/^\d{6}$/.test(pincode)) { showErr('Pincode must be exactly 6 digits!'); return; }
+  if(!utype) { showErr('Please select your role!'); return; }
+  if(!pw || pw.length < 6) { showErr('Password must be at least 6 characters!'); return; }
+  if(pw !== cp) { showErr('Passwords do not match!'); return; }
 
   const btn = document.getElementById('signupBtn');
   btn.textContent = '⏳ Creating account...'; btn.disabled = true; clearMsgs();
@@ -243,29 +348,52 @@ async function doSignup() {
       .select('id')
       .eq('phone', phone);
 
-    if (existing && existing.length > 0) {
-      showErr('This phone is already registered! Please login.');
+    if(existing && existing.length > 0) {
+      showErr('This phone number is already registered! Please login instead.');
       btn.textContent = '✅ Create Free Account'; btn.disabled = false; return;
     }
 
-    // Insert new customer
+    // Create new account
     const { data, error } = await sb
       .from('customers')
-      .insert([{ full_name: fn+' '+ln, phone: phone, city: city, password: pw }])
+      .insert([{
+        full_name: fn + ' ' + ln,
+        phone: phone,
+        email: email || null,
+        city: city,
+        pincode: pincode,
+        user_type: utype,
+        password: pw
+      }])
       .select();
 
-    if (error) throw error;
+    if(error) throw error;
 
     const user = data[0];
+
+    // Save to localStorage
     localStorage.setItem('nx_user', JSON.stringify({
-      name: fn+' '+ln, phone: phone, city: city, id: user.id
+      name: fn + ' ' + ln,
+      phone: phone,
+      city: city,
+      pincode: pincode,
+      email: email || '',
+      user_type: utype,
+      id: user.id
     }));
 
-    showSuccess('🎊', 'Account Created!', 'Welcome, ' + fn + '!', 'Your GroutGrove account is ready. Start shopping now!');
+    showSuccess(
+      '🎊',
+      'Account Created!',
+      'Welcome, ' + fn + '! 🎉',
+      city,
+      pincode,
+      'Your GroutGrove account is ready. We will show products nearest to you!'
+    );
 
   } catch(err) {
     console.error('Signup error:', err);
-    showErr('Registration failed: ' + (err.message || 'Please check internet connection'));
+    showErr('Registration failed: ' + (err.message || 'Unknown error. Please try again.'));
     btn.textContent = '✅ Create Free Account'; btn.disabled = false;
   }
 }
