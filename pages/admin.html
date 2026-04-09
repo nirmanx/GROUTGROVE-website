@@ -1,248 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Panel – GroutGrove</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'DM Sans',sans-serif;background:#F8FAFC;color:#1E293B}
-    .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#020D06,#004225,#0A1A10)}
-    .login-box{background:white;border-radius:24px;padding:44px 40px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center}
-    .login-logo{font-family:'Playfair Display',serif;font-size:32px;font-weight:800;color:#004225;margin-bottom:4px}
-    .login-logo span{color:#FF6B47}
-    .login-sub{color:#64748B;font-size:14px;margin-bottom:28px}
-    .l-field{margin-bottom:16px;text-align:left}
-    .l-field label{display:block;font-size:12px;font-weight:600;color:#475569;margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px}
-    .l-field input{width:100%;border:1.5px solid #E2E8F0;border-radius:12px;padding:13px 15px;font-family:'DM Sans';font-size:15px;outline:none;background:#FAFCFB;transition:border .2s}
-    .l-field input:focus{border-color:#2D7A50;background:white}
-    .l-btn{width:100%;background:linear-gradient(135deg,#004225,#1B5E3A);color:white;border:none;border-radius:50px;padding:15px;font-family:'DM Sans';font-size:17px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(0,66,37,.3);transition:all .2s}
-    .l-btn:hover{transform:translateY(-2px)}
-    .l-err{background:#FEE2E2;border:1px solid #E74C3C;border-radius:10px;padding:12px;font-size:13px;color:#C0392B;margin-bottom:16px;display:none;text-align:left}
-
-    .admin-layout{display:flex;min-height:100vh}
-    .sidebar{width:230px;background:#020D06;color:white;padding:0;position:fixed;height:100vh;overflow-y:auto;z-index:50;border-right:1px solid rgba(255,255,255,.05)}
-    .sb-header{padding:22px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
-    .sb-logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:white}
-    .sb-logo span{color:#FF6B47}
-    .sb-sub{font-size:11px;color:rgba(255,255,255,.3);margin-top:3px}
-    .sb-admin{display:flex;align-items:center;gap:10px;padding:14px 20px;background:rgba(45,122,80,.15);border-bottom:1px solid rgba(255,255,255,.05)}
-    .sb-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#2D7A50,#004225);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:white;flex-shrink:0}
-    .sb-name{font-size:13px;font-weight:600;color:white}
-    .sb-role{font-size:11px;color:rgba(255,255,255,.3)}
-    .nav-sec{font-size:10px;color:rgba(255,255,255,.25);padding:16px 20px 6px;text-transform:uppercase;letter-spacing:1.5px}
-    .nav-a{display:flex;align-items:center;gap:10px;padding:11px 20px;color:rgba(255,255,255,.45);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;border-left:3px solid transparent;text-decoration:none;position:relative}
-    .nav-a:hover,.nav-a.act{color:white;background:rgba(255,255,255,.05);border-left-color:#50C878}
-    .nav-a .ni{font-size:16px;width:20px;text-align:center}
-    .notif{background:#FF6B47;color:white;font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;position:absolute;right:16px}
-
-    .main{margin-left:230px;flex:1;padding:28px}
-    .topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:26px;flex-wrap:wrap;gap:14px}
-    .topbar-left h1{font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:#1E293B}
-    .topbar-left h1 span{color:#2D7A50}
-    .topbar-left p{font-size:13px;color:#64748B;margin-top:3px}
-    .topbar-right{display:flex;gap:10px;flex-wrap:wrap}
-    .t-btn{background:linear-gradient(135deg,#2D7A50,#004225);color:white;border:none;border-radius:50px;padding:9px 20px;font-family:'DM Sans';font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
-    .t-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,66,37,.25)}
-    .t-btn.gold{background:linear-gradient(135deg,#F5C518,#D4A017);color:#1E293B}
-    .t-btn.red{background:linear-gradient(135deg,#FF6B47,#E55534);color:white}
-    .t-btn.outline{background:white;color:#2D7A50;border:1.5px solid #C8DDD0}
-
-    .stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:18px;margin-bottom:26px}
-    .sc{background:white;border-radius:18px;padding:20px;border:1.5px solid #E2E8F0;transition:all .2s;position:relative;overflow:hidden}
-    .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-    .sc.green::before{background:linear-gradient(90deg,#2D7A50,#50C878)}
-    .sc.gold::before{background:linear-gradient(90deg,#F5C518,#D4A017)}
-    .sc.red::before{background:linear-gradient(90deg,#FF6B47,#E55534)}
-    .sc.blue::before{background:linear-gradient(90deg,#3B82F6,#1D4ED8)}
-    .sc:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);transform:translateY(-2px)}
-    .sc-ico{font-size:26px;margin-bottom:10px}
-    .sc-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#1E293B;line-height:1}
-    .sc-lbl{font-size:12px;color:#64748B;margin-top:5px;font-weight:400}
-
-    .card{background:white;border-radius:20px;padding:24px;border:1.5px solid #E2E8F0;margin-bottom:22px}
-    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px}
-    .card-header h3{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:#1E293B}
-    .card-header h3 span{color:#2D7A50}
-
-    .search-bar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
-    .search-bar input,.search-bar select{border:1.5px solid #E2E8F0;border-radius:12px;padding:10px 14px;font-family:'DM Sans';font-size:13px;outline:none;background:#FAFCFB;color:#1E293B;transition:border .2s}
-    .search-bar input{flex:1;min-width:180px}
-    .search-bar input:focus,.search-bar select:focus{border-color:#2D7A50;background:white}
-    .search-bar button{background:#2D7A50;color:white;border:none;border-radius:12px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
-    .search-bar button:hover{background:#004225}
-
-    /* ORDER CARD */
-    .order-card{border:1.5px solid #E2E8F0;border-radius:18px;padding:20px;margin-bottom:16px;transition:all .2s;position:relative}
-    .order-card:hover{border-color:#50C878;box-shadow:0 4px 16px rgba(45,122,80,.08)}
-    .order-card.pending{border-left:4px solid #F5C518}
-    .order-card.confirmed{border-left:4px solid #2D7A50}
-    .order-card.delivered{border-left:4px solid #50C878}
-    .order-card.cancelled{border-left:4px solid #FF6B47;opacity:.75}
-    .oc-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:16px}
-    .oc-id{font-family:'Playfair Display',serif;font-size:18px;font-weight:800;color:#2D7A50}
-    .oc-time{font-size:12px;color:#94A3B8;margin-top:2px}
-    .oc-body{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
-    .oc-field label{display:block;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
-    .oc-field span{font-size:14px;font-weight:600;color:#1E293B}
-    .oc-items{background:#F0F7F2;border-radius:12px;padding:12px 14px;font-size:13px;color:#2D7A50;margin-bottom:14px;font-weight:500}
-    .oc-amount{font-family:'Playfair Display',serif;font-size:20px;font-weight:800;color:#004225}
-    .oc-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .ab{border:none;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans';display:inline-flex;align-items:center;gap:5px}
-    .ab-green{background:#D1FAE5;color:#065F46}
-    .ab-green:hover{background:#27AE60;color:white}
-    .ab-blue{background:#DBEAFE;color:#1E40AF}
-    .ab-blue:hover{background:#2D7DD2;color:white}
-    .ab-red{background:#FEE2E2;color:#DC2626}
-    .ab-red:hover{background:#E74C3C;color:white}
-    .ab-gold{background:#FEF3C7;color:#92400E}
-    .ab-gold:hover{background:#F5C518;color:#1E293B}
-    .ab-dark{background:#1E293B;color:white}
-    .ab-dark:hover{background:#0F172A}
-    .ab-wa{background:#25D366;color:white}
-    .ab-wa:hover{background:#128C7E}
-
-    .pill{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px}
-    .p-pending{background:#FEF3C7;color:#92400E}
-    .p-confirmed{background:#DBEAFE;color:#1E40AF}
-    .p-delivered{background:#D1FAE5;color:#065F46}
-    .p-cancelled{background:#FEE2E2;color:#DC2626}
-
-    /* SELLER FORWARD POPUP */
-    .forward-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
-    .forward-overlay.show{display:flex}
-    .forward-box{background:white;border-radius:22px;padding:32px;max-width:460px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-    .forward-box h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:800;margin-bottom:6px;color:#1E293B}
-    .forward-box p{font-size:13px;color:#64748B;margin-bottom:20px}
-    .seller-select{width:100%;border:1.5px solid #E2E8F0;border-radius:12px;padding:12px 14px;font-family:'DM Sans';font-size:14px;outline:none;margin-bottom:14px;background:#FAFCFB}
-    .seller-select:focus{border-color:#2D7A50}
-    .custom-phone{width:100%;border:1.5px solid #E2E8F0;border-radius:12px;padding:12px 14px;font-family:'DM Sans';font-size:14px;outline:none;margin-bottom:16px;background:#FAFCFB}
-    .custom-phone:focus{border-color:#2D7A50}
-    .forward-preview{background:#F0F7F2;border-radius:12px;padding:14px;font-size:12px;color:#2D7A50;margin-bottom:16px;line-height:1.8;font-family:monospace;white-space:pre-wrap;max-height:150px;overflow-y:auto}
-    .forward-btns{display:flex;gap:10px}
-    .btn-forward{flex:1;background:linear-gradient(135deg,#25D366,#128C7E);color:white;border:none;border-radius:50px;padding:13px;font-family:'DM Sans';font-size:15px;font-weight:700;cursor:pointer}
-    .btn-cancel-f{background:#F1F5F9;color:#64748B;border:none;border-radius:50px;padding:13px 20px;font-family:'DM Sans';font-size:15px;cursor:pointer}
-
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    th{background:#F8FAFC;color:#94A3B8;padding:11px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #E2E8F0}
-    td{padding:13px 14px;border-bottom:1px solid #F1F5F9;color:#1E293B;vertical-align:middle}
-    tr:last-child td{border-bottom:none}
-    tr:hover td{background:#FAFCFB}
-
-    .msg-box{text-align:center;padding:56px 20px;color:#94A3B8}
-    .msg-box .mb-ico{font-size:52px;margin-bottom:14px}
-    .msg-box h3{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:8px;color:#1E293B}
-    .loading{text-align:center;padding:40px;color:#94A3B8;font-size:14px}
-
-    /* TOAST */
-    .toast-admin{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E293B;color:white;padding:13px 26px;border-radius:50px;font-size:14px;font-weight:600;z-index:99999;box-shadow:0 8px 30px rgba(0,0,0,.3);transition:opacity .3s;opacity:0;white-space:nowrap}
-
-    @media(max-width:800px){.sidebar{display:none}.main{margin-left:0;padding:16px}.oc-body{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Panel – GroutGrove</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#F8FAFC;color:#1E293B}
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0F172A,#1E293B);padding:20px}
+.login-box{background:white;border-radius:24px;padding:44px 40px;width:100%;max-width:400px;box-shadow:0 24px 80px rgba(0,0,0,.4);text-align:center}
+.login-logo{font-family:'Playfair Display',serif;font-size:32px;font-weight:800;color:#004225;margin-bottom:4px}
+.login-logo span{color:#EF4444}
+.login-sub{color:#64748B;font-size:13px;margin-bottom:28px}
+.lf{margin-bottom:14px;text-align:left}
+.lf label{display:block;font-size:11px;font-weight:700;color:#64748B;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.lf input{width:100%;border:1.5px solid #E2E8F0;border-radius:12px;padding:13px 15px;font-family:'DM Sans';font-size:15px;outline:none;background:#FAFCFB;color:#1E293B;transition:border .2s}
+.lf input:focus{border-color:#1E293B;background:white}
+.l-btn{width:100%;background:#1E293B;color:white;border:none;border-radius:50px;padding:15px;font-family:'DM Sans';font-size:17px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px}
+.l-btn:hover{background:#0F172A;transform:translateY(-1px)}
+.l-err{background:#FEF2F2;border:1.5px solid #EF4444;border-radius:10px;padding:11px;font-size:13px;color:#DC2626;margin-bottom:14px;display:none}
+.admin-wrap{display:flex;min-height:100vh}
+.sidebar{width:240px;background:#0F172A;color:white;position:fixed;height:100vh;overflow-y:auto;z-index:100;display:flex;flex-direction:column}
+.sb-header{padding:22px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:white}
+.sb-logo span{color:#F59E0B}
+.sb-role{font-size:11px;color:rgba(255,255,255,.3);margin-top:3px}
+.sb-admin{display:flex;align-items:center;gap:10px;padding:14px 20px;background:rgba(245,158,11,.1);border-bottom:1px solid rgba(255,255,255,.05)}
+.sb-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#D97706);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#1E293B;flex-shrink:0}
+.sb-name{font-size:13px;font-weight:700;color:white}
+.sb-sub{font-size:11px;color:rgba(255,255,255,.35)}
+.nav-sec{font-size:9px;color:rgba(255,255,255,.25);padding:14px 20px 5px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+.nav-a{display:flex;align-items:center;gap:10px;padding:10px 20px;color:rgba(255,255,255,.5);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;border-left:3px solid transparent;text-decoration:none}
+.nav-a:hover,.nav-a.act{background:rgba(255,255,255,.05);color:white;border-left-color:#F59E0B}
+.nav-a .ni{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.nav-badge{background:#EF4444;color:white;font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;margin-left:auto}
+.sb-bottom{margin-top:auto;padding:16px 20px;border-top:1px solid rgba(255,255,255,.05)}
+.logout-btn{width:100%;background:rgba(239,68,68,.1);color:#FCA5A5;border:1.5px solid rgba(239,68,68,.2);border-radius:10px;padding:10px;font-family:'DM Sans';font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.logout-btn:hover{background:rgba(239,68,68,.2);color:#EF4444}
+.main{margin-left:240px;flex:1;padding:28px;min-height:100vh}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.tb-left h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:800;color:#1E293B}
+.tb-left h1 span{color:#D97706}
+.tb-left p{font-size:13px;color:#64748B;margin-top:3px}
+.tb-right{display:flex;gap:10px;flex-wrap:wrap}
+.tbtn{display:inline-flex;align-items:center;gap:6px;background:#1E293B;color:white;border:none;border-radius:50px;padding:9px 18px;font-family:'DM Sans';font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none}
+.tbtn:hover{background:#0F172A;transform:translateY(-1px)}
+.tbtn.gold{background:linear-gradient(135deg,#F59E0B,#D97706);color:#1E293B}
+.tbtn.red{background:linear-gradient(135deg,#EF4444,#DC2626);color:white}
+.tbtn.green{background:linear-gradient(135deg,#22C55E,#16A34A);color:white}
+.tbtn.outline{background:white;color:#1E293B;border:1.5px solid #E2E8F0}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{background:white;border-radius:16px;padding:20px;border:1.5px solid #E2E8F0;position:relative;overflow:hidden;transition:all .2s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.stat-card.green::before{background:linear-gradient(90deg,#22C55E,#16A34A)}
+.stat-card.gold::before{background:linear-gradient(90deg,#F59E0B,#D97706)}
+.stat-card.red::before{background:linear-gradient(90deg,#EF4444,#DC2626)}
+.stat-card.blue::before{background:linear-gradient(90deg,#3B82F6,#2563EB)}
+.stat-card.purple::before{background:linear-gradient(90deg,#8B5CF6,#7C3AED)}
+.sc-ico{font-size:26px;margin-bottom:8px}
+.sc-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:#1E293B;line-height:1}
+.sc-lbl{font-size:12px;color:#64748B;margin-top:5px}
+.card{background:white;border-radius:18px;padding:22px;border:1.5px solid #E2E8F0;margin-bottom:20px;box-shadow:0 1px 6px rgba(0,0,0,.04)}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.card-header h3{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:#1E293B}
+.card-header h3 span{color:#D97706}
+.search-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search-bar input,.search-bar select{border:1.5px solid #E2E8F0;border-radius:12px;padding:10px 14px;font-family:'DM Sans';font-size:13px;outline:none;background:#FAFCFB;color:#1E293B;transition:border .2s}
+.search-bar input{flex:1;min-width:160px}
+.search-bar input:focus,.search-bar select:focus{border-color:#1E293B;background:white}
+.seller-card{border:1.5px solid #E2E8F0;border-radius:16px;padding:20px;margin-bottom:14px;transition:all .2s;position:relative;background:white}
+.seller-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.seller-card.suspended{border-color:#FCA5A5;background:#FFF5F5}
+.seller-card.active{border-left:4px solid #22C55E}
+.sc-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.sc-biz{font-family:'Playfair Display',serif;font-size:18px;font-weight:800;color:#1E293B}
+.sc-owner{font-size:13px;color:#64748B;margin-top:3px}
+.sc-sid{font-size:11px;color:#94A3B8;margin-top:2px}
+.sc-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;font-size:13px}
+.sc-field label{display:block;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.sc-field span{font-weight:600;color:#1E293B}
+.sc-cats{background:#F8FAFC;border-radius:10px;padding:10px 14px;font-size:12px;color:#475569;margin-bottom:14px}
+.sc-cats strong{color:#1E293B;font-size:11px;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
+.sc-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ab{border:none;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans';display:inline-flex;align-items:center;gap:5px}
+.ab:hover{transform:translateY(-1px)}
+.ab-green{background:#D1FAE5;color:#065F46}.ab-green:hover{background:#22C55E;color:white}
+.ab-red{background:#FEE2E2;color:#DC2626}.ab-red:hover{background:#EF4444;color:white}
+.ab-yellow{background:#FEF3C7;color:#92400E}.ab-yellow:hover{background:#F59E0B;color:#1E293B}
+.ab-blue{background:#DBEAFE;color:#1E40AF}.ab-blue:hover{background:#3B82F6;color:white}
+.ab-dark{background:#1E293B;color:white}.ab-dark:hover{background:#0F172A}
+.ab-wa{background:#25D366;color:white}.ab-wa:hover{background:#128C7E}
+.ab-orange{background:#FED7AA;color:#92400E}.ab-orange:hover{background:#F97316;color:white}
+.pill{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;gap:4px}
+.p-active{background:#D1FAE5;color:#065F46}
+.p-pending{background:#FEF3C7;color:#92400E}
+.p-suspended{background:#FEE2E2;color:#DC2626}
+.p-delivered{background:#D1FAE5;color:#065F46}
+.p-confirmed{background:#DBEAFE;color:#1E40AF}
+.p-cancelled{background:#FEE2E2;color:#DC2626}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#F8FAFC;color:#94A3B8;padding:11px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #E2E8F0}
+td{padding:13px 14px;border-bottom:1px solid #F1F5F9;color:#1E293B;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFCFB}
+.order-card{border:1.5px solid #E2E8F0;border-radius:14px;padding:18px;margin-bottom:12px;background:white;transition:all .2s}
+.order-card:hover{box-shadow:0 3px 12px rgba(0,0,0,.07)}
+.order-card.pending{border-left:4px solid #F59E0B}
+.order-card.confirmed{border-left:4px solid #3B82F6}
+.order-card.delivered{border-left:4px solid #22C55E}
+.order-card.cancelled{border-left:4px solid #EF4444;opacity:.7}
+.oc-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.oc-id{font-family:'Playfair Display',serif;font-size:17px;font-weight:800;color:#1E293B}
+.oc-time{font-size:11px;color:#94A3B8;margin-top:2px}
+.oc-body{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;font-size:13px}
+.oc-field label{display:block;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
+.oc-field span{font-weight:600;color:#1E293B}
+.oc-items{background:#F8FAFC;border-radius:10px;padding:10px 14px;font-size:12px;color:#475569;margin-bottom:12px}
+.oc-total{font-family:'Playfair Display',serif;font-size:19px;font-weight:800;color:#1E293B}
+.oc-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.confirm-overlay.show{display:flex}
+.confirm-box{background:white;border-radius:22px;padding:36px 32px;max-width:420px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.confirm-ico{font-size:60px;margin-bottom:14px;display:block}
+.confirm-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:#1E293B;margin-bottom:10px}
+.confirm-msg{color:#64748B;font-size:14px;line-height:1.7;margin-bottom:24px;white-space:pre-line}
+.confirm-btns{display:flex;gap:12px;justify-content:center}
+.btn-cy{background:#EF4444;color:white;border:none;border-radius:50px;padding:12px 28px;font-family:'DM Sans';font-size:15px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-cy:hover{transform:translateY(-1px)}
+.btn-cn{background:#F1F5F9;color:#475569;border:1.5px solid #E2E8F0;border-radius:50px;padding:11px 24px;font-family:'DM Sans';font-size:15px;cursor:pointer}
+.warning-box{background:#FFFBEB;border:1.5px solid #F59E0B;border-radius:14px;padding:18px;margin-bottom:16px}
+.warning-box h4{font-size:14px;font-weight:800;color:#92400E;margin-bottom:8px}
+.warning-box p{font-size:13px;color:#92400E;line-height:1.7}
+.empty-state{text-align:center;padding:60px 20px;color:#94A3B8}
+.empty-state .e-ico{font-size:52px;margin-bottom:14px}
+.empty-state h3{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:8px;color:#1E293B}
+.loading{text-align:center;padding:50px;color:#94A3B8;font-size:14px}
+.toast-admin{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E293B;color:white;padding:13px 26px;border-radius:50px;font-size:14px;font-weight:600;z-index:99999;box-shadow:0 8px 30px rgba(0,0,0,.3);transition:opacity .3s;opacity:0;pointer-events:none;white-space:nowrap}
+.toast-admin.show{opacity:1}
+.security-badge{position:fixed;top:12px;right:16px;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:#22C55E;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;z-index:9998;display:flex;align-items:center;gap:5px}
+@media(max-width:900px){.sidebar{display:none}.main{margin-left:0}.stats-grid{grid-template-columns:repeat(2,1fr)}.sc-body{grid-template-columns:1fr 1fr}.oc-body{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 
-<!-- SELLER FORWARD POPUP -->
-<div class="forward-overlay" id="forwardOverlay">
-  <div class="forward-box">
-    <h3>📤 Forward Order to Seller</h3>
-    <p>Select a seller or enter their WhatsApp number to forward this order.</p>
-    <select class="seller-select" id="sellerSelect" onchange="updateForwardPhone()">
-      <option value="">-- Select registered seller --</option>
-    </select>
-    <input type="tel" class="custom-phone" id="forwardPhone" placeholder="Or enter seller WhatsApp: +91 XXXXX XXXXX"/>
-    <div class="forward-preview" id="forwardPreview"></div>
-    <div class="forward-btns">
-      <button class="btn-cancel-f" onclick="closeForward()">Cancel</button>
-      <button class="btn-forward" onclick="sendForward()">💬 Send on WhatsApp</button>
+<!-- SECURITY BADGE -->
+<div class="security-badge" id="secBadge" style="display:none">🔒 Secure Session</div>
+
+<!-- CONFIRM POPUP -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <span class="confirm-ico" id="confirmIco">⚠️</span>
+    <div class="confirm-title" id="confirmTitle">Are you sure?</div>
+    <div class="confirm-msg" id="confirmMsg">This action cannot be undone.</div>
+    <div class="confirm-btns">
+      <button class="btn-cn" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-cy" id="confirmYesBtn" onclick="confirmAction()">Confirm</button>
     </div>
   </div>
 </div>
 
 <!-- LOGIN -->
-<div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <div class="login-logo">Grout<span>Grove</span></div>
-    <div class="login-sub">Admin Panel — Secure Access</div>
-    <div class="l-err" id="lErr"></div>
-    <div class="l-field"><label>Username</label><input type="text" id="adminUser" placeholder="Enter username"/></div>
-    <div class="l-field"><label>Password</label><input type="password" id="adminPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')adminLogin()"/></div>
-    <button class="l-btn" onclick="adminLogin()">🔐 Login to Admin</button>
+<div id="loginScreen">
+  <div class="login-screen">
+    <div class="login-box">
+      <div class="login-logo">Grout<span>Grove</span></div>
+      <div class="login-sub">🔐 Admin Control Panel — Authorized Access Only</div>
+      <div class="l-err" id="lErr"></div>
+      <div class="lf"><label>Username</label><input type="text" id="adminUser" placeholder="Enter username" autocomplete="off"/></div>
+      <div class="lf"><label>Password</label><input type="password" id="adminPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <button class="l-btn" onclick="doLogin()">🔐 Login to Admin Panel</button>
+      <p style="font-size:11px;color:#94A3B8;margin-top:16px">⚠️ Unauthorized access is strictly prohibited</p>
+    </div>
   </div>
 </div>
 
 <!-- ADMIN PANEL -->
-<div class="admin-layout" id="adminPanel" style="display:none">
+<div class="admin-wrap" id="adminPanel" style="display:none">
   <div class="sidebar">
     <div class="sb-header">
       <div class="sb-logo">Grout<span>Grove</span></div>
-      <div class="sb-sub">Admin Control Panel</div>
+      <div class="sb-role">🔒 Secure Admin Panel</div>
     </div>
     <div class="sb-admin">
       <div class="sb-av">V</div>
-      <div><div class="sb-name">Vishal Srivastav</div><div class="sb-role">Super Admin</div></div>
+      <div>
+        <div class="sb-name">Vishal Srivastav</div>
+        <div class="sb-sub">Super Admin — Full Control</div>
+      </div>
     </div>
-    <div class="nav-sec">Main</div>
-    <a class="nav-a act" onclick="showSec('overview',this)"><span class="ni">📊</span> Overview</a>
-    <a class="nav-a" onclick="showSec('orders',this)"><span class="ni">🛒</span> All Orders <span class="notif" id="pendingCount">0</span></a>
-    <div class="nav-sec">Manage</div>
-    <a class="nav-a" onclick="showSec('products',this)"><span class="ni">📦</span> Products</a>
-    <a class="nav-a" onclick="showSec('sellers',this)"><span class="ni">🏭</span> Sellers</a>
-    <a class="nav-a" onclick="showSec('customers',this)"><span class="ni">👥</span> Customers</a>
-    <div class="nav-sec">More</div>
+    <div class="nav-sec">Overview</div>
+    <a class="nav-a act" onclick="showSec('overview',this)"><span class="ni">📊</span> Dashboard</a>
+    <a class="nav-a" onclick="showSec('orders',this)"><span class="ni">🛒</span> Orders <span class="nav-badge" id="pendingBadge">0</span></a>
+    <div class="nav-sec">Sellers — Your Control</div>
+    <a class="nav-a" onclick="showSec('sellers',this)"><span class="ni">🏭</span> All Sellers</a>
+    <a class="nav-a" onclick="showSec('suspended',this)"><span class="ni">🚫</span> Suspended Sellers</a>
+    <a class="nav-a" onclick="showSec('products',this)"><span class="ni">📦</span> All Products</a>
+    <div class="nav-sec">Customers</div>
+    <a class="nav-a" onclick="showSec('customers',this)"><span class="ni">👥</span> All Customers</a>
+    <div class="nav-sec">Tools</div>
     <a class="nav-a" href="../index.html" target="_blank"><span class="ni">🌐</span> View Website</a>
     <a class="nav-a" onclick="exportOrders()"><span class="ni">📥</span> Export Orders</a>
+    <a class="nav-a" onclick="exportSellers()"><span class="ni">📥</span> Export Sellers</a>
     <a class="nav-a" onclick="refreshAll()"><span class="ni">🔄</span> Refresh Data</a>
-    <a class="nav-a" onclick="adminLogout()" style="color:#FF6B47;margin-top:20px"><span class="ni">🚪</span> Logout</a>
+    <div class="nav-sec">Security</div>
+    <a class="nav-a" onclick="showSecurityLog()"><span class="ni">🔒</span> Security Log</a>
+    <div class="sb-bottom">
+      <button class="logout-btn" onclick="doLogout()">🚪 Secure Logout</button>
+    </div>
   </div>
 
   <div class="main">
-
     <!-- OVERVIEW -->
     <div id="sec-overview">
       <div class="topbar">
-        <div class="topbar-left">
-          <h1>GroutGrove <span>Overview</span></h1>
+        <div class="tb-left">
+          <h1>GroutGrove <span>Dashboard</span></h1>
           <p id="adminDate"></p>
         </div>
-        <div class="topbar-right">
-          <button class="t-btn gold" onclick="exportOrders()">📥 Export CSV</button>
-          <button class="t-btn outline" onclick="refreshAll()">🔄 Refresh</button>
+        <div class="tb-right">
+          <button class="tbtn gold" onclick="exportOrders()">📥 Export CSV</button>
+          <button class="tbtn outline" onclick="refreshAll()">🔄 Refresh</button>
         </div>
       </div>
-
-      <div class="stats">
-        <div class="sc green"><div class="sc-ico">🛒</div><div class="sc-num" id="s-totalOrders">0</div><div class="sc-lbl">Total Orders</div></div>
-        <div class="sc gold"><div class="sc-ico">⏳</div><div class="sc-num" id="s-pending">0</div><div class="sc-lbl">Pending Orders</div></div>
-        <div class="sc green"><div class="sc-ico">✅</div><div class="sc-num" id="s-delivered">0</div><div class="sc-lbl">Delivered</div></div>
-        <div class="sc blue"><div class="sc-ico">💰</div><div class="sc-num" id="s-revenue">₹0</div><div class="sc-lbl">Total Revenue</div></div>
-        <div class="sc green"><div class="sc-ico">🏭</div><div class="sc-num" id="s-sellers">0</div><div class="sc-lbl">Sellers</div></div>
-        <div class="sc blue"><div class="sc-ico">📦</div><div class="sc-num" id="s-products">0</div><div class="sc-lbl">Products</div></div>
-        <div class="sc green"><div class="sc-ico">👥</div><div class="sc-num" id="s-customers">0</div><div class="sc-lbl">Customers</div></div>
-        <div class="sc gold"><div class="sc-ico">🚛</div><div class="sc-num" id="s-confirmed">0</div><div class="sc-lbl">Confirmed</div></div>
+      <div class="stats-grid">
+        <div class="stat-card green"><div class="sc-ico">🛒</div><div class="sc-num" id="s-orders">0</div><div class="sc-lbl">Total Orders</div></div>
+        <div class="stat-card gold"><div class="sc-ico">⏳</div><div class="sc-num" id="s-pending">0</div><div class="sc-lbl">Pending Orders</div></div>
+        <div class="stat-card green"><div class="sc-ico">✅</div><div class="sc-num" id="s-delivered">0</div><div class="sc-lbl">Delivered</div></div>
+        <div class="stat-card blue"><div class="sc-ico">💰</div><div class="sc-num" id="s-revenue">₹0</div><div class="sc-lbl">Total Revenue</div></div>
+        <div class="stat-card green"><div class="sc-ico">🏭</div><div class="sc-num" id="s-sellers">0</div><div class="sc-lbl">Active Sellers</div></div>
+        <div class="stat-card red"><div class="sc-ico">🚫</div><div class="sc-num" id="s-suspended">0</div><div class="sc-lbl">Suspended</div></div>
+        <div class="stat-card blue"><div class="sc-ico">📦</div><div class="sc-num" id="s-products">0</div><div class="sc-lbl">Live Products</div></div>
+        <div class="stat-card purple"><div class="sc-ico">👥</div><div class="sc-num" id="s-customers">0</div><div class="sc-lbl">Customers</div></div>
       </div>
-
-      <!-- PENDING ORDERS — ACTION NEEDED -->
       <div class="card">
-        <div class="card-header">
-          <h3>⚠️ Pending Orders <span>(Immediate Action)</span></h3>
-          <button class="t-btn" onclick="showSec('orders',null)">View All →</button>
-        </div>
-        <div id="pendingList"><div class="loading">⏳ Loading...</div></div>
+        <div class="card-header"><h3>⚠️ Pending Orders <span>(Action Required)</span></h3><button class="tbtn" onclick="showSec('orders',null)">View All →</button></div>
+        <div id="pendingOrdersList"><div class="loading">⏳ Loading...</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>🏭 Recent <span>Sellers</span></h3><button class="tbtn" onclick="showSec('sellers',null)">View All →</button></div>
+        <div id="recentSellers"><div class="loading">⏳ Loading...</div></div>
       </div>
     </div>
 
-    <!-- ALL ORDERS -->
+    <!-- ORDERS -->
     <div id="sec-orders" style="display:none">
       <div class="topbar">
-        <div class="topbar-left"><h1>All <span>Orders</span></h1><p>Manage and track all customer orders</p></div>
-        <div class="topbar-right"><button class="t-btn gold" onclick="exportOrders()">📥 Export CSV</button></div>
+        <div class="tb-left"><h1>All <span>Orders</span></h1><p>Manage all customer orders</p></div>
+        <div class="tb-right"><button class="tbtn gold" onclick="exportOrders()">📥 Export CSV</button></div>
       </div>
       <div class="search-bar">
         <input type="text" id="orderSearch" placeholder="Search Order ID, name, phone..." oninput="filterOrders()"/>
-        <select id="orderStatus" onchange="filterOrders()">
+        <select id="orderStatusF" onchange="filterOrders()">
           <option value="">All Status</option>
           <option value="pending">⏳ Pending</option>
           <option value="confirmed">✅ Confirmed</option>
@@ -250,342 +261,615 @@
           <option value="cancelled">❌ Cancelled</option>
         </select>
       </div>
-      <div id="allOrdersList"><div class="loading">⏳ Loading orders...</div></div>
-    </div>
-
-    <!-- PRODUCTS -->
-    <div id="sec-products" style="display:none">
-      <div class="topbar"><div class="topbar-left"><h1>All <span>Products</span></h1><p>Manage product listings</p></div></div>
-      <div class="search-bar">
-        <input type="text" id="prodSearch" placeholder="Search products..." oninput="filterProds()"/>
-        <select id="prodCatF" onchange="filterProds()">
-          <option value="">All Categories</option>
-          <option value="cement">Cement</option><option value="steel">Steel</option><option value="bricks">Bricks</option><option value="tiles">Tiles</option><option value="sand">Sand</option><option value="paint">Paint</option><option value="hardware">Hardware</option><option value="plumbing">Plumbing</option>
-        </select>
-        <select id="prodStatusF" onchange="filterProds()">
-          <option value="">All Status</option><option value="active">Active</option><option value="inactive">Inactive</option>
-        </select>
-      </div>
-      <div class="card"><div id="productsList"><div class="loading">⏳ Loading products...</div></div></div>
+      <div id="allOrdersList"><div class="loading">⏳ Loading...</div></div>
     </div>
 
     <!-- SELLERS -->
     <div id="sec-sellers" style="display:none">
-      <div class="topbar"><div class="topbar-left"><h1>All <span>Sellers</span></h1><p>Manage registered sellers</p></div></div>
-      <div class="card"><div id="sellersList"><div class="loading">⏳ Loading sellers...</div></div></div>
+      <div class="topbar">
+        <div class="tb-left"><h1>All <span>Sellers</span></h1><p>Manage, suspend or remove sellers</p></div>
+        <div class="tb-right"><button class="tbtn gold" onclick="exportSellers()">📥 Export</button></div>
+      </div>
+      <div class="warning-box">
+        <h4>🔐 Your Admin Powers — Only YOU Have These:</h4>
+        <p>
+          🚫 <strong>Suspend Seller</strong> — Products hidden immediately, orders stopped<br>
+          ✅ <strong>Activate Seller</strong> — Restore suspended seller back to active<br>
+          🗑️ <strong>Delete Permanently</strong> — Remove seller + ALL their products forever<br>
+          ⏸️ <strong>Hide Product</strong> — Hide specific product only<br>
+          ⚠️ <strong>Send Warning</strong> — Official WhatsApp warning message<br>
+          These controls are ONLY available to you as GroutGrove owner.
+        </p>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="sellerSearch" placeholder="Search business name, phone, city..." oninput="filterSellers()"/>
+        <select id="sellerStatusF" onchange="filterSellers()">
+          <option value="">All Sellers</option>
+          <option value="active">✅ Active</option>
+          <option value="suspended">🚫 Suspended</option>
+        </select>
+        <select id="sellerCityF" onchange="filterSellers()">
+          <option value="">All Cities</option>
+          <option>Delhi</option><option>Noida</option><option>Greater Noida</option>
+          <option>Ghaziabad</option><option>Gurugram</option><option>Faridabad</option>
+        </select>
+      </div>
+      <div id="allSellersList"><div class="loading">⏳ Loading sellers...</div></div>
+    </div>
+
+    <!-- SUSPENDED -->
+    <div id="sec-suspended" style="display:none">
+      <div class="topbar">
+        <div class="tb-left"><h1>Suspended <span>Sellers</span></h1><p>Sellers removed from marketplace</p></div>
+      </div>
+      <div id="suspendedList"><div class="loading">⏳ Loading...</div></div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div id="sec-products" style="display:none">
+      <div class="topbar">
+        <div class="tb-left"><h1>All <span>Products</span></h1><p>Manage all listings</p></div>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="prodSearch" placeholder="Search products..." oninput="filterProds()"/>
+        <select id="prodCatF" onchange="filterProds()">
+          <option value="">All Categories</option>
+          <option value="cement">Cement</option><option value="steel">Steel</option>
+          <option value="bricks">Bricks</option><option value="tiles">Tiles</option>
+          <option value="sand">Sand</option><option value="paint">Paint</option>
+          <option value="pvc_pipes">PVC Pipes</option><option value="plumbing">Plumbing</option>
+          <option value="sanitaryware">Sanitaryware</option><option value="electrical">Electrical</option>
+          <option value="hardware">Hardware</option><option value="chemicals">Chemicals</option>
+        </select>
+        <select id="prodStatusF" onchange="filterProds()">
+          <option value="">All Status</option>
+          <option value="active">✅ Active</option>
+          <option value="inactive">⏸️ Hidden</option>
+        </select>
+      </div>
+      <div class="card"><div id="productsList"><div class="loading">⏳ Loading...</div></div></div>
     </div>
 
     <!-- CUSTOMERS -->
     <div id="sec-customers" style="display:none">
-      <div class="topbar"><div class="topbar-left"><h1>All <span>Customers</span></h1><p>View registered customers</p></div></div>
-      <div class="card"><div id="customersList"><div class="loading">⏳ Loading customers...</div></div></div>
+      <div class="topbar">
+        <div class="tb-left"><h1>All <span>Customers</span></h1><p>Registered customers</p></div>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="custSearch" placeholder="Search name, phone, city..." oninput="filterCustomers()"/>
+        <select id="custCityF" onchange="filterCustomers()">
+          <option value="">All Cities</option>
+          <option>Delhi</option><option>Noida</option><option>Greater Noida</option>
+          <option>Ghaziabad</option><option>Gurugram</option><option>Faridabad</option>
+        </select>
+      </div>
+      <div class="card"><div id="customersList"><div class="loading">⏳ Loading...</div></div></div>
     </div>
 
+    <!-- SECURITY LOG -->
+    <div id="sec-security" style="display:none">
+      <div class="topbar">
+        <div class="tb-left"><h1>🔒 Security <span>Log</span></h1><p>Login attempts and admin activity</p></div>
+        <div class="tb-right"><button class="tbtn outline" onclick="clearSecLog()">🗑️ Clear Log</button></div>
+      </div>
+      <div class="card"><div id="securityLog"></div></div>
+    </div>
   </div>
 </div>
 
-<script>
-const{createClient}=supabase;
-const sb=createClient('https://ddgwdesqicrneikxrcnj.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo');
+<div class="toast-admin" id="toastAdmin"></div>
 
-const ADMIN_USER='groutgrove';
-const ADMIN_PASS='admin@2026';
-let allOrders=[],allProds=[],allSellers=[],allCustomers=[];
-let currentForwardOrder=null;
+<script>
+const { createClient } = supabase;
+const sb = createClient(
+  'https://ddgwdesqicrneikxrcnj.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo'
+);
+
+// ===== SECURITY CONFIG =====
+const ADMIN_USER = 'groutgrove2026';
+const ADMIN_PASS = 'GG@Vishal#2026!';
+const SESSION_TIMEOUT = 45 * 60 * 1000; // 45 minutes
+let loginAttempts = 0;
+let lockUntil = 0;
+let inactivityTimer;
+let confirmCallback = null;
+let allOrders=[], allSellers=[], allProducts=[], allCustomers=[];
+
+// ===== SECURITY: Block DevTools =====
+document.addEventListener('keydown', function(e) {
+  if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C')) || (e.ctrlKey&&e.key==='U')) {
+    e.preventDefault(); return false;
+  }
+});
+document.addEventListener('contextmenu', function(e) {
+  if(document.getElementById('adminPanel').style.display !== 'none') e.preventDefault();
+});
+
+// ===== SECURITY: Session timeout =====
+function resetInactivity() {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(() => {
+    if(document.getElementById('adminPanel').style.display !== 'none') {
+      doLogout();
+      alert('⏰ Session expired for security. Please login again.');
+    }
+  }, SESSION_TIMEOUT);
+}
+document.addEventListener('mousemove', resetInactivity);
+document.addEventListener('keypress', resetInactivity);
+document.addEventListener('click', resetInactivity);
+
+// ===== SECURITY: Log =====
+function secLog(action, details) {
+  const logs = JSON.parse(sessionStorage.getItem('gg_seclog') || '[]');
+  logs.unshift({ time: new Date().toLocaleString('en-IN'), action, details });
+  sessionStorage.setItem('gg_seclog', JSON.stringify(logs.slice(0, 50)));
+}
 
 // ===== LOGIN =====
-function adminLogin(){
-  const u=document.getElementById('adminUser').value.trim();
-  const p=document.getElementById('adminPass').value;
-  const err=document.getElementById('lErr');
-  if(u===ADMIN_USER&&p===ADMIN_PASS){
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('adminPanel').style.display='flex';
-    document.getElementById('adminDate').textContent=new Date().toLocaleString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+async function doLogin() {
+  const now = Date.now();
+  if(now < lockUntil) {
+    const remaining = Math.ceil((lockUntil - now) / 1000);
+    document.getElementById('lErr').textContent = `⛔ Too many attempts! Wait ${remaining} seconds.`;
+    document.getElementById('lErr').style.display = 'block';
+    return;
+  }
+  const u = sanitizeInput(document.getElementById('adminUser').value.trim());
+  const p = document.getElementById('adminPass').value;
+  const err = document.getElementById('lErr');
+
+  if(u === ADMIN_USER && p === ADMIN_PASS) {
+    loginAttempts = 0;
+    secLog('LOGIN', 'Admin logged in from ' + navigator.userAgent.split('(')[0]);
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'flex';
+    document.getElementById('secBadge').style.display = 'flex';
+    document.getElementById('adminDate').textContent = new Date().toLocaleString('en-IN', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    resetInactivity();
     loadAll();
-  }else{err.textContent='❌ Wrong username or password!';err.style.display='block';}
+  } else {
+    loginAttempts++;
+    secLog('FAILED_LOGIN', `Attempt #${loginAttempts} — user: ${u}`);
+    if(loginAttempts >= 5) {
+      lockUntil = Date.now() + (2 * 60 * 1000); // 2 min lock
+      loginAttempts = 0;
+      err.textContent = '⛔ Account locked for 2 minutes due to multiple failed attempts!';
+    } else {
+      err.textContent = `❌ Wrong credentials! ${5 - loginAttempts} attempts remaining.`;
+    }
+    err.style.display = 'block';
+    document.getElementById('adminPass').value = '';
+  }
 }
-function adminLogout(){document.getElementById('loginScreen').style.display='flex';document.getElementById('adminPanel').style.display='none';}
+
+function doLogout() {
+  secLog('LOGOUT', 'Admin logged out');
+  clearTimeout(inactivityTimer);
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('secBadge').style.display = 'none';
+  document.getElementById('adminUser').value = '';
+  document.getElementById('adminPass').value = '';
+  document.getElementById('lErr').style.display = 'none';
+}
+
+// ===== SANITIZE INPUT =====
+function sanitizeInput(str) {
+  if(!str) return '';
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#x27;').replace(/\//g,'&#x2F;')
+    .trim().substring(0, 500);
+}
 
 // ===== SECTIONS =====
-function showSec(id,btn){
-  ['overview','orders','products','sellers','customers'].forEach(s=>{
-    const el=document.getElementById('sec-'+s);
-    if(el)el.style.display=s===id?'block':'none';
+function showSec(id, btn) {
+  ['overview','orders','sellers','suspended','products','customers','security'].forEach(s => {
+    const el = document.getElementById('sec-'+s);
+    if(el) el.style.display = s===id ? 'block' : 'none';
   });
-  document.querySelectorAll('.nav-a').forEach(n=>n.classList.remove('act'));
-  if(btn)btn.classList.add('act');
-  if(id==='orders')renderAllOrders();
-  if(id==='products')renderProducts();
-  if(id==='sellers')renderSellers();
-  if(id==='customers')renderCustomers();
+  document.querySelectorAll('.nav-a').forEach(n => n.classList.remove('act'));
+  if(btn) btn.classList.add('act');
+  if(id==='orders') renderAllOrders();
+  if(id==='sellers') renderSellers(allSellers.filter(s=>s.status!=='suspended'));
+  if(id==='suspended') renderSuspended();
+  if(id==='products') renderProducts();
+  if(id==='customers') renderCustomers();
+  if(id==='security') showSecurityLog();
   window.scrollTo(0,0);
 }
 
-// ===== LOAD ALL DATA =====
-async function loadAll(){
-  const[o,p,s,c]=await Promise.all([
-    sb.from('orders').select('*').order('created_at',{ascending:false}),
-    sb.from('products').select('*').order('created_at',{ascending:false}),
-    sb.from('sellers').select('*').order('created_at',{ascending:false}),
-    sb.from('customers').select('*').order('created_at',{ascending:false})
-  ]);
-  allOrders=o.data||[];allProds=p.data||[];allSellers=s.data||[];allCustomers=c.data||[];
-  updateStats();renderPendingOrders();populateSellerSelect();
+// ===== LOAD ALL =====
+async function loadAll() {
+  try {
+    const [o,s,p,c] = await Promise.all([
+      sb.from('orders').select('*').order('created_at',{ascending:false}),
+      sb.from('sellers').select('*').order('created_at',{ascending:false}),
+      sb.from('products').select('*').order('created_at',{ascending:false}),
+      sb.from('customers').select('*').order('created_at',{ascending:false})
+    ]);
+    allOrders=o.data||[]; allSellers=s.data||[]; allProducts=p.data||[]; allCustomers=c.data||[];
+    updateStats();
+    renderPendingOrders();
+    renderRecentSellers();
+    secLog('DATA_LOAD','All data loaded successfully');
+  } catch(err) { showToast('❌ Load error: '+err.message); }
 }
-function refreshAll(){loadAll();showToast('🔄 Data refreshed!');}
 
-function updateStats(){
+function refreshAll() { loadAll(); showToast('🔄 Data refreshed!'); }
+
+function updateStats() {
   const pending=allOrders.filter(o=>o.status==='pending').length;
-  const confirmed=allOrders.filter(o=>o.status==='confirmed').length;
   const delivered=allOrders.filter(o=>o.status==='delivered').length;
-  const rev=allOrders.reduce((s,o)=>s+parseFloat(o.total||0),0);
-  document.getElementById('s-totalOrders').textContent=allOrders.length;
+  const revenue=allOrders.reduce((s,o)=>s+parseFloat(o.total||0),0);
+  const activeSellers=allSellers.filter(s=>s.status!=='suspended').length;
+  const suspendedSellers=allSellers.filter(s=>s.status==='suspended').length;
+  const liveProducts=allProducts.filter(p=>p.status==='active').length;
+  document.getElementById('s-orders').textContent=allOrders.length;
   document.getElementById('s-pending').textContent=pending;
   document.getElementById('s-delivered').textContent=delivered;
-  document.getElementById('s-confirmed').textContent=confirmed;
-  document.getElementById('s-revenue').textContent='₹'+rev.toLocaleString('en-IN');
-  document.getElementById('s-sellers').textContent=allSellers.length;
-  document.getElementById('s-products').textContent=allProds.length;
+  document.getElementById('s-revenue').textContent='₹'+revenue.toLocaleString('en-IN');
+  document.getElementById('s-sellers').textContent=activeSellers;
+  document.getElementById('s-suspended').textContent=suspendedSellers;
+  document.getElementById('s-products').textContent=liveProducts;
   document.getElementById('s-customers').textContent=allCustomers.length;
-  document.getElementById('pendingCount').textContent=pending;
+  document.getElementById('pendingBadge').textContent=pending;
 }
 
-function populateSellerSelect(){
-  const sel=document.getElementById('sellerSelect');
-  if(!sel)return;
-  sel.innerHTML='<option value="">-- Select registered seller --</option>';
-  allSellers.forEach(s=>{
-    const o=document.createElement('option');
-    o.value=s.phone||s.whatsapp||'';
-    o.textContent=`${s.business_name} (${s.phone})`;
-    sel.appendChild(o);
-  });
+// ===== CONFIRM POPUP =====
+function showConfirm(ico,title,msg,btnText,btnColor,cb) {
+  document.getElementById('confirmIco').textContent=ico;
+  document.getElementById('confirmTitle').textContent=title;
+  document.getElementById('confirmMsg').textContent=msg;
+  const yb=document.getElementById('confirmYesBtn');
+  yb.textContent=btnText;
+  yb.style.background=btnColor||'#EF4444';
+  confirmCallback=cb;
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+function closeConfirm(){document.getElementById('confirmOverlay').classList.remove('show');confirmCallback=null;}
+function confirmAction(){if(confirmCallback)confirmCallback();closeConfirm();}
+
+// ===== TOAST =====
+function showToast(msg,dur=3500) {
+  const t=document.getElementById('toastAdmin');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
 }
 
-// ===== ORDER CARD =====
-function orderCard(o){
-  const statusClass=o.status==='pending'?'pending':o.status==='confirmed'?'confirmed':o.status==='delivered'?'delivered':'cancelled';
-  const pillClass=o.status==='pending'?'p-pending':o.status==='confirmed'?'p-confirmed':o.status==='delivered'?'p-delivered':'p-cancelled';
-  return`<div class="order-card ${statusClass}">
-    <div class="oc-head">
+// ===== SELLER CARD =====
+function sellerCard(seller) {
+  const isSuspended=seller.status==='suspended';
+  const sellerProds=allProducts.filter(p=>p.seller_phone===seller.phone||p.seller_phone===seller.whatsapp);
+  const activeProds=sellerProds.filter(p=>p.status==='active').length;
+  return `<div class="seller-card ${isSuspended?'suspended':'active'}">
+    <div class="sc-head">
       <div>
-        <div class="oc-id">${o.order_id}</div>
-        <div class="oc-time">${new Date(o.created_at).toLocaleString('en-IN')}</div>
+        <div class="sc-biz">🏭 ${sanitizeInput(seller.business_name||'—')}</div>
+        <div class="sc-owner">👤 ${sanitizeInput(seller.owner_name||'—')}</div>
+        <div class="sc-sid">${seller.seller_id||'—'} | Joined: ${new Date(seller.created_at).toLocaleDateString('en-IN')}</div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <div class="oc-amount">₹${parseFloat(o.total||0).toLocaleString('en-IN')}</div>
-        <span class="pill ${pillClass}">${o.status?.toUpperCase()}</span>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span class="pill ${isSuspended?'p-suspended':'p-active'}">${isSuspended?'🚫 SUSPENDED':'✅ ACTIVE'}</span>
+        <span style="font-size:12px;color:#64748B">${activeProds} products live</span>
       </div>
     </div>
-    <div class="oc-body">
-      <div class="oc-field"><label>Customer</label><span>${o.customer_name}</span></div>
-      <div class="oc-field"><label>Phone</label><span><a href="tel:${o.customer_phone}" style="color:#2D7A50">${o.customer_phone}</a></span></div>
-      <div class="oc-field"><label>Delivery Address</label><span>${o.delivery_address||'—'}</span></div>
-      <div class="oc-field"><label>Order Date</label><span>${new Date(o.created_at).toLocaleDateString('en-IN')}</span></div>
+    <div class="sc-body">
+      <div class="sc-field"><label>WhatsApp</label><span><a href="https://wa.me/91${(seller.whatsapp||seller.phone||'').replace(/\D/g,'')}" target="_blank">📱 ${seller.whatsapp||seller.phone||'—'}</a></span></div>
+      <div class="sc-field"><label>City / State</label><span>📍 ${seller.city||'—'}, ${seller.state||'—'}</span></div>
+      <div class="sc-field"><label>Business Type</label><span>${seller.business_type||'—'}</span></div>
+      <div class="sc-field"><label>Experience</label><span>${seller.years_in_business||'—'}</span></div>
+      <div class="sc-field"><label>GST</label><span>${seller.gst_number||'Not provided'}</span></div>
+      <div class="sc-field"><label>Pincode</label><span>${seller.pincode||'—'}</span></div>
     </div>
-    <div class="oc-items">📦 ${o.items}</div>
-    <div class="oc-actions">
-      ${o.status==='pending'?`<button class="ab ab-green" onclick="updateStatus('${o.order_id}','confirmed')">✅ Confirm</button>`:''}
-      ${o.status==='confirmed'?`<button class="ab ab-blue" onclick="updateStatus('${o.order_id}','delivered')">🚚 Mark Delivered</button>`:''}
-      ${o.status!=='cancelled'&&o.status!=='delivered'?`<button class="ab ab-red" onclick="updateStatus('${o.order_id}','cancelled')">❌ Cancel</button>`:''}
-      <button class="ab ab-wa" onclick="whatsappCustomer('${o.customer_phone}','${o.customer_name}','${o.order_id}','${o.status}')">💬 Customer</button>
-      <button class="ab ab-dark" onclick="openForward(${JSON.stringify(o).replace(/"/g,'&quot;')})">📤 Forward to Seller</button>
-      <button class="ab ab-gold" onclick="whatsappSelf('${o.order_id}','${o.customer_name}','${o.customer_phone}','${o.delivery_address}','${o.items}','${o.total}')">📱 Send to Myself</button>
+    <div class="sc-cats"><strong>Categories</strong>${seller.categories||'—'}</div>
+    <div class="sc-actions">
+      ${!isSuspended?`
+        <button class="ab ab-red" onclick="suspendSeller(${seller.id},'${sanitizeInput(seller.business_name)}','${seller.phone}')">🚫 Suspend</button>
+        <button class="ab ab-yellow" onclick="sendWarning('${seller.whatsapp||seller.phone}','${sanitizeInput(seller.business_name)}')">⚠️ Warning</button>
+        <button class="ab ab-orange" onclick="viewSellerProducts(${seller.id},'${sanitizeInput(seller.business_name)}')">📦 Products (${sellerProds.length})</button>
+      `:`
+        <button class="ab ab-green" onclick="activateSeller(${seller.id},'${sanitizeInput(seller.business_name)}','${seller.phone}')">✅ Restore</button>
+      `}
+      <button class="ab ab-dark" onclick="deleteSellerPermanently(${seller.id},'${sanitizeInput(seller.business_name)}','${seller.phone}')">🗑️ Delete</button>
+      <a href="https://wa.me/91${(seller.whatsapp||seller.phone||'').replace(/\D/g,'')}" target="_blank" class="ab ab-wa">💬 WhatsApp</a>
+      <a href="tel:${seller.phone}" class="ab ab-blue">📞 Call</a>
     </div>
   </div>`;
 }
 
-function renderPendingOrders(){
-  const pending=allOrders.filter(o=>o.status==='pending');
-  const el=document.getElementById('pendingList');
-  if(!pending.length){
-    el.innerHTML=`<div class="msg-box"><div class="mb-ico">✅</div><h3>All Clear!</h3><p>No pending orders right now.</p></div>`;
-    return;
+// ===== SELLER ACTIONS =====
+async function suspendSeller(id,name,phone) {
+  showConfirm('🚫','Suspend Seller?',
+    `Suspend "${name}"?\n\nThis will:\n• Hide ALL their products immediately\n• Stop all new orders\n• WhatsApp notification sent to seller`,
+    '🚫 Yes, Suspend','#EF4444',
+    async()=>{
+      try{
+        await sb.from('sellers').update({status:'suspended'}).eq('id',id);
+        await sb.from('products').update({status:'inactive'}).eq('seller_phone',phone);
+        secLog('SUSPEND_SELLER',`Suspended: ${name} (${phone})`);
+        showToast('🚫 Seller suspended! All products hidden.');
+        const msg=encodeURIComponent(`*GroutGrove — Important Notice* ⚠️\n\nDear ${name},\n\nYour seller account has been *temporarily suspended* on GroutGrove.\n\nYour products are not visible to customers.\n\nTo resolve, contact us:\n📞 +91 96541 71005\n\n— GroutGrove Team`);
+        setTimeout(()=>window.open(`https://wa.me/91${phone.replace(/\D/g,'')}?text=${msg}`,'_blank'),500);
+        await loadAll();
+        renderSellers(allSellers.filter(s=>s.status!=='suspended'));
+      }catch(err){showToast('❌ Error: '+err.message);}
+    }
+  );
+}
+
+async function activateSeller(id,name,phone) {
+  showConfirm('✅','Restore Seller?',
+    `Restore "${name}" back to active?\n\nThis will:\n• Make their products visible again\n• Allow new orders`,
+    '✅ Yes, Restore','#22C55E',
+    async()=>{
+      try{
+        await sb.from('sellers').update({status:'active'}).eq('id',id);
+        await sb.from('products').update({status:'active'}).eq('seller_phone',phone);
+        secLog('ACTIVATE_SELLER',`Activated: ${name}`);
+        showToast('✅ Seller restored! Products are live again.');
+        await loadAll();
+        renderSuspended();
+      }catch(err){showToast('❌ Error: '+err.message);}
+    }
+  );
+}
+
+async function deleteSellerPermanently(id,name,phone) {
+  showConfirm('🗑️','DELETE PERMANENTLY?',
+    `⚠️ WARNING!\n\nDelete "${name}" and ALL their products FOREVER?\n\nThis CANNOT be undone!`,
+    '🗑️ Delete Forever','#991B1B',
+    async()=>{
+      try{
+        await sb.from('products').delete().eq('seller_phone',phone);
+        await sb.from('sellers').delete().eq('id',id);
+        secLog('DELETE_SELLER',`Permanently deleted: ${name} (${phone})`);
+        showToast('🗑️ Seller permanently deleted!');
+        await loadAll();
+        renderSellers(allSellers.filter(s=>s.status!=='suspended'));
+      }catch(err){showToast('❌ Error: '+err.message);}
+    }
+  );
+}
+
+function sendWarning(phone,name) {
+  const msg=encodeURIComponent(`*GroutGrove — Official Warning* ⚠️\n\nDear ${name},\n\nWe received a complaint about your product/service.\n\n*Action Required:*\n1. Ensure products match listing\n2. Professional customer communication\n3. Meet delivery timelines\n\nRepeated violations = account suspended.\n\n📞 +91 96541 71005\n\n— GroutGrove Admin`);
+  window.open(`https://wa.me/91${(phone||'').replace(/\D/g,'')}?text=${msg}`,'_blank');
+  secLog('WARNING_SENT',`Warning sent to: ${name}`);
+  showToast('⚠️ Warning sent via WhatsApp!');
+}
+
+function viewSellerProducts(sellerId,bizName) {
+  showSec('products',null);
+  const seller=allSellers.find(s=>s.id===sellerId);
+  if(seller){
+    renderProductsList(allProducts.filter(p=>p.seller_phone===seller.phone));
+    document.querySelector('#sec-products .tb-left h1').innerHTML=`${bizName}'s <span>Products</span>`;
   }
-  el.innerHTML=pending.map(o=>orderCard(o)).join('');
 }
 
-function renderAllOrders(){
-  const el=document.getElementById('allOrdersList');
-  if(!allOrders.length){el.innerHTML=`<div class="msg-box"><div class="mb-ico">🛒</div><h3>No Orders Yet</h3><p>Orders will appear here when customers place them.</p></div>`;return;}
-  el.innerHTML=allOrders.map(o=>orderCard(o)).join('');
+// ===== RENDER SELLERS =====
+function renderSellers(sellers) {
+  const el=document.getElementById('allSellersList');
+  const active=sellers.filter(s=>s.status!=='suspended');
+  el.innerHTML=active.length?active.map(s=>sellerCard(s)).join(''):`<div class="empty-state"><div class="e-ico">🏭</div><h3>No Active Sellers</h3></div>`;
 }
 
-function filterOrders(){
-  const q=(document.getElementById('orderSearch')?.value||'').toLowerCase();
-  const s=document.getElementById('orderStatus')?.value||'';
-  const filtered=allOrders.filter(o=>{
-    const mq=!q||(o.order_id||'').toLowerCase().includes(q)||(o.customer_name||'').toLowerCase().includes(q)||(o.customer_phone||'').includes(q)||(o.items||'').toLowerCase().includes(q);
-    const ms=!s||o.status===s;
-    return mq&&ms;
-  });
-  const el=document.getElementById('allOrdersList');
-  el.innerHTML=filtered.length?filtered.map(o=>orderCard(o)).join(''):`<div class="msg-box"><div class="mb-ico">🔍</div><h3>No orders found</h3></div>`;
+function renderSuspended() {
+  const el=document.getElementById('suspendedList');
+  const sus=allSellers.filter(s=>s.status==='suspended');
+  el.innerHTML=sus.length?sus.map(s=>sellerCard(s)).join(''):`<div class="empty-state"><div class="e-ico">✅</div><h3>No Suspended Sellers</h3><p>All sellers are active.</p></div>`;
 }
 
-// ===== ORDER ACTIONS =====
-async function updateStatus(orderId,status){
-  const{error}=await sb.from('orders').update({status}).eq('order_id',orderId);
-  if(error){showToast('❌ Update failed!');return;}
-  showToast(status==='confirmed'?'✅ Order confirmed!':status==='delivered'?'🚚 Marked as delivered!':'❌ Order cancelled!');
-  await loadAll();
-  if(document.getElementById('sec-orders').style.display!=='none')renderAllOrders();
-}
-
-// ===== WHATSAPP CUSTOMER =====
-function whatsappCustomer(phone,name,orderId,status){
-  const msgs={
-    pending:`Hi ${name}! 👋\n\nYour GroutGrove order *${orderId}* has been received!\n\nWe'll confirm within 30 minutes.\n\nThank you for choosing GroutGrove! 🏗️`,
-    confirmed:`Hi ${name}! ✅\n\nYour GroutGrove order *${orderId}* is *CONFIRMED!*\n\nDelivery will be arranged shortly. We'll keep you updated.\n\nGroutGrove - Building Trust, Brick by Brick 🏗️`,
-    delivered:`Hi ${name}! 🎉\n\nYour GroutGrove order *${orderId}* has been *DELIVERED!*\n\nThank you for your order! Please share your feedback.\n\nOrder again: nirmanx.github.io/nirmanx-website`
-  };
-  const msg=msgs[status]||msgs.pending;
-  const ph=phone.replace(/\D/g,'');
-  window.open(`https://wa.me/91${ph}?text=${encodeURIComponent(msg)}`,'_blank');
-}
-
-// ===== WHATSAPP SELF =====
-function whatsappSelf(orderId,name,phone,addr,items,total){
-  const msg=encodeURIComponent(`📋 *ORDER REMINDER — ${orderId}*\n\n👤 ${name}\n📱 ${phone}\n📍 ${addr}\n📦 ${items}\n💰 ₹${parseFloat(total).toLocaleString('en-IN')}\n\n⚡ Action needed!`);
-  window.open(`https://wa.me/919654171005?text=${msg}`,'_blank');
-}
-
-// ===== FORWARD TO SELLER =====
-function openForward(order){
-  currentForwardOrder=order;
-  const preview=`📦 *ORDER FROM GROUTGROVE*\n\nOrder ID: ${order.order_id}\n\n🛒 Items: ${order.items}\n\n👤 Customer: [Name Hidden]\n📍 Delivery: ${order.delivery_address}\n💰 Amount: ₹${parseFloat(order.total).toLocaleString('en-IN')}\n\n⚡ Please confirm stock availability and delivery time.\n\nReply to: GroutGrove Admin\n📱 +91 96541 71005`;
-  document.getElementById('forwardPreview').textContent=preview;
-  document.getElementById('forwardOverlay').classList.add('show');
-}
-function closeForward(){document.getElementById('forwardOverlay').classList.remove('show');currentForwardOrder=null;}
-function updateForwardPhone(){
-  const sel=document.getElementById('sellerSelect');
-  if(sel.value)document.getElementById('forwardPhone').value=sel.value;
-}
-function sendForward(){
-  if(!currentForwardOrder){return;}
-  const phone=(document.getElementById('forwardPhone').value||'').replace(/\D/g,'');
-  if(!phone||phone.length<10){showToast('⚠️ Enter valid seller phone!');return;}
-  const o=currentForwardOrder;
-  const msg=encodeURIComponent(`📦 *ORDER FROM GROUTGROVE*\n\n*Order ID:* ${o.order_id}\n*Date:* ${new Date(o.created_at).toLocaleDateString('en-IN')}\n\n*🛒 Items Required:*\n${o.items}\n\n*📍 Delivery Address:*\n${o.delivery_address}\n\n*💰 Order Value:* ₹${parseFloat(o.total).toLocaleString('en-IN')}\n\n━━━━━━━━━━━━━━\nPlease confirm:\n1. Stock availability ✅\n2. Delivery timeline 🚚\n3. Your rate for this order 💰\n━━━━━━━━━━━━━━\n\nReply to GroutGrove Admin:\n📱 +91 96541 71005\n\n_GroutGrove — Building Trust, Brick by Brick_`);
-  window.open(`https://wa.me/91${phone}?text=${msg}`,'_blank');
-  closeForward();
-  showToast('✅ Order forwarded to seller on WhatsApp!');
-}
-
-// ===== PRODUCTS =====
-function renderProducts(){
-  const el=document.getElementById('productsList');
-  const catEmojis={cement:'🏗️',steel:'⚙️',bricks:'🧱',tiles:'🪟',sand:'🪣',paint:'🎨',hardware:'🔩',plumbing:'🪛'};
-  if(!allProds.length){el.innerHTML=`<div class="msg-box"><div class="mb-ico">📦</div><h3>No Products</h3></div>`;return;}
-  el.innerHTML=`<table><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Seller</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    ${allProds.map(p=>`<tr>
-      <td><div style="font-weight:700">${catEmojis[p.category]||'📦'} ${p.product_name}</div><div style="font-size:12px;color:#94A3B8">${p.brand_name} • ${p.specs||''}</div></td>
-      <td><span style="text-transform:capitalize;font-size:13px">${p.category}</span></td>
-      <td><span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#004225">₹${p.price}</span><br><span style="font-size:11px;color:#94A3B8">${p.unit}</span></td>
-      <td><span style="font-size:13px">${p.seller_phone||'—'}</span></td>
-      <td><span class="pill ${p.status==='active'?'p-delivered':'p-pending'}">${p.status==='active'?'✅ Live':'⏳ Hidden'}</span></td>
-      <td style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="ab ${p.status==='active'?'ab-gold':'ab-green'}" onclick="toggleProd(${p.id},'${p.status==='active'?'inactive':'active'}')">${p.status==='active'?'⏸️ Hide':'✅ Live'}</button>
-        <button class="ab ab-red" onclick="deleteProd(${p.id})">🗑️</button>
-      </td>
+function renderRecentSellers() {
+  const el=document.getElementById('recentSellers');
+  if(!allSellers.length){el.innerHTML=`<div class="empty-state"><p>No sellers yet.</p></div>`;return;}
+  el.innerHTML=`<table><thead><tr><th>Business</th><th>Phone</th><th>City</th><th>Categories</th><th>Status</th><th>Action</th></tr></thead><tbody>
+    ${allSellers.slice(0,5).map(s=>`<tr>
+      <td><div style="font-weight:700">${sanitizeInput(s.business_name)}</div><div style="font-size:11px;color:#94A3B8">${s.seller_id||''}</div></td>
+      <td>${s.phone||'—'}</td>
+      <td>${s.city||'—'}</td>
+      <td style="font-size:12px;max-width:150px">${(s.categories||'').substring(0,50)}</td>
+      <td><span class="pill ${s.status==='suspended'?'p-suspended':'p-active'}">${s.status==='suspended'?'Suspended':'Active'}</span></td>
+      <td><button class="ab ab-dark" onclick="showSec('sellers',null)">Manage →</button></td>
     </tr>`).join('')}
   </tbody></table>`;
 }
 
-function filterProds(){
-  const q=(document.getElementById('prodSearch')?.value||'').toLowerCase();
-  const c=document.getElementById('prodCatF')?.value||'';
-  const s=document.getElementById('prodStatusF')?.value||'';
-  const filtered=allProds.filter(p=>{
-    const mq=!q||(p.product_name||'').toLowerCase().includes(q)||(p.brand_name||'').toLowerCase().includes(q);
-    const mc=!c||p.category===c;
-    const ms=!s||p.status===s;
-    return mq&&mc&&ms;
-  });
-  const el=document.getElementById('productsList');
-  const catEmojis={cement:'🏗️',steel:'⚙️',bricks:'🧱',tiles:'🪟',sand:'🪣',paint:'🎨',hardware:'🔩',plumbing:'🪛'};
-  el.innerHTML=filtered.length?`<table><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Status</th><th>Action</th></tr></thead><tbody>${filtered.map(p=>`<tr><td><div style="font-weight:700">${catEmojis[p.category]||'📦'} ${p.product_name}</div><div style="font-size:12px;color:#94A3B8">${p.brand_name}</div></td><td>${p.category}</td><td style="font-family:'Playfair Display',serif;font-weight:700;color:#004225">₹${p.price}</td><td><span class="pill ${p.status==='active'?'p-delivered':'p-pending'}">${p.status}</span></td><td><button class="ab ab-red" onclick="deleteProd(${p.id})">🗑️</button></td></tr>`).join('')}</tbody></table>`:`<div class="msg-box"><p>No products found.</p></div>`;
+function filterSellers() {
+  const q=(document.getElementById('sellerSearch')?.value||'').toLowerCase();
+  const status=document.getElementById('sellerStatusF')?.value||'';
+  const city=document.getElementById('sellerCityF')?.value||'';
+  let f=allSellers;
+  if(q)f=f.filter(s=>(s.business_name||'').toLowerCase().includes(q)||(s.phone||'').includes(q)||(s.city||'').toLowerCase().includes(q));
+  if(status==='active')f=f.filter(s=>s.status!=='suspended');
+  if(status==='suspended')f=f.filter(s=>s.status==='suspended');
+  if(city)f=f.filter(s=>(s.city||'').includes(city));
+  document.getElementById('allSellersList').innerHTML=f.length?f.map(s=>sellerCard(s)).join(''):`<div class="empty-state"><div class="e-ico">🔍</div><h3>No sellers found</h3></div>`;
 }
 
-async function toggleProd(id,status){
-  await sb.from('products').update({status}).eq('id',id);
-  showToast(status==='active'?'✅ Product is Live!':'⏸️ Product hidden!');
+// ===== PRODUCTS =====
+async function toggleProduct(id,currentStatus) {
+  const ns=currentStatus==='active'?'inactive':'active';
+  const{error}=await sb.from('products').update({status:ns}).eq('id',id);
+  if(error){showToast('❌ Error!');return;}
+  secLog('PRODUCT_TOGGLE',`Product ID ${id} → ${ns}`);
+  showToast(ns==='active'?'✅ Product LIVE!':'⏸️ Product hidden!');
   await loadAll();renderProducts();
 }
-async function deleteProd(id){
-  if(!confirm('Delete this product permanently?'))return;
-  await sb.from('products').delete().eq('id',id);
-  showToast('🗑️ Product deleted!');
-  allProds=allProds.filter(p=>p.id!==id);
-  updateStats();renderProducts();
+
+async function deleteProduct(id,name) {
+  showConfirm('🗑️','Delete Product?',`Delete "${name}" permanently?`,'🗑️ Delete','#EF4444',
+    async()=>{
+      await sb.from('products').delete().eq('id',id);
+      secLog('DELETE_PRODUCT',`Deleted product: ${name} (ID:${id})`);
+      showToast('🗑️ Product deleted!');
+      await loadAll();renderProducts();
+    }
+  );
 }
 
-// ===== SELLERS =====
-function renderSellers(){
-  const el=document.getElementById('sellersList');
-  if(!allSellers.length){el.innerHTML=`<div class="msg-box"><div class="mb-ico">🏭</div><h3>No Sellers Yet</h3><p>Sellers will appear here after registration.</p></div>`;return;}
-  el.innerHTML=`<table><thead><tr><th>Business</th><th>Owner</th><th>Phone</th><th>City</th><th>Products</th><th>Actions</th></tr></thead><tbody>
-    ${allSellers.map(s=>{
-      const prodCount=allProds.filter(p=>p.seller_phone===s.phone).length;
-      return`<tr>
-        <td><div style="font-weight:700">🏭 ${s.business_name}</div><div style="font-size:11px;color:#94A3B8">${s.city||''}</div></td>
-        <td>${s.owner_name||'—'}</td>
-        <td><a href="tel:${s.phone}" style="color:#2D7A50;font-weight:600">${s.phone}</a></td>
-        <td>${s.city||'—'}</td>
-        <td><span class="pill p-delivered">${prodCount} products</span></td>
-        <td style="display:flex;gap:6px">
-          <a href="https://wa.me/91${(s.phone||'').replace(/\D/g,'')}" target="_blank" class="ab ab-wa">💬</a>
-          <a href="tel:${s.phone}" class="ab ab-green">📞</a>
-        </td>
-      </tr>`;
-    }).join('')}
+function renderProducts() { renderProductsList(getFilteredProds()); }
+
+function getFilteredProds() {
+  const q=(document.getElementById('prodSearch')?.value||'').toLowerCase();
+  const cat=document.getElementById('prodCatF')?.value||'';
+  const status=document.getElementById('prodStatusF')?.value||'';
+  return allProducts.filter(p=>{
+    const mq=!q||(p.product_name||'').toLowerCase().includes(q)||(p.brand_name||'').toLowerCase().includes(q);
+    return mq&&(!cat||p.category===cat)&&(!status||p.status===status);
+  });
+}
+
+function renderProductsList(prods) {
+  const el=document.getElementById('productsList');
+  const ci={cement:'🏗️',steel:'⚙️',bricks:'🧱',tiles:'🪟',sand:'🪣',paint:'🎨',pvc_pipes:'🔵',plumbing:'🚿',sanitaryware:'🚽',electrical:'⚡',hardware:'🔩',chemicals:'🧪',bathware:'🛁',gfrp:'🏗️',other:'📦'};
+  if(!prods.length){el.innerHTML=`<div class="empty-state"><div class="e-ico">📦</div><h3>No products found</h3></div>`;return;}
+  el.innerHTML=`<table><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Seller</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    ${prods.map(p=>`<tr>
+      <td><div style="font-weight:700">${ci[p.category]||'📦'} ${sanitizeInput(p.product_name)}</div><div style="font-size:11px;color:#94A3B8">${sanitizeInput(p.brand_name||'')} ${p.specs?'• '+p.specs:''}</div></td>
+      <td style="text-transform:capitalize">${p.category||'—'}</td>
+      <td><div style="font-weight:700;font-size:16px">₹${parseFloat(p.price||0).toLocaleString('en-IN')}</div><div style="font-size:11px;color:#94A3B8">${p.unit||''}</div></td>
+      <td><div style="font-size:12px;font-weight:600">${sanitizeInput(p.seller_name||p.seller_phone||'—')}</div></td>
+      <td><span class="pill ${p.status==='active'?'p-active':'p-pending'}">${p.status==='active'?'✅ Live':'⏸️ Hidden'}</span></td>
+      <td style="display:flex;gap:6px">
+        <button class="ab ${p.status==='active'?'ab-yellow':'ab-green'}" onclick="toggleProduct(${p.id},'${p.status}')">${p.status==='active'?'⏸️ Hide':'✅ Live'}</button>
+        <button class="ab ab-red" onclick="deleteProduct(${p.id},'${sanitizeInput(p.product_name)}')">🗑️</button>
+      </td>
+    </tr>`).join('')}
   </tbody></table>`;
+}
+function filterProds(){renderProducts();}
+
+// ===== ORDERS =====
+function orderCard(o) {
+  const sc={pending:'pending',confirmed:'confirmed',delivered:'delivered',cancelled:'cancelled'}[o.status]||'pending';
+  const pc={pending:'p-pending',confirmed:'p-confirmed',delivered:'p-delivered',cancelled:'p-cancelled'}[o.status]||'p-pending';
+  return `<div class="order-card ${sc}">
+    <div class="oc-head">
+      <div><div class="oc-id">${o.order_id}</div><div class="oc-time">${new Date(o.created_at).toLocaleString('en-IN')}</div></div>
+      <div style="text-align:right"><div class="oc-total">₹${parseFloat(o.total||0).toLocaleString('en-IN')}</div><span class="pill ${pc}">${(o.status||'pending').toUpperCase()}</span></div>
+    </div>
+    <div class="oc-body">
+      <div class="oc-field"><label>Customer</label><span>${sanitizeInput(o.customer_name||'—')}</span></div>
+      <div class="oc-field"><label>Phone</label><span>${o.customer_phone||'—'}</span></div>
+      <div class="oc-field"><label>Address</label><span>${sanitizeInput(o.delivery_address||'—')}</span></div>
+      <div class="oc-field"><label>Payment</label><span>${o.payment_method||'—'}</span></div>
+    </div>
+    <div class="oc-items">📦 ${sanitizeInput(o.items||'—')}</div>
+    <div class="oc-actions">
+      ${o.status==='pending'?`<button class="ab ab-green" onclick="updateOrder('${o.order_id}','confirmed')">✅ Confirm</button>`:''}
+      ${o.status==='confirmed'?`<button class="ab ab-blue" onclick="updateOrder('${o.order_id}','delivered')">🚚 Delivered</button>`:''}
+      ${o.status!=='cancelled'&&o.status!=='delivered'?`<button class="ab ab-red" onclick="updateOrder('${o.order_id}','cancelled')">❌ Cancel</button>`:''}
+      <button class="ab ab-wa" onclick="waCustomer('${o.customer_phone}','${sanitizeInput(o.customer_name)}','${o.order_id}','${o.status}')">💬 Customer</button>
+      <button class="ab ab-dark" onclick="forwardToSeller('${o.order_id}','${sanitizeInput(o.items)}','${sanitizeInput(o.delivery_address)}','${o.total}')">📤 To Seller</button>
+    </div>
+  </div>`;
+}
+
+function renderPendingOrders() {
+  const el=document.getElementById('pendingOrdersList');
+  const p=allOrders.filter(o=>o.status==='pending');
+  el.innerHTML=p.length?p.slice(0,5).map(o=>orderCard(o)).join(''):`<div class="empty-state"><div class="e-ico">✅</div><h3>No pending orders!</h3></div>`;
+}
+
+function renderAllOrders() {
+  document.getElementById('allOrdersList').innerHTML=allOrders.length?allOrders.map(o=>orderCard(o)).join(''):`<div class="empty-state"><div class="e-ico">🛒</div><h3>No orders yet</h3></div>`;
+}
+
+function filterOrders() {
+  const q=(document.getElementById('orderSearch')?.value||'').toLowerCase();
+  const s=document.getElementById('orderStatusF')?.value||'';
+  const f=allOrders.filter(o=>(!q||(o.order_id||'').toLowerCase().includes(q)||(o.customer_name||'').toLowerCase().includes(q)||(o.customer_phone||'').includes(q))&&(!s||o.status===s));
+  document.getElementById('allOrdersList').innerHTML=f.length?f.map(o=>orderCard(o)).join(''):`<div class="empty-state"><div class="e-ico">🔍</div><h3>No orders found</h3></div>`;
+}
+
+async function updateOrder(orderId,status) {
+  const{error}=await sb.from('orders').update({status}).eq('order_id',orderId);
+  if(error){showToast('❌ Error!');return;}
+  secLog('ORDER_UPDATE',`Order ${orderId} → ${status}`);
+  showToast(status==='confirmed'?'✅ Confirmed!':status==='delivered'?'🚚 Delivered!':'❌ Cancelled!');
+  await loadAll();renderAllOrders();
+}
+
+function waCustomer(phone,name,orderId,status) {
+  const msgs={
+    pending:`Hi ${name}! ✅ GroutGrove order *${orderId}* received. Confirming in 30 mins!`,
+    confirmed:`Hi ${name}! ✅ Order *${orderId}* CONFIRMED! Delivery being arranged.`,
+    delivered:`Hi ${name}! 🎉 Order *${orderId}* DELIVERED! Thank you! 🌟`
+  };
+  window.open(`https://wa.me/91${(phone||'').replace(/\D/g,'')}?text=${encodeURIComponent(msgs[status]||msgs.pending)}`,'_blank');
+}
+
+function forwardToSeller(orderId,items,address,total) {
+  const phone=prompt('Enter seller WhatsApp number (10 digits):');
+  if(!phone||phone.replace(/\D/g,'').length<10){showToast('❌ Invalid number!');return;}
+  const msg=encodeURIComponent(`📦 *ORDER FROM GROUTGROVE*\n\n*Order ID:* ${orderId}\n*Items:* ${items}\n*Address:* ${address}\n*Amount:* ₹${parseFloat(total||0).toLocaleString('en-IN')}\n\nPlease confirm stock & delivery.\nReply to: +91 96541 71005`);
+  window.open(`https://wa.me/91${phone.replace(/\D/g,'')}?text=${msg}`,'_blank');
+  showToast('✅ Forwarded to seller!');
 }
 
 // ===== CUSTOMERS =====
-function renderCustomers(){
+function renderCustomers() {
   const el=document.getElementById('customersList');
-  if(!allCustomers.length){el.innerHTML=`<div class="msg-box"><div class="mb-ico">👥</div><h3>No Customers Yet</h3></div>`;return;}
-  el.innerHTML=`<table><thead><tr><th>Name</th><th>Phone</th><th>City</th><th>Orders</th><th>Actions</th></tr></thead><tbody>
-    ${allCustomers.map(c=>{
-      const orderCount=allOrders.filter(o=>o.customer_phone===c.phone).length;
-      return`<tr>
-        <td><div style="font-weight:700">👤 ${c.full_name}</div></td>
-        <td><a href="tel:${c.phone}" style="color:#2D7A50;font-weight:600">${c.phone}</a></td>
-        <td>${c.city||'—'}</td>
-        <td><span class="pill ${orderCount>0?'p-delivered':'p-pending'}">${orderCount} orders</span></td>
-        <td style="display:flex;gap:6px">
-          <a href="https://wa.me/91${(c.phone||'').replace(/\D/g,'')}" target="_blank" class="ab ab-wa">💬</a>
-          <a href="tel:${c.phone}" class="ab ab-green">📞</a>
-        </td>
-      </tr>`;
-    }).join('')}
+  const f=getFilteredCustomers();
+  if(!f.length){el.innerHTML=`<div class="empty-state"><div class="e-ico">👥</div><h3>No customers yet</h3></div>`;return;}
+  el.innerHTML=`<table><thead><tr><th>Name</th><th>Phone</th><th>City</th><th>Pincode</th><th>Role</th><th>Joined</th><th>Action</th></tr></thead><tbody>
+    ${f.map(c=>`<tr>
+      <td><div style="font-weight:700">👤 ${sanitizeInput(c.full_name||'—')}</div></td>
+      <td>${c.phone||'—'}</td>
+      <td>${c.city||'—'}</td>
+      <td>${c.pincode||'—'}</td>
+      <td style="font-size:12px;color:#64748B">${c.user_type||'—'}</td>
+      <td style="font-size:12px;color:#94A3B8">${new Date(c.created_at).toLocaleDateString('en-IN')}</td>
+      <td style="display:flex;gap:6px">
+        <a href="https://wa.me/91${(c.phone||'').replace(/\D/g,'')}" target="_blank" class="ab ab-wa">💬</a>
+        <a href="tel:${c.phone}" class="ab ab-green">📞</a>
+      </td>
+    </tr>`).join('')}
   </tbody></table>`;
 }
+function getFilteredCustomers(){
+  const q=(document.getElementById('custSearch')?.value||'').toLowerCase();
+  const city=document.getElementById('custCityF')?.value||'';
+  return allCustomers.filter(c=>(!q||(c.full_name||'').toLowerCase().includes(q)||(c.phone||'').includes(q))&&(!city||(c.city||'').includes(city)));
+}
+function filterCustomers(){renderCustomers();}
+
+// ===== SECURITY LOG =====
+function showSecurityLog() {
+  const logs=JSON.parse(sessionStorage.getItem('gg_seclog')||'[]');
+  const el=document.getElementById('securityLog');
+  if(!logs.length){el.innerHTML=`<div class="empty-state"><div class="e-ico">🔒</div><h3>No security events yet</h3></div>`;return;}
+  el.innerHTML=`<table><thead><tr><th>Time</th><th>Action</th><th>Details</th></tr></thead><tbody>
+    ${logs.map(l=>`<tr><td style="font-size:12px;color:#94A3B8;white-space:nowrap">${l.time}</td><td><span class="pill ${l.action.includes('FAIL')||l.action.includes('DELETE')||l.action.includes('SUSPEND')?'p-cancelled':'p-active'}" style="font-size:11px">${l.action}</span></td><td style="font-size:12px;color:#475569">${l.details}</td></tr>`).join('')}
+  </tbody></table>`;
+}
+function clearSecLog(){sessionStorage.removeItem('gg_seclog');showSecurityLog();showToast('🗑️ Security log cleared!');}
 
 // ===== EXPORT =====
-function exportOrders(){
-  if(!allOrders.length){showToast('⚠️ No orders to export!');return;}
-  const rows=['Order ID,Customer,Phone,Items,Total,Address,Status,Date'];
-  allOrders.forEach(o=>{
-    rows.push(`"${o.order_id}","${o.customer_name}","${o.customer_phone}","${o.items}","${o.total}","${o.delivery_address||''}","${o.status}","${new Date(o.created_at).toLocaleDateString('en-IN')}"`);
-  });
-  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
+function exportOrders() {
+  if(!allOrders.length){showToast('⚠️ No orders!');return;}
+  const rows=['Order ID,Customer,Phone,Items,Total,Address,Payment,Status,Date'];
+  allOrders.forEach(o=>rows.push(`"${o.order_id}","${o.customer_name}","${o.customer_phone}","${o.items}","${o.total}","${o.delivery_address||''}","${o.payment_method||''}","${o.status}","${new Date(o.created_at).toLocaleDateString('en-IN')}"`));
+  downloadCSV(rows.join('\n'),'GroutGrove_Orders.csv');
+  showToast('📥 Orders exported!');
+}
+function exportSellers() {
+  if(!allSellers.length){showToast('⚠️ No sellers!');return;}
+  const rows=['Seller ID,Business,Owner,Phone,City,State,Pincode,Categories,Status,Joined'];
+  allSellers.forEach(s=>rows.push(`"${s.seller_id||''}","${s.business_name}","${s.owner_name}","${s.phone}","${s.city||''}","${s.state||''}","${s.pincode||''}","${s.categories||''}","${s.status||'active'}","${new Date(s.created_at).toLocaleDateString('en-IN')}"`));
+  downloadCSV(rows.join('\n'),'GroutGrove_Sellers.csv');
+  showToast('📥 Sellers exported!');
+}
+function downloadCSV(content,filename) {
+  const blob=new Blob([content],{type:'text/csv'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download=`GroutGrove_Orders_${new Date().toISOString().split('T')[0]}.csv`;
+  a.download=filename;
   a.click();
-  showToast('📥 Orders exported successfully!');
-}
-
-// ===== TOAST =====
-function showToast(msg,dur=3000){
-  let t=document.querySelector('.toast-admin');
-  if(!t){t=document.createElement('div');t.className='toast-admin';document.body.appendChild(t);}
-  t.textContent=msg;t.style.opacity='1';
-  setTimeout(()=>{t.style.opacity='0';},dur);
 }
 </script>
 </body>

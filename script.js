@@ -1,287 +1,279 @@
-// ===== GROUTGROVE — MAIN SCRIPT =====
+// ===== GROUTGROVE — MAIN SCRIPT v3.0 =====
+// Security + Input Sanitization + Cart Fix
 
-// Supabase Config
-const SUPABASE_URL = 'https://ddgwdesqicrneikxrcnj.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo';
+const CART_KEY = 'groutgrove_cart';
+
+// ===== INPUT SANITIZATION =====
+function sanitizeInput(str) {
+  if(!str) return '';
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#x27;')
+    .replace(/\//g,'&#x2F;')
+    .trim()
+    .substring(0, 500);
+}
+
+function validatePhone(phone) {
+  const cleaned = phone.replace(/\D/g,'');
+  return cleaned.length === 10 && /^[6-9]/.test(cleaned);
+}
+
+function validatePincode(pin) {
+  return /^\d{6}$/.test(pin.trim());
+}
+
+function validateEmail(email) {
+  if(!email) return true; // Optional
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// Rate limiting
+const rateLimits = {};
+function checkRateLimit(key, maxAttempts=5, windowMs=60000) {
+  const now = Date.now();
+  if(!rateLimits[key]) rateLimits[key] = [];
+  rateLimits[key] = rateLimits[key].filter(t => now-t < windowMs);
+  if(rateLimits[key].length >= maxAttempts) return false;
+  rateLimits[key].push(now);
+  return true;
+}
 
 // ===== NAVBAR =====
 function toggleNav() {
   const nav = document.getElementById('navLinks');
-  if (nav) nav.classList.toggle('open');
+  if(nav) nav.classList.toggle('open');
 }
-
-// Close nav on outside click
 document.addEventListener('click', function(e) {
   const nav = document.getElementById('navLinks');
-  const hamburger = document.querySelector('.hamburger');
-  if (nav && nav.classList.contains('open')) {
-    if (!nav.contains(e.target) && e.target !== hamburger) {
-      nav.classList.remove('open');
-    }
+  const btn = document.querySelector('.hamburger');
+  if(nav && nav.classList.contains('open') && !nav.contains(e.target) && e.target !== btn) {
+    nav.classList.remove('open');
   }
 });
 
-// ===== TOAST NOTIFICATION =====
-function showToast(msg, duration = 3000) {
-  let toast = document.querySelector('.toast');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.className = 'toast';
-    document.body.appendChild(toast);
+// ===== TOAST =====
+function showToast(msg, duration=3000) {
+  let t = document.querySelector('.toast');
+  if(!t) {
+    t = document.createElement('div');
+    t.className = 'toast';
+    document.body.appendChild(t);
   }
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), duration);
+  t.textContent = sanitizeInput(msg);
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
 }
 
-// ===== CART SYSTEM =====
-const CART_KEY = 'nirmanx_cart';
-
+// ===== CART — Persistent + Login Merge =====
 function getCart() {
   try {
+    const nxUser = JSON.parse(localStorage.getItem('nx_user'));
+    if(nxUser && nxUser.phone) {
+      const userCart = localStorage.getItem(CART_KEY+'_'+nxUser.phone);
+      if(userCart) return JSON.parse(userCart);
+    }
     return JSON.parse(localStorage.getItem(CART_KEY)) || [];
-  } catch (e) {
-    return [];
-  }
+  } catch(e) { return []; }
 }
 
 function saveCart(cart) {
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  updateCartBadge();
+  try {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    localStorage.setItem('nirmanx_cart', JSON.stringify(cart));
+    const nxUser = JSON.parse(localStorage.getItem('nx_user'));
+    if(nxUser && nxUser.phone) {
+      localStorage.setItem(CART_KEY+'_'+nxUser.phone, JSON.stringify(cart));
+    }
+    updateCartBadge();
+  } catch(e) {}
 }
 
 function updateCartBadge() {
   const cart = getCart();
-  const total = cart.reduce((s, i) => s + i.qty, 0);
-  const badge = document.querySelector('.cart-badge');
-  if (badge) {
-    badge.textContent = total;
-    badge.style.display = total > 0 ? 'inline' : 'none';
-  }
+  const total = cart.reduce((s,i) => s+(i.qty||1), 0);
+  document.querySelectorAll('.cart-badge').forEach(b => {
+    b.textContent = total;
+    b.style.display = total > 0 ? 'inline' : 'none';
+  });
 }
 
-// Global addToCart — works on all pages
+// Merge carts on login
+function mergeCartsOnLogin() {
+  const nxUser = JSON.parse(localStorage.getItem('nx_user'));
+  if(!nxUser || !nxUser.phone) return;
+  const guestCart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+  const userCartKey = CART_KEY+'_'+nxUser.phone;
+  const userCart = JSON.parse(localStorage.getItem(userCartKey)) || [];
+  if(guestCart.length > 0 && userCart.length > 0) {
+    guestCart.forEach(gItem => {
+      const ex = userCart.find(u => u.name === gItem.name);
+      if(ex) ex.qty += gItem.qty;
+      else userCart.push(gItem);
+    });
+    localStorage.setItem(userCartKey, JSON.stringify(userCart));
+    localStorage.setItem(CART_KEY, JSON.stringify(userCart));
+    localStorage.setItem('nirmanx_cart', JSON.stringify(userCart));
+  } else if(guestCart.length > 0) {
+    localStorage.setItem(userCartKey, JSON.stringify(guestCart));
+  } else if(userCart.length > 0) {
+    localStorage.setItem(CART_KEY, JSON.stringify(userCart));
+    localStorage.setItem('nirmanx_cart', JSON.stringify(userCart));
+  }
+  updateCartBadge();
+}
+
+// ===== ADD TO CART =====
 window.addToCart = function(name, price) {
-  // If on cart page, handle directly
-  if (window.location.pathname.includes('cart.html')) {
-    let cart = getCart();
-    const existing = cart.find(i => i.name === name);
-    if (existing) {
-      existing.qty++;
-      saveCart(cart);
-      showToast('✅ Quantity updated in cart!');
-    } else {
-      cart.push({ name, price, qty: 1 });
-      saveCart(cart);
-      showToast('✅ Added to cart!');
-    }
-    if (typeof renderCart === 'function') renderCart();
+  if(!checkRateLimit('add_cart', 30, 60000)) {
+    showToast('⚠️ Too many actions! Please wait a moment.');
     return;
   }
-
-  // Show quantity popup
-  showQtyPopup(name, price);
+  const safeName = sanitizeInput(name);
+  const safePrice = parseFloat(price);
+  if(!safeName || isNaN(safePrice) || safePrice <= 0) {
+    showToast('❌ Invalid product!');
+    return;
+  }
+  if(window.location.pathname.includes('cart.html')) {
+    let cart = getCart();
+    const ex = cart.find(i => i.name === safeName);
+    if(ex) ex.qty++;
+    else cart.push({ name: safeName, price: safePrice, qty: 1 });
+    saveCart(cart);
+    showToast('✅ Quantity updated!');
+    if(typeof renderCart === 'function') renderCart();
+    return;
+  }
+  showQtyPopup(safeName, safePrice);
 };
 
 function showQtyPopup(name, price) {
-  // Remove existing popup
-  const existing = document.querySelector('.qty-popup-overlay');
-  if (existing) existing.remove();
-
+  const ex = document.querySelector('.qty-popup-overlay');
+  if(ex) ex.remove();
   let qty = 1;
-
   const overlay = document.createElement('div');
   overlay.className = 'qty-popup-overlay';
   overlay.innerHTML = `
     <div class="qty-popup">
       <h3>${name}</h3>
-      <div class="qp-price">₹${parseFloat(price).toLocaleString('en-IN')}</div>
+      <div class="qp-price">₹${price.toLocaleString('en-IN')}</div>
       <div class="qty-controls">
         <button id="qp-minus">−</button>
         <span id="qp-num">1</span>
         <button id="qp-plus">+</button>
       </div>
-      <div class="qp-total" id="qp-total">Total: ₹${parseFloat(price).toLocaleString('en-IN')}</div>
+      <div class="qp-total" id="qp-total">Total: ₹${price.toLocaleString('en-IN')}</div>
       <div class="qp-btns">
         <button class="qp-cancel" id="qp-cancel">Cancel</button>
         <button class="qp-add" id="qp-add">🛒 Add to Cart</button>
       </div>
     </div>`;
-
   document.body.appendChild(overlay);
-
-  function updateTotal() {
+  function upd() {
     document.getElementById('qp-num').textContent = qty;
-    document.getElementById('qp-total').textContent =
-      'Total: ₹' + (price * qty).toLocaleString('en-IN');
+    document.getElementById('qp-total').textContent = 'Total: ₹'+(price*qty).toLocaleString('en-IN');
   }
-
-  document.getElementById('qp-minus').addEventListener('click', () => {
-    if (qty > 1) { qty--; updateTotal(); }
-  });
-
-  document.getElementById('qp-plus').addEventListener('click', () => {
-    if (qty < 999) { qty++; updateTotal(); }
-  });
-
-  document.getElementById('qp-cancel').addEventListener('click', () => {
-    overlay.remove();
-  });
-
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) overlay.remove();
-  });
-
-  document.getElementById('qp-add').addEventListener('click', () => {
+  document.getElementById('qp-minus').onclick = () => { if(qty>1){qty--;upd();} };
+  document.getElementById('qp-plus').onclick = () => { if(qty<999){qty++;upd();} };
+  document.getElementById('qp-cancel').onclick = () => overlay.remove();
+  overlay.onclick = e => { if(e.target===overlay) overlay.remove(); };
+  document.getElementById('qp-add').onclick = () => {
     let cart = getCart();
-    const existing = cart.find(i => i.name === name);
-    if (existing) {
-      existing.qty += qty;
-    } else {
-      cart.push({ name, price: parseFloat(price), qty });
-    }
+    const ex = cart.find(i => i.name===name);
+    if(ex) ex.qty += qty;
+    else cart.push({ name, price, qty });
     saveCart(cart);
     overlay.remove();
-    showToast(`✅ ${name} added to cart (×${qty})!`);
-  });
+    showToast(`✅ ${name} added! (×${qty})`);
+  };
 }
 
 // ===== CALCULATOR =====
 let currentCalcType = 'cement';
-
 function switchCalc(type, btn) {
   currentCalcType = type;
   document.querySelectorAll('.calc-tab').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  const result = document.getElementById('calcResult');
-  if (result) {
-    result.classList.remove('show');
-    result.style.display = 'none';
-  }
+  if(btn) btn.classList.add('active');
+  const r = document.getElementById('calcResult');
+  if(r) { r.classList.remove('show'); r.style.display='none'; }
 }
-
 function calculate() {
-  const length = parseFloat(document.getElementById('cLength')?.value);
-  const width = parseFloat(document.getElementById('cWidth')?.value);
-  const floors = parseFloat(document.getElementById('cFloors')?.value) || 1;
-
-  if (!length || !width || length <= 0 || width <= 0) {
-    showToast('⚠️ Please enter valid length and width!');
-    return;
-  }
-
-  if (length > 500 || width > 500) {
-    showToast('⚠️ Please enter area in feet (max 500)!');
-    return;
-  }
-
-  const area = length * width * floors;
+  const len = parseFloat(document.getElementById('cLength')?.value)||0;
+  const wid = parseFloat(document.getElementById('cWidth')?.value)||0;
+  const flo = parseFloat(document.getElementById('cFloors')?.value)||1;
+  if(!len||!wid||len<=0||wid<=0){showToast('⚠️ Enter valid length and width!');return;}
+  if(len>500||wid>500){showToast('⚠️ Enter area in feet (max 500)!');return;}
+  const area = len*wid*flo;
   let results = [];
-
-  switch (currentCalcType) {
+  switch(currentCalcType) {
     case 'cement':
-      const cementBags = Math.ceil(area * 0.4);
-      const sandCFT = Math.ceil(area * 0.6);
-      const gritCFT = Math.ceil(area * 1.2);
-      results = [
-        { val: cementBags + ' Bags', lbl: 'Cement (50kg)', icon: '🏗️' },
-        { val: sandCFT + ' CFT', lbl: 'Sand (Baalu)', icon: '🪣' },
-        { val: gritCFT + ' CFT', lbl: 'Grit/Stone', icon: '🪨' },
-        { val: '₹' + (cementBags * 380).toLocaleString('en-IN'), lbl: 'Est. Cost', icon: '💰' }
-      ];
-      break;
-
+      results=[
+        {val:Math.ceil(area*.4)+' Bags',lbl:'Cement (50kg)',icon:'🏗️'},
+        {val:Math.ceil(area*.6)+' CFT',lbl:'Sand',icon:'🪣'},
+        {val:Math.ceil(area*1.2)+' CFT',lbl:'Stone/Grit',icon:'🪨'},
+        {val:'₹'+(Math.ceil(area*.4)*380).toLocaleString('en-IN'),lbl:'Est. Cost',icon:'💰'}
+      ]; break;
     case 'bricks':
-      const bricks = Math.ceil(area * 55);
-      const mortar = Math.ceil(area * 0.3);
-      results = [
-        { val: bricks.toLocaleString('en-IN'), lbl: 'Bricks Needed', icon: '🧱' },
-        { val: mortar + ' Bags', lbl: 'Cement for Mortar', icon: '🏗️' },
-        { val: '₹' + (bricks * 8).toLocaleString('en-IN'), lbl: 'Est. Brick Cost', icon: '💰' },
-        { val: area + ' sqft', lbl: 'Total Area', icon: '📐' }
-      ];
-      break;
-
+      const br=Math.ceil(area*55);
+      results=[
+        {val:br.toLocaleString('en-IN'),lbl:'Bricks Needed',icon:'🧱'},
+        {val:Math.ceil(area*.3)+' Bags',lbl:'Cement Mortar',icon:'🏗️'},
+        {val:'₹'+(br*8).toLocaleString('en-IN'),lbl:'Est. Cost',icon:'💰'},
+        {val:area+' sqft',lbl:'Total Area',icon:'📐'}
+      ]; break;
     case 'tiles':
-      const tiles = Math.ceil(area * 1.1);
-      const adhesive = Math.ceil(area / 40);
-      const grout = Math.ceil(area / 50);
-      results = [
-        { val: tiles + ' sqft', lbl: 'Tiles Required (+10%)', icon: '🪟' },
-        { val: adhesive + ' Bags', lbl: 'Tile Adhesive', icon: '🧴' },
-        { val: grout + ' Bags', lbl: 'Grout/Filler', icon: '⬜' },
-        { val: '₹' + (tiles * 45).toLocaleString('en-IN'), lbl: 'Est. Cost', icon: '💰' }
-      ];
-      break;
-
+      const ti=Math.ceil(area*1.1);
+      results=[
+        {val:ti+' sqft',lbl:'Tiles (+10%)',icon:'🪟'},
+        {val:Math.ceil(area/40)+' Bags',lbl:'Tile Adhesive',icon:'🧴'},
+        {val:Math.ceil(area/50)+' Bags',lbl:'Grout',icon:'⬜'},
+        {val:'₹'+(ti*45).toLocaleString('en-IN'),lbl:'Est. Cost',icon:'💰'}
+      ]; break;
     case 'paint':
-      const wallArea = area * 3.5;
-      const paintLtr = Math.ceil(wallArea / 40);
-      const primer = Math.ceil(wallArea / 80);
-      results = [
-        { val: paintLtr + ' Litres', lbl: 'Paint Needed (2 coats)', icon: '🎨' },
-        { val: primer + ' Litres', lbl: 'Primer', icon: '🖌️' },
-        { val: wallArea + ' sqft', lbl: 'Wall Area', icon: '📐' },
-        { val: '₹' + (paintLtr * 280).toLocaleString('en-IN'), lbl: 'Est. Cost', icon: '💰' }
-      ];
-      break;
+      const wa=Math.ceil(area*3.5);
+      results=[
+        {val:Math.ceil(wa/40)+' Litres',lbl:'Paint (2 coats)',icon:'🎨'},
+        {val:Math.ceil(wa/80)+' Litres',lbl:'Primer',icon:'🖌️'},
+        {val:wa+' sqft',lbl:'Wall Area',icon:'📐'},
+        {val:'₹'+(Math.ceil(wa/40)*280).toLocaleString('en-IN'),lbl:'Est. Cost',icon:'💰'}
+      ]; break;
   }
-
   const grid = document.getElementById('resultGrid');
-  if (grid) {
-    grid.innerHTML = results.map(r => `
-      <div class="result-item">
-        <div style="font-size:24px;margin-bottom:6px">${r.icon}</div>
-        <div class="r-val">${r.val}</div>
-        <div class="r-lbl">${r.lbl}</div>
-      </div>`).join('');
-  }
-
-  const result = document.getElementById('calcResult');
-  if (result) {
-    result.style.display = 'block';
-    result.classList.add('show');
-    result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
+  if(grid) grid.innerHTML = results.map(r=>`<div class="result-item"><div style="font-size:22px;margin-bottom:5px">${r.icon}</div><span class="r-val">${r.val}</span><div class="r-lbl">${r.lbl}</div></div>`).join('');
+  const res = document.getElementById('calcResult');
+  if(res){res.style.display='block';res.classList.add('show');res.scrollIntoView({behavior:'smooth',block:'nearest'});}
 }
 
 // ===== SEARCH =====
 function searchProduct() {
-  const query = document.getElementById('searchInput')?.value?.trim();
-  if (!query) {
-    showToast('⚠️ Please enter a product name!');
-    return;
-  }
-  // Redirect to products page with search query
-  const base = window.location.pathname.includes('/pages/') ? 'products.html' : 'pages/products.html';
-  window.location.href = `${base}?search=${encodeURIComponent(query)}`;
+  const q = document.getElementById('searchInput')?.value?.trim();
+  if(!q){showToast('⚠️ Enter product name!');return;}
+  if(!checkRateLimit('search',20,60000)){showToast('⚠️ Too many searches!');return;}
+  const base = window.location.pathname.includes('/pages/') ? 'products.html':'pages/products.html';
+  window.location.href = `${base}?search=${encodeURIComponent(sanitizeInput(q))}`;
 }
-
-// Enter key on search
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && document.getElementById('searchInput') === document.activeElement) {
-    searchProduct();
-  }
+  if(e.key==='Enter' && document.getElementById('searchInput')===document.activeElement) searchProduct();
 });
 
-// ===== WHATSAPP FLOAT =====
-setTimeout(() => {
-  const bubble = document.getElementById('waBubble');
-  if (bubble) {
-    bubble.style.display = 'block';
-    setTimeout(() => { bubble.style.display = 'none'; }, 5000);
-  }
-}, 3000);
+// ===== WA FLOAT =====
+setTimeout(()=>{
+  const b=document.getElementById('waBubble');
+  if(b){b.style.display='block';setTimeout(()=>b.style.display='none',5000);}
+},3000);
 
 // ===== INIT =====
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
   updateCartBadge();
-
-  // Handle search query from URL
+  mergeCartsOnLogin();
   const urlParams = new URLSearchParams(window.location.search);
   const searchQuery = urlParams.get('search');
-  if (searchQuery && typeof loadProducts === 'function') {
+  if(searchQuery) {
     const input = document.querySelector('.filter-search');
-    if (input) input.value = searchQuery;
+    if(input) input.value = sanitizeInput(searchQuery);
   }
 });
