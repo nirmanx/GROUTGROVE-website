@@ -3,48 +3,62 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cement – GroutGrove</title>
+  <title>Contact Us – GroutGrove</title>
+  <meta name="description" content="Contact GroutGrove for construction material. Call, WhatsApp or email us."/>
   <link rel="stylesheet" href="../style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Hind:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    .cat-hero{background:linear-gradient(135deg,#001A10,#004225,#004B3B);padding:50px 24px;text-align:center;position:relative;overflow:hidden}
-    .cat-hero::before{content:'🏗️';position:absolute;right:5%;top:50%;transform:translateY(-50%);font-size:120px;opacity:.08}
-    .cat-hero h1{font-family:'Baloo 2';font-size:42px;font-weight:800;color:white;margin-bottom:8px}
-    .cat-hero h1 span{color:#50C878}
-    .cat-hero p{color:#9DC183;font-size:16px;max-width:500px;margin:0 auto 20px}
-    .cat-hero-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-    .hero-badge-item{background:rgba(80,200,120,.15);border:1px solid rgba(80,200,120,.3);color:#9DC183;font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px}
-    .cat-page{max-width:1100px;margin:40px auto;padding:0 24px}
-    .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}
-    .f-btn{background:white;border:1.5px solid #C8DDD0;color:#1A2E20;font-family:'Hind';font-size:13px;font-weight:600;padding:8px 16px;border-radius:25px;cursor:pointer;transition:all .2s}
-    .f-btn:hover,.f-btn.active{background:#2D7A50;border-color:#2D7A50;color:white}
-    .info-section{background:white;border:1.5px solid #C8DDD0;border-radius:20px;padding:28px;margin-bottom:32px}
-    .info-section h2{font-family:'Baloo 2';font-size:22px;font-weight:800;margin-bottom:16px;color:#1A2E20}
-    .info-section h2 span{color:#2D7A50}
-    .brand-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-bottom:10px}
-    .brand-card{background:#F0F7F2;border-radius:14px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;border:1.5px solid transparent}
-    .brand-card:hover{border-color:#2D7A50;transform:translateY(-2px)}
-    .brand-card.sel{border-color:#2D7A50;background:#E0EFE8}
-    .brand-ico{font-size:28px;margin-bottom:6px}
-    .brand-name{font-family:'Baloo 2';font-size:13px;font-weight:700;color:#1A2E20}
-    .brand-tag{font-size:11px;color:#5A7A65;margin-top:2px}
-    .info-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
-    .info-card{background:#F0F7F2;border-radius:14px;padding:16px;border-left:3px solid #2D7A50}
-    .info-card h4{font-family:'Baloo 2';font-size:14px;font-weight:800;margin-bottom:6px;color:#1A2E20}
-    .info-card p{font-size:13px;color:#5A7A65;line-height:1.5}
-    .prod-count{font-size:14px;color:#5A7A65;margin-bottom:18px}
-    .prod-count span{color:#2D7A50;font-weight:700}
-    .empty-state{text-align:center;padding:60px 20px;background:white;border-radius:20px;border:1.5px solid #C8DDD0}
-    .empty-state .e-ico{font-size:60px;margin-bottom:16px}
-    .empty-state h3{font-family:'Baloo 2';font-size:22px;margin-bottom:10px}
-    .empty-state p{color:#5A7A65;margin-bottom:20px}
-    .loading-state{text-align:center;padding:60px;color:#5A7A65}
+    .contact-hero{background:linear-gradient(135deg,#0F172A,#1E293B);padding:56px 24px;text-align:center}
+    .contact-hero h1{font-family:'Playfair Display',serif;font-size:40px;font-weight:800;color:white;margin-bottom:8px}
+    .contact-hero h1 span{color:#F59E0B}
+    .contact-hero p{color:rgba(255,255,255,.5);font-size:15px}
+    .contact-page{max-width:1000px;margin:40px auto;padding:0 24px 80px}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .contact-card{background:white;border-radius:20px;padding:28px;border:1.5px solid #E2E8F0;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+    .contact-card h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#1E293B;margin-bottom:20px}
+    .contact-card h2 span{color:#D97706}
+    .contact-item{display:flex;align-items:center;gap:14px;padding:14px;background:#F8FAFC;border-radius:14px;margin-bottom:12px;text-decoration:none;color:inherit;transition:all .2s;border:1.5px solid #E2E8F0}
+    .contact-item:hover{border-color:#1E293B;transform:translateX(4px)}
+    .ci-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+    .ci-icon.phone{background:#DBEAFE}
+    .ci-icon.wa{background:#D1FAE5}
+    .ci-icon.email{background:#FEF3C7}
+    .ci-icon.hours{background:#F3E8FF}
+    .ci-icon.area{background:#FFE4E6}
+    .ci-label{font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+    .ci-value{font-size:15px;font-weight:700;color:#1E293B}
+    .ci-sub{font-size:12px;color:#64748B;margin-top:2px}
+    .form-card{background:white;border-radius:20px;padding:28px;border:1.5px solid #E2E8F0;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+    .form-card h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#1E293B;margin-bottom:20px}
+    .form-card h2 span{color:#D97706}
+    .ff{margin-bottom:14px}
+    .ff label{display:block;font-size:11px;font-weight:700;color:#64748B;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+    .ff input,.ff select,.ff textarea{width:100%;border:1.5px solid #E2E8F0;border-radius:12px;padding:12px 14px;font-family:'DM Sans';font-size:14px;outline:none;background:#FAFCFB;color:#1E293B;transition:border .2s}
+    .ff input:focus,.ff select:focus,.ff textarea:focus{border-color:#1E293B;background:white}
+    .ff textarea{height:100px;resize:vertical}
+    .f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn-send{width:100%;background:#1E293B;color:white;border:none;border-radius:50px;padding:15px;font-family:'DM Sans';font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px}
+    .btn-send:hover{background:#0F172A;transform:translateY(-1px)}
+    .btn-send:disabled{background:#94A3B8;cursor:not-allowed;transform:none}
+    .success-msg{background:#F0FDF4;border:1.5px solid #22C55E;border-radius:12px;padding:14px;font-size:14px;color:#166534;margin-top:14px;display:none;text-align:center}
+    .wa-cta{background:linear-gradient(135deg,#25D366,#128C7E);border-radius:20px;padding:28px;text-align:center;margin-top:24px}
+    .wa-cta h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:white;margin-bottom:8px}
+    .wa-cta p{color:rgba(255,255,255,.75);font-size:14px;margin-bottom:20px}
+    .btn-wa-big{display:inline-flex;align-items:center;gap:10px;background:white;color:#166534;padding:14px 32px;border-radius:50px;font-family:'DM Sans';font-size:16px;font-weight:800;text-decoration:none;transition:all .2s}
+    .btn-wa-big:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
+    @media(max-width:768px){
+      .contact-grid{grid-template-columns:1fr}
+      .f-row{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
-
-<div class="ticker-wrap"><div class="ticker"><span>🏗️ Cement — Best Prices in Delhi NCR</span><span>UltraTech • ACC • Ambuja • Shree</span><span>Same Day Delivery Available</span><span>Bulk Orders: +91 96541 71005</span><span>100% Genuine — ISI Certified</span><span>🏗️ Cement — Best Prices in Delhi NCR</span></div></div>
+<div class="ticker-wrap"><div class="ticker">
+  <span>📞 Call: +91 96541 71005</span>
+  <span>💬 WhatsApp 24/7</span>
+  <span>📧 support@groutgrove.in</span>
+  <span>📞 Call: +91 96541 71005</span>
+</div></div>
 
 <nav>
   <div class="nav-inner">
@@ -55,133 +69,143 @@
       <a href="track.html">Track Order</a>
       <a href="contact.html">Contact</a>
       <a href="login.html" id="loginNavBtn">Login</a>
-      <span id="userBadge" style="display:none;background:#2D7A50;color:white;font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px;cursor:pointer;" onclick="logoutUser()">👤 <span id="userName"></span> ✕</span>
+      <span id="userBadge" style="display:none;background:#1E293B;color:white;font-size:13px;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer;" onclick="logoutUser()">👤 <span id="userName"></span> ✕</span>
       <a href="cart.html" class="nav-cta">🛒 Cart</a>
     </div>
     <button class="hamburger" onclick="toggleNav()">☰</button>
   </div>
 </nav>
 
-<div class="cat-hero">
-  <h1>🏗️ Buy <span>Cement</span> Online</h1>
-  <p>Best cement brands at wholesale prices. Delivered directly to your construction site.</p>
-  <div class="cat-hero-badges">
-    <div class="hero-badge-item">✅ ISI Certified</div>
-    <div class="hero-badge-item">🚚 Same Day Delivery</div>
-    <div class="hero-badge-item">💰 Best Price Guaranteed</div>
-    <div class="hero-badge-item">📦 Bulk Orders Welcome</div>
-  </div>
+<div class="contact-hero">
+  <h1>Contact <span>Us</span></h1>
+  <p>We are always available — call, WhatsApp or email us anytime!</p>
 </div>
 
-<div class="cat-page">
+<div class="contact-page">
+  <div class="contact-grid">
+    <!-- Contact Info -->
+    <div class="contact-card">
+      <h2>Get In <span>Touch</span></h2>
+      <a href="tel:+919654171005" class="contact-item">
+        <div class="ci-icon phone">📞</div>
+        <div>
+          <div class="ci-label">Phone / Call</div>
+          <div class="ci-value">+91 96541 71005</div>
+          <div class="ci-sub">Mon–Sat: 8AM–8PM</div>
+        </div>
+      </a>
+      <a href="https://wa.me/919654171005?text=Hi GroutGrove! I need help with construction material." target="_blank" class="contact-item">
+        <div class="ci-icon wa">💬</div>
+        <div>
+          <div class="ci-label">WhatsApp — Fastest Response</div>
+          <div class="ci-value">+91 96541 71005</div>
+          <div class="ci-sub">Available 24/7</div>
+        </div>
+      </a>
+      <a href="mailto:support@groutgrove.in" class="contact-item">
+        <div class="ci-icon email">📧</div>
+        <div>
+          <div class="ci-label">Email</div>
+          <div class="ci-value">support@groutgrove.in</div>
+          <div class="ci-sub">Reply within 24 hours</div>
+        </div>
+      </a>
+      <div class="contact-item" style="cursor:default">
+        <div class="ci-icon hours">🕐</div>
+        <div>
+          <div class="ci-label">Working Hours</div>
+          <div class="ci-value">Mon–Sat: 8AM – 8PM</div>
+          <div class="ci-sub">Sun: 9AM – 5PM | WhatsApp 24/7</div>
+        </div>
+      </div>
+      <div class="contact-item" style="cursor:default">
+        <div class="ci-icon area">📍</div>
+        <div>
+          <div class="ci-label">Service Areas</div>
+          <div class="ci-value">Delhi NCR</div>
+          <div class="ci-sub">Delhi • Noida • Gr. Noida • Gurugram • Ghaziabad • Faridabad</div>
+        </div>
+      </div>
+    </div>
 
-  <!-- BRAND FILTER -->
-  <div class="info-section">
-    <h2>Top Cement <span>Brands</span></h2>
-    <div class="brand-grid">
-      <div class="brand-card" onclick="filterBrand('all',this)"><div class="brand-ico">🏪</div><div class="brand-name">All Brands</div><div class="brand-tag">Show all</div></div>
-      <div class="brand-card" onclick="filterBrand('UltraTech',this)"><div class="brand-ico">🏆</div><div class="brand-name">UltraTech</div><div class="brand-tag">#1 in India</div></div>
-      <div class="brand-card" onclick="filterBrand('ACC',this)"><div class="brand-ico">⭐</div><div class="brand-name">ACC</div><div class="brand-tag">Since 1936</div></div>
-      <div class="brand-card" onclick="filterBrand('Ambuja',this)"><div class="brand-ico">💪</div><div class="brand-name">Ambuja</div><div class="brand-tag">Strong Bond</div></div>
-      <div class="brand-card" onclick="filterBrand('Shree',this)"><div class="brand-ico">🌟</div><div class="brand-name">Shree</div><div class="brand-tag">Budget Friendly</div></div>
-      <div class="brand-card" onclick="filterBrand('JK',this)"><div class="brand-ico">🔵</div><div class="brand-name">JK Cement</div><div class="brand-tag">Premium Quality</div></div>
+    <!-- Contact Form -->
+    <div class="form-card">
+      <h2>Send Us a <span>Message</span></h2>
+      <div class="f-row">
+        <div class="ff"><label>Your Name *</label><input type="text" id="cName" placeholder="Rajesh Kumar"/></div>
+        <div class="ff"><label>Phone Number *</label><input type="tel" id="cPhone" placeholder="9876543210" maxlength="10"/></div>
+      </div>
+      <div class="f-row">
+        <div class="ff"><label>Your City *</label>
+          <select id="cCity">
+            <option value="">Select City</option>
+            <option>Delhi</option><option>Noida</option><option>Greater Noida</option>
+            <option>Gurugram</option><option>Ghaziabad</option><option>Faridabad</option><option>Other</option>
+          </select>
+        </div>
+        <div class="ff"><label>Material Needed</label>
+          <select id="cMaterial">
+            <option value="">Select Material</option>
+            <option>Cement</option><option>Steel / TMT Bars</option><option>Bricks</option>
+            <option>Tiles</option><option>Sand / Grit</option><option>Paint</option>
+            <option>PVC Pipes</option><option>Electrical</option><option>Hardware</option>
+            <option>Multiple Materials</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="ff"><label>Your Message *</label>
+        <textarea id="cMessage" placeholder="Tell us what you need — quantity, specifications, delivery location..."></textarea>
+      </div>
+      <button class="btn-send" id="sendBtn" onclick="sendMessage()">📨 Send Message</button>
+      <div class="success-msg" id="successMsg">
+        ✅ Message sent! We will call you within 30 minutes. For urgent needs — WhatsApp us directly!
+      </div>
     </div>
   </div>
 
-  <!-- TYPE FILTER -->
-  <div class="filter-row">
-    <button class="f-btn active" onclick="filterType('all',this)">All Types</button>
-    <button class="f-btn" onclick="filterType('PPC',this)">PPC Cement</button>
-    <button class="f-btn" onclick="filterType('OPC',this)">OPC Cement</button>
-    <button class="f-btn" onclick="filterType('White',this)">White Cement</button>
-    <button class="f-btn" onclick="filterType('43',this)">43 Grade</button>
-    <button class="f-btn" onclick="filterType('53',this)">53 Grade</button>
-  </div>
-
-  <!-- PRODUCTS -->
-  <div class="prod-count" id="prodCount"></div>
-  <div class="prod-grid" id="productGrid">
-    <div class="loading-state">⏳ Loading cement products...</div>
-  </div>
-
-  <!-- INFO SECTION -->
-  <div class="info-section" style="margin-top:40px">
-    <h2>Cement <span>Buying Guide</span></h2>
-    <div class="info-cards">
-      <div class="info-card"><h4>PPC vs OPC?</h4><p>PPC is best for general construction. OPC 53 Grade is stronger — use for columns, beams & foundations.</p></div>
-      <div class="info-card"><h4>How much cement?</h4><p>For 1000 sqft house you need approx 400 bags of cement. Use our calculator for exact quantity.</p></div>
-      <div class="info-card"><h4>Storage Tips</h4><p>Store cement bags on wooden platform. Keep away from moisture. Use within 3 months of manufacturing.</p></div>
-      <div class="info-card"><h4>Bulk Discount</h4><p>Order 50+ bags and get extra 5% discount. Order 100+ bags for 10% off. WhatsApp us for bulk pricing.</p></div>
-    </div>
+  <div class="wa-cta">
+    <h3>💬 Fastest — WhatsApp Us!</h3>
+    <p>Get instant reply on WhatsApp — price quotes, product availability, bulk orders</p>
+    <a href="https://wa.me/919654171005?text=Hi GroutGrove! I need construction material. Please help." target="_blank" class="btn-wa-big">
+      💬 WhatsApp Now — +91 96541 71005
+    </a>
   </div>
 </div>
 
 <div class="wa-float">
-  <div class="wa-bubble" id="waBubble">💬 <strong>Cement order help?</strong><br><small>+91 96541 71005</small></div>
-  <a href="https://wa.me/919654171005?text=Namaste! I need cement — please help." target="_blank" class="wa-btn" id="waBtn">💬</a>
+  <div class="wa-bubble" id="waBubble">💬 <strong>Chat with us!</strong><br><small>+91 96541 71005</small></div>
+  <a href="https://wa.me/919654171005" target="_blank" class="wa-btn" id="waBtn">💬</a>
 </div>
-<div class="call-float"><a href="tel:+919654171005" class="call-btn">📞 Call for Bulk Order</a></div>
 
 <script src="../script.js"></script>
 <script>
-  const{createClient}=supabase;
-  const sb=createClient('https://ddgwdesqicrneikxrcnj.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo');
-  const nxUser=JSON.parse(localStorage.getItem('nx_user'));
-  if(nxUser){const lb=document.getElementById('loginNavBtn');const ub=document.getElementById('userBadge');const un=document.getElementById('userName');if(lb)lb.style.display='none';if(ub)ub.style.display='inline-flex';if(un)un.textContent=nxUser.name.split(' ')[0];}
-  function logoutUser(){localStorage.removeItem('nx_user');window.location.reload();}
-  let allProds=[];
-  async function loadProducts(){
-    const{data,error}=await sb.from('products').select('*').eq('category','cement').eq('status','active').order('created_at',{ascending:false});
-    allProds=data||[];
-    renderProducts(allProds);
-  }
-  function renderProducts(prods){
-    const grid=document.getElementById('productGrid');
-    const count=document.getElementById('prodCount');
-    if(!prods||!prods.length){
-      count.innerHTML='';
-      grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="e-ico">🏗️</div><h3>No cement products listed yet</h3><p>Be the first to list your cement! Register as a seller.</p><a href="seller.html" class="btn-primary" style="text-decoration:none">🏭 Become a Seller</a></div>`;
-      return;
-    }
-    count.innerHTML=`<span>${prods.length}</span> cement products available`;
-    grid.innerHTML=prods.map(p=>{
-      const orig=p.discount>0?Math.round(p.price*100/(100-p.discount)):null;
-      return`<div class="prod-card">
-        <div class="prod-img" style="${p.photo_url&&p.photo_url.length>100?'padding:0':''}">
-          ${p.photo_url&&p.photo_url.length>100?`<img src="${p.photo_url}" style="width:100%;height:100%;object-fit:cover">`:'🏗️'}
-          ${p.discount>0?`<span class="badge-sale">-${p.discount}%</span>`:''}
-          <span class="badge-best">${p.delivery_time||'Fast Delivery'}</span>
-        </div>
-        <div class="prod-body">
-          <div class="prod-brand">${p.brand_name}</div>
-          <div class="prod-name">${p.product_name}</div>
-          <div class="prod-specs">${p.specs||''}</div>
-          ${p.offer_text?`<div style="background:#E8F5EE;color:#2D7A50;font-size:11px;font-weight:700;padding:4px 10px;border-radius:15px;display:inline-block;margin-top:4px">🔥 ${p.offer_text}</div>`:''}
-          ${p.min_order?`<div style="font-size:11px;color:#5A7A65;margin-top:4px">📦 Min: ${p.min_order}</div>`:''}
-          <div class="prod-price">
-            <span class="price-now">₹${parseFloat(p.price).toLocaleString('en-IN')}</span>
-            ${orig?`<span class="price-old">₹${orig.toLocaleString('en-IN')}</span>`:''}
-            <span class="price-unit">${p.unit}</span>
-          </div>
-          <div class="prod-actions">
-            <button class="btn-cart" onclick="addToCart('${p.product_name.replace(/'/g,"\\'")}',${p.price})">🛒 Add to Cart</button>
-            <a href="https://wa.me/919654171005?text=I need ${encodeURIComponent(p.product_name)}" target="_blank" class="btn-wa">💬</a>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-  function filterBrand(brand,btn){
-    document.querySelectorAll('.brand-card').forEach(b=>b.classList.remove('sel'));
-    btn.classList.add('sel');
-    renderProducts(brand==='all'?allProds:allProds.filter(p=>p.brand_name&&p.brand_name.toLowerCase().includes(brand.toLowerCase())));
-  }
-  function filterType(type,btn){
-    document.querySelectorAll('.f-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    renderProducts(type==='all'?allProds:allProds.filter(p=>(p.product_name+' '+(p.specs||'')).toLowerCase().includes(type.toLowerCase())));
-  }
-  loadProducts();
+const nxUser = JSON.parse(localStorage.getItem('nx_user'));
+if(nxUser){document.getElementById('loginNavBtn').style.display='none';document.getElementById('userBadge').style.display='inline-flex';document.getElementById('userName').textContent=nxUser.name.split(' ')[0];}
+function logoutUser(){localStorage.removeItem('nx_user');window.location.reload();}
+
+function sendMessage() {
+  const name = document.getElementById('cName').value.trim();
+  const phone = document.getElementById('cPhone').value.trim().replace(/\D/g,'');
+  const city = document.getElementById('cCity').value;
+  const material = document.getElementById('cMaterial').value;
+  const message = document.getElementById('cMessage').value.trim();
+  if(!name){showToast('⚠️ Please enter your name!');return;}
+  if(!phone||phone.length<10){showToast('⚠️ Enter valid 10-digit phone!');return;}
+  if(!city){showToast('⚠️ Select your city!');return;}
+  if(!message){showToast('⚠️ Please write your message!');return;}
+  const btn = document.getElementById('sendBtn');
+  btn.textContent='⏳ Sending...';btn.disabled=true;
+  // Send via WhatsApp to admin
+  const waMsg=encodeURIComponent(`📩 *NEW CONTACT FORM — GROUTGROVE*\n\n👤 Name: ${name}\n📱 Phone: ${phone}\n📍 City: ${city}\n🏗️ Material: ${material||'Not specified'}\n\n💬 Message:\n${message}\n\n⚡ Please call/reply within 30 minutes!`);
+  setTimeout(()=>{
+    window.open(`https://wa.me/919654171005?text=${waMsg}`,'_blank');
+    document.getElementById('successMsg').style.display='block';
+    btn.textContent='📨 Send Message';btn.disabled=false;
+    document.getElementById('cName').value='';
+    document.getElementById('cPhone').value='';
+    document.getElementById('cMessage').value='';
+  },1000);
+}
 </script>
 </body>
 </html>

@@ -276,4 +276,4 @@ document.addEventListener('DOMContentLoaded', function() {
     const input = document.querySelector('.filter-search');
     if(input) input.value = sanitizeInput(searchQuery);
   }
-});
+}); 

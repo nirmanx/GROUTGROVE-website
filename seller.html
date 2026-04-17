@@ -3,113 +3,174 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Seller Registration – GroutGrove</title>
-<link rel="stylesheet" href="../style.css"/>
+<title>Sell on GroutGrove – Free Seller Registration</title>
+<meta name="description" content="Register as seller on GroutGrove. Reach thousands of builders in Delhi NCR. 100% free, products go live instantly."/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
-*{box-sizing:border-box}
-body{font-family:'DM Sans',sans-serif;background:#F8FAFC;margin:0;padding:0}
-.seller-hero{background:linear-gradient(135deg,#0F172A,#1E293B);padding:50px 24px;text-align:center}
-.seller-hero h1{font-family:'Playfair Display',serif;font-size:40px;font-weight:800;color:white;margin-bottom:10px}
-.seller-hero h1 span{color:#F59E0B}
-.seller-hero p{color:rgba(255,255,255,.5);font-size:15px;max-width:540px;margin:0 auto 22px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#F8FAFC;color:#1E293B}
+
+/* TICKER */
+.ticker-wrap{background:#1E293B;overflow:hidden;padding:8px 0;white-space:nowrap}
+.ticker{display:inline-flex;animation:tick 30s linear infinite;gap:0}
+.ticker span{color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:0 32px}
+.ticker span::after{content:'•';margin-left:32px;color:#F59E0B}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* NAV */
+nav{background:white;border-bottom:1px solid #E2E8F0;padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:#004225;text-decoration:none}
+.logo span{color:#EF4444}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{color:#475569;font-size:14px;font-weight:500;text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:#1E293B}
+.nav-cta{background:#1E293B!important;color:white!important;padding:8px 20px;border-radius:50px;font-weight:700!important}
+.hamburger{display:none;background:none;border:none;font-size:22px;cursor:pointer}
+@media(max-width:768px){.nav-links{display:none;position:absolute;top:64px;left:0;right:0;background:white;flex-direction:column;padding:20px;border-bottom:1px solid #E2E8F0;gap:16px;z-index:99}.nav-links.open{display:flex}.hamburger{display:block}}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0F172A 0%,#1E293B 60%,#0F172A 100%);padding:56px 24px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;border-radius:50%;border:1px solid rgba(245,158,11,.08)}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-60px;width:220px;height:220px;border-radius:50%;border:1px solid rgba(245,158,11,.06)}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#F59E0B;font-size:12px;font-weight:700;padding:6px 16px;border-radius:50px;margin-bottom:20px;text-transform:uppercase;letter-spacing:1px}
+.hero h1{font-family:'Playfair Display',serif;font-size:44px;font-weight:800;color:white;margin-bottom:12px;line-height:1.2}
+.hero h1 span{color:#F59E0B}
+.hero p{color:rgba(255,255,255,.5);font-size:16px;max-width:560px;margin:0 auto 28px;line-height:1.7}
 .ben-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.ben{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.8);font-size:12px;font-weight:600;padding:7px 16px;border-radius:50px}
+.ben{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.8);font-size:12px;font-weight:600;padding:8px 18px;border-radius:50px}
+@media(max-width:600px){.hero h1{font-size:30px}}
 
-.page{max-width:820px;margin:32px auto 80px;padding:0 20px}
-.step-box{background:white;border-radius:18px;border:1.5px solid #E2E8F0;overflow:hidden;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.step-head{background:linear-gradient(135deg,#1E293B,#334155);padding:14px 20px;display:flex;align-items:center;gap:12px}
-.snum{background:#F59E0B;color:#1E293B;width:28px;height:28px;border-radius:50%;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.step-head h3{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:white;margin:0}
-.step-body{padding:20px}
-.ff{margin-bottom:14px}
-.ff label{display:block;font-size:11px;font-weight:700;color:#64748B;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
-.ff input,.ff select,.ff textarea{width:100%;border:1.5px solid #E2E8F0;border-radius:10px;padding:12px 14px;font-family:'DM Sans';font-size:14px;outline:none;background:#FAFCFB;color:#1E293B;transition:border .2s}
-.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:#1E293B;background:white}
+/* PAGE */
+.page{max-width:840px;margin:36px auto 90px;padding:0 20px}
+
+/* ERROR */
+.err-box{background:#FEF2F2;border:1.5px solid #EF4444;border-radius:14px;padding:14px 18px;font-size:14px;color:#DC2626;margin-bottom:18px;display:none;line-height:1.6}
+
+/* STEP BOXES */
+.step-box{background:white;border-radius:20px;border:1.5px solid #E2E8F0;overflow:hidden;margin-bottom:18px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.step-head{background:linear-gradient(135deg,#1E293B,#334155);padding:16px 22px;display:flex;align-items:center;gap:14px}
+.snum{background:#F59E0B;color:#1E293B;width:30px;height:30px;border-radius:50%;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-head h3{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;color:white;margin:0}
+.step-head p{font-size:12px;color:rgba(255,255,255,.45);margin:2px 0 0}
+.step-body{padding:22px}
+
+/* FORM FIELDS */
+.ff{margin-bottom:16px}
+.ff label{display:block;font-size:11px;font-weight:700;color:#64748B;margin-bottom:7px;text-transform:uppercase;letter-spacing:.6px}
+.ff input,.ff select,.ff textarea{width:100%;border:1.5px solid #E2E8F0;border-radius:12px;padding:13px 16px;font-family:'DM Sans';font-size:14px;outline:none;background:#FAFCFB;color:#1E293B;transition:all .2s}
+.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:#1E293B;background:white;box-shadow:0 0 0 3px rgba(30,41,59,.06)}
 .ff textarea{height:80px;resize:vertical}
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
 
-/* CATEGORY SELECTION GRID */
-.cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
-.cat-opt{background:#F8FAFC;border:2px solid #E2E8F0;border-radius:12px;padding:12px 6px;text-align:center;cursor:pointer;transition:all .2s;user-select:none}
-.cat-opt:hover{border-color:#94A3B8;transform:translateY(-1px)}
-.cat-opt.sel{border-color:#F59E0B;background:#FFFBEB}
-.co-i{font-size:22px;margin-bottom:5px}
+/* CATEGORY GRID */
+.cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.cat-opt{background:#F8FAFC;border:2px solid #E2E8F0;border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;user-select:none}
+.cat-opt:hover{border-color:#94A3B8;transform:translateY(-2px)}
+.cat-opt.sel{border-color:#F59E0B;background:#FFFBEB;transform:translateY(-2px);box-shadow:0 4px 14px rgba(245,158,11,.2)}
+.co-i{font-size:24px;margin-bottom:6px}
 .co-n{font-size:11px;font-weight:700;color:#1E293B}
 .cat-opt.sel .co-n{color:#92400E}
 
 /* DYNAMIC SECTIONS */
-.dyn-box{display:none;background:#F8FAFC;border-radius:14px;padding:18px;margin:12px 0 4px;border:2px solid #E2E8F0}
-.dyn-box.show{display:block;animation:fadeIn .3s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-.dyn-title{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:800;color:#1E293B;margin-bottom:12px;display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid #E2E8F0}
-.dyn-title span{background:#1E293B;color:#F59E0B;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px}
+.dyn-box{display:none;background:#F8FAFC;border-radius:14px;padding:20px;margin:10px 0 6px;border:2px solid #E2E8F0;animation:slideIn .3s ease}
+.dyn-box.show{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.dyn-title{font-size:13px;font-weight:800;color:#1E293B;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;gap:8px}
+.dyn-title .badge{background:#1E293B;color:#F59E0B;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px}
+.sub-title{font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 10px;display:flex;align-items:center;gap:6px}
+.sub-title::after{content:'';flex:1;height:1px;background:#E2E8F0}
 
-/* CHECKBOX GRID */
-.cb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+/* CHECKBOXES */
+.cb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
 .cb-label{display:flex;align-items:center;gap:8px;cursor:pointer;background:white;border:1.5px solid #E2E8F0;border-radius:10px;padding:9px 12px;transition:all .2s;font-size:12px;font-weight:600;color:#1E293B}
 .cb-label:hover{border-color:#1E293B;background:#F8FAFC}
-.cb-label input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:#1E293B;flex-shrink:0}
-.cb-label.checked{border-color:#1E293B;background:#F1F5F9}
-.sub-title{font-size:12px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.5px;margin:12px 0 8px;padding-top:8px;border-top:1px dashed #E2E8F0}
+.cb-label input[type=checkbox]{width:14px;height:14px;cursor:pointer;accent-color:#1E293B;flex-shrink:0}
 
 /* PRODUCT CARDS */
-.prod-card-wrap{position:relative;background:white;border:1.5px solid #E2E8F0;border-radius:14px;padding:20px 18px 18px;margin-bottom:12px}
-.prod-num-badge{position:absolute;top:-10px;left:16px;background:#1E293B;color:#F59E0B;font-size:11px;font-weight:800;padding:3px 12px;border-radius:10px}
-.rm-prod-btn{position:absolute;top:10px;right:12px;background:#FEF2F2;color:#DC2626;border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
-.rm-prod-btn:hover{background:#DC2626;color:white}
-.add-prod-btn{width:100%;background:#F8FAFC;border:2px dashed #CBD5E1;border-radius:12px;padding:14px;font-family:'DM Sans';font-size:14px;font-weight:700;color:#64748B;cursor:pointer;transition:all .2s;margin-top:4px}
+.prod-card{position:relative;background:white;border:1.5px solid #E2E8F0;border-radius:16px;padding:22px 20px 18px;margin-bottom:14px}
+.prod-num{position:absolute;top:-11px;left:18px;background:#1E293B;color:#F59E0B;font-size:11px;font-weight:800;padding:4px 14px;border-radius:50px}
+.rm-prod{position:absolute;top:12px;right:14px;background:#FEF2F2;color:#DC2626;border:none;border-radius:8px;padding:5px 11px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
+.rm-prod:hover{background:#EF4444;color:white}
+.add-prod-btn{width:100%;background:#F8FAFC;border:2px dashed #CBD5E1;border-radius:14px;padding:16px;font-family:'DM Sans';font-size:14px;font-weight:700;color:#64748B;cursor:pointer;transition:all .2s}
 .add-prod-btn:hover{border-color:#1E293B;color:#1E293B;background:white}
 
-/* PHOTO UPLOAD */
-.photo-upload{border:2px dashed #E2E8F0;border-radius:12px;padding:18px;text-align:center;cursor:pointer;transition:all .2s}
-.photo-upload:hover{border-color:#1E293B}
-.ph-previews{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.ph-thumb{position:relative;width:72px;height:72px;border-radius:8px;overflow:hidden;border:2px solid #E2E8F0}
+/* PHOTO */
+.photo-box{border:2px dashed #E2E8F0;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .2s}
+.photo-box:hover{border-color:#1E293B}
+.ph-prev{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ph-thumb{position:relative;width:72px;height:72px;border-radius:10px;overflow:hidden;border:2px solid #E2E8F0}
 .ph-thumb img{width:100%;height:100%;object-fit:cover}
-.ph-rm{position:absolute;top:1px;right:1px;background:rgba(0,0,0,.7);color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.ph-rm{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.7);color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 
-.err-box{background:#FEF2F2;border:1.5px solid #EF4444;border-radius:12px;padding:13px;font-size:13px;color:#DC2626;margin-bottom:14px;display:none;line-height:1.6}
-.notice{background:#FFFBEB;border:1.5px solid #F59E0B;border-radius:12px;padding:13px;font-size:13px;color:#92400E;margin:14px 0;line-height:1.6}
-.btn-submit{width:100%;background:#1E293B;color:white;border:none;border-radius:50px;padding:16px;font-family:'DM Sans';font-size:17px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(30,41,59,.25);margin-top:4px}
-.btn-submit:hover{background:#0F172A;transform:translateY(-2px)}
+/* NOTICE */
+.notice{background:#FFFBEB;border:1.5px solid #F59E0B;border-radius:14px;padding:14px 18px;font-size:13px;color:#92400E;margin:18px 0;line-height:1.7;display:flex;gap:10px;align-items:flex-start}
+.notice span{font-size:18px;flex-shrink:0}
+
+/* SUBMIT */
+.btn-submit{width:100%;background:linear-gradient(135deg,#1E293B,#0F172A);color:white;border:none;border-radius:50px;padding:17px;font-family:'DM Sans';font-size:18px;font-weight:800;cursor:pointer;transition:all .3s;box-shadow:0 8px 24px rgba(30,41,59,.3);margin-top:6px}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(30,41,59,.4)}
 .btn-submit:disabled{background:#94A3B8;cursor:not-allowed;transform:none;box-shadow:none}
-.wa-help-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:12px;padding:12px;color:#166534;font-size:14px;font-weight:700;text-decoration:none;margin-top:12px}
+.wa-help{display:flex;align-items:center;justify-content:center;gap:8px;background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:50px;padding:12px 24px;color:#166534;font-size:14px;font-weight:700;text-decoration:none;margin-top:12px;transition:all .2s}
+.wa-help:hover{background:#22C55E;color:white}
 
-/* SUCCESS */
-.success-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
-.success-overlay.show{display:flex}
-.success-card{background:white;border-radius:24px;padding:44px 32px;text-align:center;max-width:420px;width:100%}
-.s-ico{font-size:64px;margin-bottom:16px;display:block}
-.s-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:#1E293B;margin-bottom:8px}
-.s-id{background:#F0FDF4;border:2px solid #22C55E;border-radius:12px;padding:10px 22px;font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:#166534;margin:14px 0;display:inline-block}
-.s-msg{color:#64748B;font-size:14px;line-height:1.7;margin-bottom:22px}
-.s-btn{background:#1E293B;color:white;border:none;border-radius:50px;padding:13px 32px;font-family:'DM Sans';font-size:16px;font-weight:700;cursor:pointer}
+/* SUCCESS OVERLAY */
+.s-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)}
+.s-overlay.show{display:flex}
+.s-card{background:white;border-radius:28px;padding:48px 36px;text-align:center;max-width:440px;width:100%;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.s-ico{font-size:72px;margin-bottom:18px;display:block}
+.s-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:800;color:#1E293B;margin-bottom:8px}
+.s-id{background:#F0FDF4;border:2px solid #22C55E;border-radius:14px;padding:12px 24px;font-family:'Playfair Display',serif;font-size:24px;font-weight:800;color:#166534;margin:16px 0;display:inline-block;letter-spacing:2px}
+.s-msg{color:#64748B;font-size:14px;line-height:1.8;margin-bottom:26px}
+.s-btn{background:#1E293B;color:white;border:none;border-radius:50px;padding:14px 36px;font-family:'DM Sans';font-size:17px;font-weight:700;cursor:pointer;transition:all .2s}
+.s-btn:hover{background:#0F172A;transform:translateY(-1px)}
+
+/* FLOAT */
+.wa-float{position:fixed;bottom:24px;right:24px;z-index:500;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.wa-btn{width:58px;height:58px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;text-decoration:none;box-shadow:0 6px 20px rgba(37,211,102,.4);transition:all .2s}
+.wa-btn:hover{transform:scale(1.1)}
+.call-float{position:fixed;bottom:24px;left:24px;z-index:500}
+.call-btn{background:#1E293B;color:white;padding:10px 18px;border-radius:50px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.2)}
 
 @media(max-width:600px){
   .cat-grid{grid-template-columns:repeat(3,1fr)}
   .fr,.fr3{grid-template-columns:1fr}
   .cb-grid{grid-template-columns:repeat(2,1fr)}
-  .seller-hero h1{font-size:30px}
+  .hero h1{font-size:28px}
 }
 </style>
 </head>
 <body>
 
 <!-- SUCCESS OVERLAY -->
-<div class="success-overlay" id="successOverlay">
-  <div class="success-card">
+<div class="s-overlay" id="sOverlay">
+  <div class="s-card">
     <span class="s-ico">🎉</span>
     <div class="s-title">Registration Successful!</div>
-    <div class="s-id" id="sellerId">GG-S-XXXXXX</div>
-    <div class="s-msg">Your products are now <strong>LIVE on GroutGrove!</strong><br>Customers in your area can see them right now.<br>Our team will call you within 24 hours.</div>
+    <div class="s-id" id="sId">GG-S-XXXXXX</div>
+    <div class="s-msg">Your products are now <strong>LIVE on GroutGrove!</strong><br>Customers in your area can see them RIGHT NOW.<br>Our team will call you within 24 hours.</div>
     <button class="s-btn" onclick="window.location.href='../index.html'">🏠 Go to Home</button>
   </div>
 </div>
 
-<!-- NAVBAR -->
+<!-- TICKER -->
+<div class="ticker-wrap"><div class="ticker">
+  <span>Sell on GroutGrove — 100% Free</span>
+  <span>Products Go Live Instantly</span>
+  <span>WhatsApp Orders Direct</span>
+  <span>Zero Commission — 3 Months</span>
+  <span>Delhi NCR's Biggest Construction Marketplace</span>
+  <span>Sell on GroutGrove — 100% Free</span>
+  <span>Products Go Live Instantly</span>
+  <span>WhatsApp Orders Direct</span>
+  <span>Zero Commission — 3 Months</span>
+  <span>Delhi NCR's Biggest Construction Marketplace</span>
+</div></div>
+
+<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <a href="../index.html" class="logo">Grout<span>Grove</span></a>
@@ -117,37 +178,44 @@ body{font-family:'DM Sans',sans-serif;background:#F8FAFC;margin:0;padding:0}
       <a href="../index.html">Home</a>
       <a href="products.html">Products</a>
       <a href="contact.html">Contact</a>
+      <a href="login.html">Login</a>
       <a href="cart.html" class="nav-cta">🛒 Cart</a>
     </div>
     <button class="hamburger" onclick="toggleNav()">☰</button>
   </div>
 </nav>
 
-<div class="seller-hero">
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🏭 Seller Registration Open</div>
   <h1>Sell on <span>GroutGrove</span></h1>
-  <p>Reach thousands of builders in Delhi NCR. Free registration — products go LIVE instantly!</p>
+  <p>Reach thousands of builders & contractors in Delhi NCR. Register FREE — products go live instantly!</p>
   <div class="ben-row">
-    <div class="ben">✅ 100% Free</div>
-    <div class="ben">🚀 Products Live Instantly</div>
+    <div class="ben">✅ 100% Free Forever</div>
+    <div class="ben">🚀 Instant Live Listing</div>
     <div class="ben">📱 WhatsApp Orders</div>
-    <div class="ben">🏆 Zero Commission — 3 Months</div>
+    <div class="ben">💰 Zero Commission 3 Months</div>
+    <div class="ben">🔒 Privacy Protected</div>
   </div>
 </div>
 
 <div class="page">
   <div class="err-box" id="errBox"></div>
 
-  <!-- STEP 1 — Business Details -->
+  <!-- STEP 1 -->
   <div class="step-box">
-    <div class="step-head"><div class="snum">1</div><h3>Business Details</h3></div>
+    <div class="step-head">
+      <div class="snum">1</div>
+      <div><h3>Business Details</h3><p>Tell us about your business</p></div>
+    </div>
     <div class="step-body">
       <div class="fr">
         <div class="ff"><label>Business / Shop Name *</label><input type="text" id="bizName" placeholder="e.g. Sharma Tiles & Bricks"/></div>
         <div class="ff"><label>Owner Name *</label><input type="text" id="ownerName" placeholder="e.g. Ramesh Sharma"/></div>
       </div>
       <div class="fr">
-        <div class="ff"><label>WhatsApp Number * (Orders will come here)</label><input type="tel" id="waPhone" placeholder="10-digit WhatsApp number" maxlength="10"/></div>
-        <div class="ff"><label>Alternate Phone (Optional)</label><input type="tel" id="altPhone" placeholder="Optional second number"/></div>
+        <div class="ff"><label>WhatsApp Number * (Orders will come here)</label><input type="tel" id="waPhone" placeholder="10-digit number" maxlength="10"/></div>
+        <div class="ff"><label>Alternate Phone (Optional)</label><input type="tel" id="altPhone" placeholder="Optional"/></div>
       </div>
       <div class="fr">
         <div class="ff"><label>Business Type *</label>
@@ -161,7 +229,7 @@ body{font-family:'DM Sans',sans-serif;background:#F8FAFC;margin:0;padding:0}
             <option>Contractor / Supplier</option>
           </select>
         </div>
-        <div class="ff"><label>Years in Business *</label>
+        <div class="ff"><label>Years in This Business *</label>
           <select id="bizYears">
             <option value="">Select Experience</option>
             <option>Less than 1 year</option>
@@ -179,9 +247,12 @@ body{font-family:'DM Sans',sans-serif;background:#F8FAFC;margin:0;padding:0}
     </div>
   </div>
 
-  <!-- STEP 2 — Location -->
+  <!-- STEP 2 -->
   <div class="step-box">
-    <div class="step-head"><div class="snum">2</div><h3>Business Location</h3></div>
+    <div class="step-head">
+      <div class="snum">2</div>
+      <div><h3>Business Location</h3><p>Where are you based?</p></div>
+    </div>
     <div class="step-body">
       <div class="ff"><label>Full Address *</label>
         <input type="text" id="bizAddr" placeholder="Shop no., Street, Area, Landmark..."/>
@@ -197,26 +268,26 @@ body{font-family:'DM Sans',sans-serif;background:#F8FAFC;margin:0;padding:0}
         </div>
         <div class="ff"><label>State *</label>
           <select id="bizState">
-            <option value="">Select State</option>
+            <option value="">Select</option>
             <option>Delhi</option><option>Uttar Pradesh</option><option>Haryana</option><option>Other</option>
           </select>
         </div>
-        <div class="ff"><label>Pincode *</label>
-          <input type="text" id="bizPin" placeholder="201301" maxlength="6"/>
-        </div>
+        <div class="ff"><label>Pincode *</label><input type="text" id="bizPin" placeholder="201301" maxlength="6"/></div>
       </div>
-      <div class="ff"><label>Delivery Coverage Area (Pincodes / Areas)</label>
-        <input type="text" id="deliveryArea" placeholder="e.g. Noida Sector 1-100, Greater Noida, Ghaziabad..."/>
+      <div class="ff"><label>Delivery Coverage Area</label>
+        <input type="text" id="deliveryArea" placeholder="e.g. Noida Sectors 1-100, Greater Noida, Ghaziabad..."/>
       </div>
     </div>
   </div>
 
-  <!-- STEP 3 — Category Selection + Dynamic Questions -->
+  <!-- STEP 3 -->
   <div class="step-box">
-    <div class="step-head"><div class="snum">3</div><h3>What Do You Sell? Select Category → Fill Details</h3></div>
+    <div class="step-head">
+      <div class="snum">3</div>
+      <div><h3>Select Your Categories</h3><p>Click category → Answer relevant questions</p></div>
+    </div>
     <div class="step-body">
-      <p style="font-size:13px;color:#64748B;margin-bottom:14px">👇 Click on your category — relevant questions will appear automatically</p>
-
+      <p style="font-size:13px;color:#64748B;margin-bottom:16px">👇 Select your category — specific questions will appear automatically</p>
       <div class="cat-grid">
         <div class="cat-opt" onclick="toggleCat(this,'cement')"><div class="co-i">🏗️</div><div class="co-n">Cement</div></div>
         <div class="cat-opt" onclick="toggleCat(this,'steel')"><div class="co-i">⚙️</div><div class="co-n">Steel/TMT</div></div>
@@ -231,50 +302,43 @@ body{font-family:'DM Sans',sans-serif;background:#F8FAFC;margin:0;padding:0}
         <div class="cat-opt" onclick="toggleCat(this,'hardware')"><div class="co-i">🔩</div><div class="co-n">Hardware</div></div>
         <div class="cat-opt" onclick="toggleCat(this,'chemicals')"><div class="co-i">🧪</div><div class="co-n">Chemicals</div></div>
         <div class="cat-opt" onclick="toggleCat(this,'bathware')"><div class="co-i">🛁</div><div class="co-n">Bathware</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'gfrp')"><div class="co-i">🏗️</div><div class="co-n">GFRP Rebar</div></div>
+        <div class="cat-opt" onclick="toggleCat(this,'gfrp')"><div class="co-i">🔧</div><div class="co-n">GFRP Rebar</div></div>
         <div class="cat-opt" onclick="toggleCat(this,'other')"><div class="co-i">📦</div><div class="co-n">Other</div></div>
       </div>
 
-      <!-- ===== CEMENT DYNAMIC ===== -->
+      <!-- CEMENT -->
       <div class="dyn-box" id="dyn-cement">
-        <div class="dyn-title">🏗️ Cement Details <span>FILL ALL</span></div>
-        <div class="sub-title">Cement Types You Sell</div>
+        <div class="dyn-title">🏗️ Cement Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Cement Types</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="cement-type" value="PPC Cement"> PPC Cement</label>
           <label class="cb-label"><input type="checkbox" name="cement-type" value="OPC 43 Grade"> OPC 43 Grade</label>
           <label class="cb-label"><input type="checkbox" name="cement-type" value="OPC 53 Grade"> OPC 53 Grade</label>
           <label class="cb-label"><input type="checkbox" name="cement-type" value="White Cement"> White Cement</label>
-          <label class="cb-label"><input type="checkbox" name="cement-type" value="Rapid Hardening Cement"> Rapid Hardening</label>
+          <label class="cb-label"><input type="checkbox" name="cement-type" value="Rapid Hardening"> Rapid Hardening</label>
           <label class="cb-label"><input type="checkbox" name="cement-type" value="Sulphate Resistant"> Sulphate Resistant</label>
-          <label class="cb-label"><input type="checkbox" name="cement-type" value="Low Heat Cement"> Low Heat Cement</label>
-          <label class="cb-label"><input type="checkbox" name="cement-type" value="Blast Furnace Slag"> Blast Furnace Slag</label>
         </div>
         <div class="sub-title">Brands You Deal In</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="cement-brand" value="UltraTech"> UltraTech</label>
-          <label class="cb-label"><input type="checkbox" name="cement-brand" value="ACC Cement"> ACC Cement</label>
-          <label class="cb-label"><input type="checkbox" name="cement-brand" value="Ambuja"> Ambuja Cement</label>
+          <label class="cb-label"><input type="checkbox" name="cement-brand" value="ACC"> ACC Cement</label>
+          <label class="cb-label"><input type="checkbox" name="cement-brand" value="Ambuja"> Ambuja</label>
           <label class="cb-label"><input type="checkbox" name="cement-brand" value="Shree Cement"> Shree Cement</label>
           <label class="cb-label"><input type="checkbox" name="cement-brand" value="JK Lakshmi"> JK Lakshmi</label>
-          <label class="cb-label"><input type="checkbox" name="cement-brand" value="Bangur"> Bangur / Shree Ultra</label>
+          <label class="cb-label"><input type="checkbox" name="cement-brand" value="Bangur"> Bangur</label>
           <label class="cb-label"><input type="checkbox" name="cement-brand" value="Birla Samrat"> Birla Samrat</label>
-          <label class="cb-label"><input type="checkbox" name="cement-brand" value="Dalmia Cement"> Dalmia Cement</label>
-          <label class="cb-label"><input type="checkbox" name="cement-brand" value="Wonder Cement"> Wonder Cement</label>
           <label class="cb-label"><input type="checkbox" name="cement-brand" value="Other Brand"> Other Brand</label>
         </div>
-        <div class="sub-title">Supply Capacity</div>
-        <div class="fr">
-          <div class="ff"><label>Minimum Order (Bags)</label><input type="text" id="cement-min" placeholder="e.g. 10 bags, 50 bags"/></div>
-          <div class="ff"><label>Stock Available</label>
-            <select id="cement-stock"><option>Ready Stock Available</option><option>2-3 Days Lead Time</option><option>On Order Basis</option></select>
-          </div>
+        <div class="fr" style="margin-top:12px">
+          <div class="ff"><label>Min Order (Bags)</label><input type="text" id="cement-min" placeholder="e.g. 10 bags"/></div>
+          <div class="ff"><label>Stock Availability</label><select id="cement-stock"><option>Ready Stock</option><option>2-3 Days Lead Time</option><option>On Order Basis</option></select></div>
         </div>
       </div>
 
-      <!-- ===== TILES DYNAMIC ===== -->
+      <!-- TILES -->
       <div class="dyn-box" id="dyn-tiles">
-        <div class="dyn-title">🪟 Tiles Details <span>FILL ALL</span></div>
-        <div class="sub-title">Tile Types You Sell</div>
+        <div class="dyn-title">🪟 Tiles Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Tile Types</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="tile-type" value="Ceramic Tiles"> Ceramic Tiles</label>
           <label class="cb-label"><input type="checkbox" name="tile-type" value="Vitrified Tiles"> Vitrified Tiles</label>
@@ -283,123 +347,97 @@ body{font-family:'DM Sans',sans-serif;background:#F8FAFC;margin:0;padding:0}
           <label class="cb-label"><input type="checkbox" name="tile-type" value="Terracotta Tiles"> Terracotta Tiles</label>
           <label class="cb-label"><input type="checkbox" name="tile-type" value="Zellige Tiles"> Zellige Tiles</label>
           <label class="cb-label"><input type="checkbox" name="tile-type" value="Cement Tiles"> Cement Tiles</label>
-          <label class="cb-label"><input type="checkbox" name="tile-type" value="Wooden Tiles"> Wooden / Wood-Look</label>
-          <label class="cb-label"><input type="checkbox" name="tile-type" value="Stone Tiles"> Stone / Marble Tiles</label>
-          <label class="cb-label"><input type="checkbox" name="tile-type" value="Mosaic Tiles"> Mosaic Tiles</label>
-          <label class="cb-label"><input type="checkbox" name="tile-type" value="Metal Tiles"> Metal Tiles</label>
-          <label class="cb-label"><input type="checkbox" name="tile-type" value="Subway Tiles"> Subway Tiles</label>
+          <label class="cb-label"><input type="checkbox" name="tile-type" value="Wooden Look Tiles"> Wooden Look</label>
+          <label class="cb-label"><input type="checkbox" name="tile-type" value="Stone Tiles"> Stone/Marble</label>
         </div>
         <div class="sub-title">Usage Area</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="tile-area" value="Floor Tiles"> Floor Tiles</label>
           <label class="cb-label"><input type="checkbox" name="tile-area" value="Wall Tiles"> Wall Tiles</label>
-          <label class="cb-label"><input type="checkbox" name="tile-area" value="Bathroom Tiles"> Bathroom Tiles</label>
-          <label class="cb-label"><input type="checkbox" name="tile-area" value="Kitchen Tiles"> Kitchen Tiles</label>
-          <label class="cb-label"><input type="checkbox" name="tile-area" value="Outdoor/Parking"> Outdoor / Parking</label>
-          <label class="cb-label"><input type="checkbox" name="tile-area" value="Swimming Pool"> Swimming Pool</label>
-          <label class="cb-label"><input type="checkbox" name="tile-area" value="Elevation/Facade"> Elevation / Facade</label>
-          <label class="cb-label"><input type="checkbox" name="tile-area" value="Roof/Terrace"> Roof / Terrace</label>
+          <label class="cb-label"><input type="checkbox" name="tile-area" value="Bathroom Tiles"> Bathroom</label>
+          <label class="cb-label"><input type="checkbox" name="tile-area" value="Kitchen Tiles"> Kitchen</label>
+          <label class="cb-label"><input type="checkbox" name="tile-area" value="Outdoor/Parking"> Outdoor/Parking</label>
+          <label class="cb-label"><input type="checkbox" name="tile-area" value="Elevation/Facade"> Elevation</label>
         </div>
-        <div class="sub-title">Tile Sizes Available</div>
+        <div class="sub-title">Sizes Available</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="tile-size" value="200x200 mm"> 200×200 mm</label>
-          <label class="cb-label"><input type="checkbox" name="tile-size" value="300x300 mm"> 300×300 mm</label>
-          <label class="cb-label"><input type="checkbox" name="tile-size" value="300x600 mm"> 300×600 mm</label>
-          <label class="cb-label"><input type="checkbox" name="tile-size" value="600x600 mm"> 600×600 mm</label>
-          <label class="cb-label"><input type="checkbox" name="tile-size" value="800x800 mm"> 800×800 mm</label>
-          <label class="cb-label"><input type="checkbox" name="tile-size" value="600x1200 mm"> 600×1200 mm</label>
-          <label class="cb-label"><input type="checkbox" name="tile-size" value="800x1600 mm"> 800×1600 mm</label>
+          <label class="cb-label"><input type="checkbox" name="tile-size" value="300x300mm"> 300×300 mm</label>
+          <label class="cb-label"><input type="checkbox" name="tile-size" value="300x600mm"> 300×600 mm</label>
+          <label class="cb-label"><input type="checkbox" name="tile-size" value="600x600mm"> 600×600 mm</label>
+          <label class="cb-label"><input type="checkbox" name="tile-size" value="800x800mm"> 800×800 mm</label>
+          <label class="cb-label"><input type="checkbox" name="tile-size" value="600x1200mm"> 600×1200 mm</label>
           <label class="cb-label"><input type="checkbox" name="tile-size" value="Custom Size"> Custom Size</label>
         </div>
         <div class="sub-title">Finish Type</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="tile-finish" value="Glossy"> Glossy</label>
-          <label class="cb-label"><input type="checkbox" name="tile-finish" value="Matte"> Matte / Satin</label>
-          <label class="cb-label"><input type="checkbox" name="tile-finish" value="Polished"> Polished</label>
+          <label class="cb-label"><input type="checkbox" name="tile-finish" value="Matte"> Matte/Satin</label>
           <label class="cb-label"><input type="checkbox" name="tile-finish" value="Anti-Skid"> Anti-Skid</label>
-          <label class="cb-label"><input type="checkbox" name="tile-finish" value="Rustic"> Rustic / Textured</label>
-          <label class="cb-label"><input type="checkbox" name="tile-finish" value="High Gloss"> High Gloss / Mirror</label>
+          <label class="cb-label"><input type="checkbox" name="tile-finish" value="Polished"> Polished</label>
+          <label class="cb-label"><input type="checkbox" name="tile-finish" value="Rustic"> Rustic/Textured</label>
+          <label class="cb-label"><input type="checkbox" name="tile-finish" value="High Gloss"> High Gloss</label>
         </div>
-        <div class="sub-title">Brands You Deal In</div>
+        <div class="sub-title">Brands</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="tile-brand" value="Kajaria"> Kajaria</label>
           <label class="cb-label"><input type="checkbox" name="tile-brand" value="Somany"> Somany</label>
           <label class="cb-label"><input type="checkbox" name="tile-brand" value="Orientbell"> Orientbell</label>
-          <label class="cb-label"><input type="checkbox" name="tile-brand" value="Johnson Tiles"> Johnson Tiles</label>
+          <label class="cb-label"><input type="checkbox" name="tile-brand" value="Johnson"> Johnson</label>
           <label class="cb-label"><input type="checkbox" name="tile-brand" value="Nitco"> Nitco</label>
-          <label class="cb-label"><input type="checkbox" name="tile-brand" value="Asian Granito"> Asian Granito</label>
-          <label class="cb-label"><input type="checkbox" name="tile-brand" value="Simpolo"> Simpolo</label>
-          <label class="cb-label"><input type="checkbox" name="tile-brand" value="Local Brand"> Local / Other Brand</label>
-        </div>
-        <div class="fr">
-          <div class="ff"><label>Price Range (₹ per sqft)</label><input type="text" id="tile-price-range" placeholder="e.g. ₹25–₹120 per sqft"/></div>
-          <div class="ff"><label>Minimum Order</label><input type="text" id="tile-min" placeholder="e.g. 50 sqft, 1 box"/></div>
+          <label class="cb-label"><input type="checkbox" name="tile-brand" value="Other Brand"> Other Brand</label>
         </div>
       </div>
 
-      <!-- ===== BRICKS DYNAMIC ===== -->
+      <!-- BRICKS -->
       <div class="dyn-box" id="dyn-bricks">
-        <div class="dyn-title">🧱 Bricks Details <span>FILL ALL</span></div>
-        <div class="sub-title">Brick Types You Sell</div>
+        <div class="dyn-title">🧱 Bricks Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Brick Types</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="brick-type" value="Burnt Clay Bricks"> Burnt Clay (Red Bricks)</label>
+          <label class="cb-label"><input type="checkbox" name="brick-type" value="Burnt Clay Red Bricks"> Burnt Clay (Red)</label>
           <label class="cb-label"><input type="checkbox" name="brick-type" value="Fly Ash Bricks"> Fly Ash Bricks</label>
-          <label class="cb-label"><input type="checkbox" name="brick-type" value="AAC Blocks"> AAC Blocks (Autoclaved)</label>
-          <label class="cb-label"><input type="checkbox" name="brick-type" value="Concrete Hollow Blocks"> Concrete Hollow Blocks</label>
-          <label class="cb-label"><input type="checkbox" name="brick-type" value="Sand Lime Bricks"> Sand Lime / Calcium Silicate</label>
-          <label class="cb-label"><input type="checkbox" name="brick-type" value="Engineering Bricks"> Engineering Bricks</label>
-          <label class="cb-label"><input type="checkbox" name="brick-type" value="Fire Bricks"> Fire Bricks / Refractory</label>
-          <label class="cb-label"><input type="checkbox" name="brick-type" value="Paving Bricks"> Paving / Interlocking</label>
+          <label class="cb-label"><input type="checkbox" name="brick-type" value="AAC Blocks"> AAC Blocks</label>
+          <label class="cb-label"><input type="checkbox" name="brick-type" value="Concrete Hollow Blocks"> Concrete Hollow</label>
+          <label class="cb-label"><input type="checkbox" name="brick-type" value="Sand Lime Bricks"> Sand Lime</label>
+          <label class="cb-label"><input type="checkbox" name="brick-type" value="Fire Bricks"> Fire Bricks</label>
+          <label class="cb-label"><input type="checkbox" name="brick-type" value="Engineering Bricks"> Engineering</label>
+          <label class="cb-label"><input type="checkbox" name="brick-type" value="Paving Bricks"> Paving/Interlocking</label>
         </div>
         <div class="sub-title">Quality Grade</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="brick-grade" value="First Class"> First Class (Premium)</label>
-          <label class="cb-label"><input type="checkbox" name="brick-grade" value="Second Class"> Second Class (Standard)</label>
-          <label class="cb-label"><input type="checkbox" name="brick-grade" value="Third Class"> Third Class (Economy)</label>
+          <label class="cb-label"><input type="checkbox" name="brick-grade" value="First Class"> First Class ⭐⭐⭐</label>
+          <label class="cb-label"><input type="checkbox" name="brick-grade" value="Second Class"> Second Class ⭐⭐</label>
+          <label class="cb-label"><input type="checkbox" name="brick-grade" value="Third Class"> Third Class ⭐</label>
         </div>
-        <div class="sub-title">Standard Sizes Available</div>
+        <div class="sub-title">Sizes Available</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="brick-size" value="190x90x90 mm (IS Standard)"> 190×90×90 mm (IS Standard)</label>
-          <label class="cb-label"><input type="checkbox" name="brick-size" value="230x110x70 mm (Modular)"> 230×110×70 mm (Modular)</label>
-          <label class="cb-label"><input type="checkbox" name="brick-size" value="230x76x76 mm (Common)"> 230×76×76 mm (Common)</label>
-          <label class="cb-label"><input type="checkbox" name="brick-size" value="9x4x3 inch (Traditional)"> 9×4×3 inch (Traditional)</label>
-          <label class="cb-label"><input type="checkbox" name="brick-size" value="400x200x200 mm (AAC)"> 400×200×200 mm (AAC)</label>
-          <label class="cb-label"><input type="checkbox" name="brick-size" value="600x200x200 mm (Large AAC)"> 600×200×200 mm (Large AAC)</label>
-          <label class="cb-label"><input type="checkbox" name="brick-size" value="300x200x100 mm (Block)"> 300×200×100 mm (Block)</label>
+          <label class="cb-label"><input type="checkbox" name="brick-size" value="190x90x90mm IS"> 190×90×90 (IS Std)</label>
+          <label class="cb-label"><input type="checkbox" name="brick-size" value="230x110x70mm"> 230×110×70 mm</label>
+          <label class="cb-label"><input type="checkbox" name="brick-size" value="9x4x3 inch"> 9×4×3 inch</label>
+          <label class="cb-label"><input type="checkbox" name="brick-size" value="400x200x200mm AAC"> 400×200×200 (AAC)</label>
+          <label class="cb-label"><input type="checkbox" name="brick-size" value="600x200x200mm AAC"> 600×200×200 (AAC)</label>
           <label class="cb-label"><input type="checkbox" name="brick-size" value="Custom Size"> Custom Size</label>
         </div>
-        <div class="fr">
-          <div class="ff"><label>Minimum Order Quantity</label><input type="text" id="brick-min" placeholder="e.g. 500 bricks, 1000 pieces"/></div>
-          <div class="ff"><label>Supply Source</label>
-            <select id="brick-source">
-              <option>Direct from Bhatta (Manufacturer)</option>
-              <option>Wholesale Dealer</option>
-              <option>Both Manufacturer + Dealer</option>
-            </select>
-          </div>
-        </div>
-        <div class="ff"><label>Bhatta / Kiln Location (If Manufacturer)</label>
-          <input type="text" id="brick-location" placeholder="e.g. Muradnagar, Ghaziabad — NH-58"/>
+        <div class="fr" style="margin-top:12px">
+          <div class="ff"><label>Min Order</label><input type="text" id="brick-min" placeholder="e.g. 500 bricks"/></div>
+          <div class="ff"><label>Supply Source</label><select id="brick-source"><option>Direct from Bhatta</option><option>Wholesale Dealer</option><option>Both</option></select></div>
         </div>
       </div>
 
-      <!-- ===== STEEL DYNAMIC ===== -->
+      <!-- STEEL -->
       <div class="dyn-box" id="dyn-steel">
-        <div class="dyn-title">⚙️ Steel / TMT Details <span>FILL ALL</span></div>
-        <div class="sub-title">Steel Products You Sell</div>
+        <div class="dyn-title">⚙️ Steel / TMT Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Products</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="steel-type" value="TMT Bars Fe-415"> TMT Bars Fe-415</label>
-          <label class="cb-label"><input type="checkbox" name="steel-type" value="TMT Bars Fe-500D"> TMT Bars Fe-500D</label>
-          <label class="cb-label"><input type="checkbox" name="steel-type" value="TMT Bars Fe-550D"> TMT Bars Fe-550D</label>
-          <label class="cb-label"><input type="checkbox" name="steel-type" value="TMT Bars Fe-600"> TMT Bars Fe-600</label>
-          <label class="cb-label"><input type="checkbox" name="steel-type" value="Mild Steel (MS) Bars"> Mild Steel (MS) Bars</label>
-          <label class="cb-label"><input type="checkbox" name="steel-type" value="Binding Wire"> Binding Wire / Taar</label>
-          <label class="cb-label"><input type="checkbox" name="steel-type" value="Steel Sheets / Plates"> Steel Sheets / Plates</label>
-          <label class="cb-label"><input type="checkbox" name="steel-type" value="Angle Iron / Channels"> Angle Iron / Channels</label>
-          <label class="cb-label"><input type="checkbox" name="steel-type" value="GI Wire Mesh"> GI Wire / Mesh</label>
-          <label class="cb-label"><input type="checkbox" name="steel-type" value="Stainless Steel Rods"> Stainless Steel Rods</label>
+          <label class="cb-label"><input type="checkbox" name="steel-type" value="TMT Fe-415"> TMT Fe-415</label>
+          <label class="cb-label"><input type="checkbox" name="steel-type" value="TMT Fe-500D"> TMT Fe-500D</label>
+          <label class="cb-label"><input type="checkbox" name="steel-type" value="TMT Fe-550D"> TMT Fe-550D</label>
+          <label class="cb-label"><input type="checkbox" name="steel-type" value="Mild Steel MS Bars"> Mild Steel Bars</label>
+          <label class="cb-label"><input type="checkbox" name="steel-type" value="Binding Wire"> Binding Wire</label>
+          <label class="cb-label"><input type="checkbox" name="steel-type" value="Steel Sheets"> Steel Sheets</label>
+          <label class="cb-label"><input type="checkbox" name="steel-type" value="Angle Iron Channels"> Angle/Channels</label>
+          <label class="cb-label"><input type="checkbox" name="steel-type" value="GI Wire Mesh"> GI Wire/Mesh</label>
         </div>
-        <div class="sub-title">Diameters / Sizes Available (mm)</div>
+        <div class="sub-title">Diameters (mm)</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="steel-size" value="6mm"> 6 mm</label>
           <label class="cb-label"><input type="checkbox" name="steel-size" value="8mm"> 8 mm</label>
@@ -408,314 +446,233 @@ body{font-family:'DM Sans',sans-serif;background:#F8FAFC;margin:0;padding:0}
           <label class="cb-label"><input type="checkbox" name="steel-size" value="16mm"> 16 mm</label>
           <label class="cb-label"><input type="checkbox" name="steel-size" value="20mm"> 20 mm</label>
           <label class="cb-label"><input type="checkbox" name="steel-size" value="25mm"> 25 mm</label>
-          <label class="cb-label"><input type="checkbox" name="steel-size" value="28mm"> 28 mm</label>
           <label class="cb-label"><input type="checkbox" name="steel-size" value="32mm"> 32 mm</label>
-          <label class="cb-label"><input type="checkbox" name="steel-size" value="All Sizes Available"> All Sizes</label>
+          <label class="cb-label"><input type="checkbox" name="steel-size" value="All Sizes"> All Sizes</label>
         </div>
-        <div class="sub-title">Brands You Deal In</div>
+        <div class="sub-title">Brands</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="steel-brand" value="TATA Steel (Tiscon)"> TATA Steel (Tiscon)</label>
-          <label class="cb-label"><input type="checkbox" name="steel-brand" value="JSW Steel (Neosteel)"> JSW (Neosteel)</label>
-          <label class="cb-label"><input type="checkbox" name="steel-brand" value="SAIL"> SAIL (Govt. of India)</label>
-          <label class="cb-label"><input type="checkbox" name="steel-brand" value="Jindal Steel (Panther)"> Jindal (Panther)</label>
+          <label class="cb-label"><input type="checkbox" name="steel-brand" value="TATA Tiscon"> TATA Tiscon</label>
+          <label class="cb-label"><input type="checkbox" name="steel-brand" value="JSW Neosteel"> JSW Neosteel</label>
+          <label class="cb-label"><input type="checkbox" name="steel-brand" value="SAIL"> SAIL</label>
+          <label class="cb-label"><input type="checkbox" name="steel-brand" value="Jindal Panther"> Jindal Panther</label>
           <label class="cb-label"><input type="checkbox" name="steel-brand" value="Kamdhenu"> Kamdhenu</label>
-          <label class="cb-label"><input type="checkbox" name="steel-brand" value="Shyam Steel"> Shyam Steel</label>
-          <label class="cb-label"><input type="checkbox" name="steel-brand" value="Rathi Steel"> Rathi Steel</label>
           <label class="cb-label"><input type="checkbox" name="steel-brand" value="Other Brand"> Other Brand</label>
         </div>
-        <div class="fr">
-          <div class="ff"><label>Minimum Order Quantity</label><input type="text" id="steel-min" placeholder="e.g. 1 tonne, 50 kg"/></div>
-          <div class="ff"><label>Current Rate (₹/kg approx.)</label><input type="number" id="steel-rate" placeholder="e.g. 65"/></div>
-        </div>
-        <div class="ff"><label>BIS/ISI Certification Available?</label>
-          <select id="steel-bis">
-            <option>Yes — BIS Certified Stock</option>
-            <option>Partially — Some brands BIS certified</option>
-            <option>No — Not certified</option>
-          </select>
+        <div class="fr" style="margin-top:12px">
+          <div class="ff"><label>Min Order</label><input type="text" id="steel-min" placeholder="e.g. 1 tonne"/></div>
+          <div class="ff"><label>BIS Certified?</label><select id="steel-bis"><option>Yes — BIS Certified</option><option>Partial</option><option>No</option></select></div>
         </div>
       </div>
 
-      <!-- ===== SAND DYNAMIC ===== -->
+      <!-- SAND -->
       <div class="dyn-box" id="dyn-sand">
-        <div class="dyn-title">🪣 Sand / Grit Details <span>FILL ALL</span></div>
-        <div class="sub-title">Sand / Grit Types</div>
+        <div class="dyn-title">🪣 Sand / Grit Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Types Available</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="sand-type" value="River Sand (Baalu)"> River Sand (Baalu)</label>
-          <label class="cb-label"><input type="checkbox" name="sand-type" value="M-Sand (Manufactured)"> M-Sand (Manufactured)</label>
-          <label class="cb-label"><input type="checkbox" name="sand-type" value="Plaster Sand (Fine)"> Plaster Sand (Fine)</label>
-          <label class="cb-label"><input type="checkbox" name="sand-type" value="Coarse Sand"> Coarse Sand</label>
-          <label class="cb-label"><input type="checkbox" name="sand-type" value="Stone Grit 6mm"> Stone Grit 6 mm</label>
-          <label class="cb-label"><input type="checkbox" name="sand-type" value="Stone Grit 12mm"> Stone Grit 12 mm</label>
-          <label class="cb-label"><input type="checkbox" name="sand-type" value="Stone Grit 20mm"> Stone Grit 20 mm</label>
-          <label class="cb-label"><input type="checkbox" name="sand-type" value="Bajri / Crushed Stone"> Bajri / Crushed Stone</label>
+          <label class="cb-label"><input type="checkbox" name="sand-type" value="River Sand Baalu"> River Sand (Baalu)</label>
+          <label class="cb-label"><input type="checkbox" name="sand-type" value="M-Sand Manufactured"> M-Sand (Manufactured)</label>
+          <label class="cb-label"><input type="checkbox" name="sand-type" value="Plaster Sand Fine"> Plaster Sand (Fine)</label>
+          <label class="cb-label"><input type="checkbox" name="sand-type" value="Stone Grit 6mm"> Stone Grit 6mm</label>
+          <label class="cb-label"><input type="checkbox" name="sand-type" value="Stone Grit 12mm"> Stone Grit 12mm</label>
+          <label class="cb-label"><input type="checkbox" name="sand-type" value="Stone Grit 20mm"> Stone Grit 20mm</label>
+          <label class="cb-label"><input type="checkbox" name="sand-type" value="Bajri Crushed Stone"> Bajri/Crushed Stone</label>
           <label class="cb-label"><input type="checkbox" name="sand-type" value="Filling Sand"> Filling Sand</label>
-          <label class="cb-label"><input type="checkbox" name="sand-type" value="White Sand"> White Sand (Silica)</label>
         </div>
-        <div class="fr">
-          <div class="ff"><label>Minimum Supply Quantity</label><input type="text" id="sand-min" placeholder="e.g. 1 Tractor Load, 5 CFT"/></div>
-          <div class="ff"><label>Unit of Sale</label>
-            <select id="sand-unit">
-              <option>per CFT</option><option>per Cubic Meter</option>
-              <option>per Tractor Load</option><option>per Truck Load</option><option>per Ton</option>
-            </select>
-          </div>
-        </div>
-        <div class="ff"><label>Supply Source / Origin</label>
-          <input type="text" id="sand-source" placeholder="e.g. Yamuna River, Ganga, Local quarry..."/>
+        <div class="fr" style="margin-top:12px">
+          <div class="ff"><label>Min Supply Qty</label><input type="text" id="sand-min" placeholder="e.g. 1 Tractor Load"/></div>
+          <div class="ff"><label>Unit of Sale</label><select id="sand-unit"><option>per CFT</option><option>per Cubic Meter</option><option>per Tractor Load</option><option>per Truck Load</option><option>per Ton</option></select></div>
         </div>
       </div>
 
-      <!-- ===== PAINT DYNAMIC ===== -->
+      <!-- PAINT -->
       <div class="dyn-box" id="dyn-paint">
-        <div class="dyn-title">🎨 Paint Details <span>FILL ALL</span></div>
-        <div class="sub-title">Paint Types You Sell</div>
+        <div class="dyn-title">🎨 Paint Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Paint Types</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="paint-type" value="Exterior Emulsion"> Exterior Emulsion</label>
           <label class="cb-label"><input type="checkbox" name="paint-type" value="Interior Emulsion"> Interior Emulsion</label>
-          <label class="cb-label"><input type="checkbox" name="paint-type" value="Distemper"> Distemper (Wall Coating)</label>
-          <label class="cb-label"><input type="checkbox" name="paint-type" value="Primer / Putty"> Primer / Wall Putty</label>
+          <label class="cb-label"><input type="checkbox" name="paint-type" value="Distemper"> Distemper</label>
+          <label class="cb-label"><input type="checkbox" name="paint-type" value="Primer Wall Putty"> Primer/Wall Putty</label>
           <label class="cb-label"><input type="checkbox" name="paint-type" value="Waterproof Paint"> Waterproof Paint</label>
-          <label class="cb-label"><input type="checkbox" name="paint-type" value="Texture Paint"> Texture / Designer Paint</label>
-          <label class="cb-label"><input type="checkbox" name="paint-type" value="Wood Polish/Varnish"> Wood Polish / Varnish</label>
+          <label class="cb-label"><input type="checkbox" name="paint-type" value="Texture Paint"> Texture Paint</label>
+          <label class="cb-label"><input type="checkbox" name="paint-type" value="Wood Polish Varnish"> Wood Polish/Varnish</label>
           <label class="cb-label"><input type="checkbox" name="paint-type" value="Enamel Paint"> Enamel Paint</label>
-          <label class="cb-label"><input type="checkbox" name="paint-type" value="Epoxy Paint"> Epoxy / Floor Paint</label>
-          <label class="cb-label"><input type="checkbox" name="paint-type" value="Anti-Corrosion Paint"> Anti-Corrosion Coating</label>
-          <label class="cb-label"><input type="checkbox" name="paint-type" value="Roof / Heat Resistant"> Roof / Heat Resistant</label>
-          <label class="cb-label"><input type="checkbox" name="paint-type" value="Road Marking Paint"> Road Marking Paint</label>
+          <label class="cb-label"><input type="checkbox" name="paint-type" value="Epoxy Floor Paint"> Epoxy/Floor Paint</label>
         </div>
-        <div class="sub-title">Brands You Deal In</div>
+        <div class="sub-title">Brands</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="paint-brand" value="Asian Paints"> Asian Paints</label>
           <label class="cb-label"><input type="checkbox" name="paint-brand" value="Berger Paints"> Berger Paints</label>
-          <label class="cb-label"><input type="checkbox" name="paint-brand" value="Nerolac"> Nerolac (Kansai)</label>
+          <label class="cb-label"><input type="checkbox" name="paint-brand" value="Nerolac"> Nerolac</label>
           <label class="cb-label"><input type="checkbox" name="paint-brand" value="Indigo Paints"> Indigo Paints</label>
-          <label class="cb-label"><input type="checkbox" name="paint-brand" value="Dulux (AkzoNobel)"> Dulux (AkzoNobel)</label>
-          <label class="cb-label"><input type="checkbox" name="paint-brand" value="Shalimar Paints"> Shalimar Paints</label>
-          <label class="cb-label"><input type="checkbox" name="paint-brand" value="Pidilite Dr.Fixit"> Pidilite / Dr. Fixit</label>
+          <label class="cb-label"><input type="checkbox" name="paint-brand" value="Dulux AkzoNobel"> Dulux</label>
           <label class="cb-label"><input type="checkbox" name="paint-brand" value="Other Brand"> Other Brand</label>
-        </div>
-        <div class="fr">
-          <div class="ff"><label>Pack Sizes Available</label><input type="text" id="paint-packs" placeholder="e.g. 1L, 4L, 10L, 20L"/></div>
-          <div class="ff"><label>Minimum Order</label><input type="text" id="paint-min" placeholder="e.g. 5 litres, 1 tin"/></div>
         </div>
       </div>
 
-      <!-- ===== PVC PIPES DYNAMIC ===== -->
+      <!-- PVC PIPES -->
       <div class="dyn-box" id="dyn-pvc_pipes">
-        <div class="dyn-title">🔵 PVC / CPVC Pipes Details <span>FILL ALL</span></div>
-        <div class="sub-title">Pipe Types You Sell</div>
+        <div class="dyn-title">🔵 PVC Pipes Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Pipe Types</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="pipe-type" value="UPVC Pressure Pipes"> UPVC Pressure Pipes</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-type" value="CPVC Pipes (Hot Water)"> CPVC (Hot Water)</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-type" value="SWR Drainage Pipes"> SWR Drainage Pipes</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-type" value="Column/Casing Pipes"> Column / Casing Pipes</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-type" value="Agriculture Irrigation Pipes"> Agriculture / Irrigation</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-type" value="Electrical Conduit Pipes"> Electrical Conduit</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-type" value="PPR Pipes"> PPR Pipes (Polypropylene)</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-type" value="HDPE Pipes"> HDPE Pipes</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-type" value="GI Pipes"> GI Pipes (Galvanized Iron)</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-type" value="Fittings & Joints"> Fittings / Joints / Bends</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-type" value="UPVC Pressure Pipes"> UPVC Pressure</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-type" value="CPVC Hot Water Pipes"> CPVC (Hot Water)</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-type" value="SWR Drainage Pipes"> SWR Drainage</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-type" value="Column Casing Pipes"> Column/Casing</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-type" value="Agriculture Pipes"> Agriculture</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-type" value="Fittings Joints"> Fittings/Joints</label>
         </div>
-        <div class="sub-title">Diameter Range Available</div>
+        <div class="sub-title">Diameter Range</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="pipe-size" value="0.5 inch (15mm)"> ½ inch (15 mm)</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-size" value="0.75 inch (20mm)"> ¾ inch (20 mm)</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-size" value="1 inch (25mm)"> 1 inch (25 mm)</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-size" value="1.5 inch (40mm)"> 1.5 inch (40 mm)</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-size" value="2 inch (50mm)"> 2 inch (50 mm)</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-size" value="3 inch (75mm)"> 3 inch (75 mm)</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-size" value="4 inch (100mm)"> 4 inch (100 mm)</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-size" value="6 inch+"> 6 inch & above</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-size" value="0.5 inch"> ½ inch</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-size" value="0.75 inch"> ¾ inch</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-size" value="1 inch"> 1 inch</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-size" value="1.5 inch"> 1.5 inch</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-size" value="2 inch"> 2 inch</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-size" value="3 inch+"> 3 inch+</label>
         </div>
-        <div class="sub-title">Brands You Deal In</div>
+        <div class="sub-title">Brands</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="pipe-brand" value="Ajay Pipes"> Ajay Pipes</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-brand" value="Supreme Industries"> Supreme Industries</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-brand" value="Finolex Pipes"> Finolex Pipes</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-brand" value="Astral Pipes"> Astral Pipes</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-brand" value="Prince Pipes"> Prince Pipes</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-brand" value="Wavin Pipes"> Wavin</label>
-          <label class="cb-label"><input type="checkbox" name="pipe-brand" value="Jain Irrigation"> Jain Irrigation</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-brand" value="Supreme Industries"> Supreme</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-brand" value="Finolex Pipes"> Finolex</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-brand" value="Astral Pipes"> Astral</label>
+          <label class="cb-label"><input type="checkbox" name="pipe-brand" value="Prince Pipes"> Prince</label>
           <label class="cb-label"><input type="checkbox" name="pipe-brand" value="Other Brand"> Other Brand</label>
         </div>
       </div>
 
-      <!-- ===== PLUMBING DYNAMIC ===== -->
+      <!-- PLUMBING -->
       <div class="dyn-box" id="dyn-plumbing">
-        <div class="dyn-title">🚿 Plumbing Products Details <span>FILL ALL</span></div>
-        <div class="sub-title">Plumbing Products You Sell</div>
+        <div class="dyn-title">🚿 Plumbing Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Products</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="plumb-type" value="CP/Chrome Fittings"> CP / Chrome Fittings</label>
+          <label class="cb-label"><input type="checkbox" name="plumb-type" value="CP Chrome Fittings"> CP/Chrome Fittings</label>
           <label class="cb-label"><input type="checkbox" name="plumb-type" value="Ball Valves"> Ball Valves</label>
           <label class="cb-label"><input type="checkbox" name="plumb-type" value="Gate Valves"> Gate Valves</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-type" value="Check/NRV Valves"> Check / NRV Valves</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-type" value="Taps & Faucets"> Taps & Faucets</label>
+          <label class="cb-label"><input type="checkbox" name="plumb-type" value="Taps Faucets"> Taps & Faucets</label>
+          <label class="cb-label"><input type="checkbox" name="plumb-type" value="Water Tanks Plastic"> Water Tanks</label>
+          <label class="cb-label"><input type="checkbox" name="plumb-type" value="Water Pumps Motor"> Water Pumps</label>
           <label class="cb-label"><input type="checkbox" name="plumb-type" value="Shower Heads"> Shower Heads</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-type" value="Water Tanks (Plastic)"> Water Tanks (Plastic)</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-type" value="Water Tanks (Steel)"> Water Tanks (Steel)</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-type" value="Water Pumps"> Water Pumps (Motor)</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-type" value="Water Meters"> Water Meters</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-type" value="Pressure Gauges"> Pressure Gauges</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-type" value="Drainage Products"> Drainage Products</label>
-        </div>
-        <div class="sub-title">Brands You Deal In</div>
-        <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="plumb-brand" value="Jaquar"> Jaquar</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-brand" value="Grohe"> Grohe</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-brand" value="Cera"> Cera</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-brand" value="Kohler"> Kohler</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-brand" value="Supreme Valves"> Supreme</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-brand" value="Zoloto Valves"> Zoloto</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-brand" value="Sintex Tanks"> Sintex (Tanks)</label>
-          <label class="cb-label"><input type="checkbox" name="plumb-brand" value="Other Brand"> Other Brand</label>
+          <label class="cb-label"><input type="checkbox" name="plumb-type" value="Drainage Products"> Drainage</label>
         </div>
       </div>
 
-      <!-- ===== SANITARYWARE DYNAMIC ===== -->
+      <!-- SANITARYWARE -->
       <div class="dyn-box" id="dyn-sanitaryware">
-        <div class="dyn-title">🚽 Sanitaryware Details <span>FILL ALL</span></div>
-        <div class="sub-title">Sanitaryware Products You Sell</div>
+        <div class="dyn-title">🚽 Sanitaryware Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Products</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="san-type" value="Western Toilets/WC"> Western Toilets / WC</label>
-          <label class="cb-label"><input type="checkbox" name="san-type" value="Indian Toilets (Squat)"> Indian Toilets (Squat)</label>
-          <label class="cb-label"><input type="checkbox" name="san-type" value="Wash Basins"> Wash Basins / Sinks</label>
+          <label class="cb-label"><input type="checkbox" name="san-type" value="Western Toilets WC"> Western Toilets</label>
+          <label class="cb-label"><input type="checkbox" name="san-type" value="Indian Toilets Squat"> Indian Toilets</label>
+          <label class="cb-label"><input type="checkbox" name="san-type" value="Wash Basins"> Wash Basins</label>
           <label class="cb-label"><input type="checkbox" name="san-type" value="Urinals"> Urinals</label>
-          <label class="cb-label"><input type="checkbox" name="san-type" value="Cisterns/Flush Tanks"> Cisterns / Flush Tanks</label>
-          <label class="cb-label"><input type="checkbox" name="san-type" value="Floor Drains"> Floor Drains / Trap</label>
+          <label class="cb-label"><input type="checkbox" name="san-type" value="Cisterns Flush Tanks"> Cisterns/Flush</label>
           <label class="cb-label"><input type="checkbox" name="san-type" value="Health Faucets"> Health Faucets</label>
-          <label class="cb-label"><input type="checkbox" name="san-type" value="Shower Panels"> Shower Panels / Cubicles</label>
-          <label class="cb-label"><input type="checkbox" name="san-type" value="Bathroom Accessories"> Bathroom Accessories</label>
-          <label class="cb-label"><input type="checkbox" name="san-type" value="Bathtubs"> Bathtubs</label>
+          <label class="cb-label"><input type="checkbox" name="san-type" value="Bathroom Accessories"> Accessories</label>
+          <label class="cb-label"><input type="checkbox" name="san-type" value="Shower Panels"> Shower Panels</label>
         </div>
-        <div class="sub-title">Brands You Deal In</div>
+        <div class="sub-title">Brands</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="san-brand" value="Hindware"> Hindware</label>
           <label class="cb-label"><input type="checkbox" name="san-brand" value="Parryware"> Parryware</label>
           <label class="cb-label"><input type="checkbox" name="san-brand" value="Cera"> Cera</label>
           <label class="cb-label"><input type="checkbox" name="san-brand" value="Jaquar"> Jaquar</label>
           <label class="cb-label"><input type="checkbox" name="san-brand" value="Kohler"> Kohler</label>
-          <label class="cb-label"><input type="checkbox" name="san-brand" value="Kerovit (Kajaria)"> Kerovit (Kajaria)</label>
-          <label class="cb-label"><input type="checkbox" name="san-brand" value="Roca"> Roca</label>
           <label class="cb-label"><input type="checkbox" name="san-brand" value="Other Brand"> Other Brand</label>
         </div>
       </div>
 
-      <!-- ===== ELECTRICAL DYNAMIC ===== -->
+      <!-- ELECTRICAL -->
       <div class="dyn-box" id="dyn-electrical">
-        <div class="dyn-title">⚡ Electrical Products Details <span>FILL ALL</span></div>
-        <div class="sub-title">Electrical Products You Sell</div>
+        <div class="dyn-title">⚡ Electrical Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Products</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="elec-type" value="Electrical Wires & Cables"> Wires & Cables</label>
-          <label class="cb-label"><input type="checkbox" name="elec-type" value="Modular Switches & Sockets"> Switches & Sockets</label>
-          <label class="cb-label"><input type="checkbox" name="elec-type" value="MCB / RCCB / ELCB"> MCB / RCCB / ELCB</label>
-          <label class="cb-label"><input type="checkbox" name="elec-type" value="Distribution Boards (DB)"> Distribution Boards (DB)</label>
-          <label class="cb-label"><input type="checkbox" name="elec-type" value="Conduit Pipes & Fittings"> Conduit Pipes</label>
-          <label class="cb-label"><input type="checkbox" name="elec-type" value="LED Lights & Bulbs"> LED Lights & Bulbs</label>
-          <label class="cb-label"><input type="checkbox" name="elec-type" value="Ceiling & Exhaust Fans"> Ceiling & Exhaust Fans</label>
-          <label class="cb-label"><input type="checkbox" name="elec-type" value="Earthing Material"> Earthing Material</label>
-          <label class="cb-label"><input type="checkbox" name="elec-type" value="Inverter / UPS / Battery"> Inverter / UPS / Battery</label>
-          <label class="cb-label"><input type="checkbox" name="elec-type" value="Solar Panels & Equipment"> Solar Equipment</label>
-          <label class="cb-label"><input type="checkbox" name="elec-type" value="Cable Trays & Trunkings"> Cable Trays / Trunkings</label>
-          <label class="cb-label"><input type="checkbox" name="elec-type" value="Meters & Sensors"> Meters & Sensors</label>
+          <label class="cb-label"><input type="checkbox" name="elec-type" value="Electrical Wires Cables"> Wires & Cables</label>
+          <label class="cb-label"><input type="checkbox" name="elec-type" value="Modular Switches Sockets"> Switches/Sockets</label>
+          <label class="cb-label"><input type="checkbox" name="elec-type" value="MCB RCCB DB Box"> MCB/RCCB/DB Box</label>
+          <label class="cb-label"><input type="checkbox" name="elec-type" value="Conduit Pipes Fittings"> Conduit Pipes</label>
+          <label class="cb-label"><input type="checkbox" name="elec-type" value="LED Lights Bulbs"> LED Lights</label>
+          <label class="cb-label"><input type="checkbox" name="elec-type" value="Ceiling Exhaust Fans"> Fans</label>
+          <label class="cb-label"><input type="checkbox" name="elec-type" value="Earthing Material"> Earthing</label>
+          <label class="cb-label"><input type="checkbox" name="elec-type" value="Inverter UPS Battery"> Inverter/UPS</label>
+          <label class="cb-label"><input type="checkbox" name="elec-type" value="Solar Products"> Solar Products</label>
         </div>
-        <div class="sub-title">Brands You Deal In</div>
+        <div class="sub-title">Brands</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="elec-brand" value="Havells"> Havells</label>
           <label class="cb-label"><input type="checkbox" name="elec-brand" value="Polycab"> Polycab</label>
-          <label class="cb-label"><input type="checkbox" name="elec-brand" value="Finolex Cables"> Finolex Cables</label>
-          <label class="cb-label"><input type="checkbox" name="elec-brand" value="Anchor (Panasonic)"> Anchor (Panasonic)</label>
+          <label class="cb-label"><input type="checkbox" name="elec-brand" value="Finolex Cables"> Finolex</label>
+          <label class="cb-label"><input type="checkbox" name="elec-brand" value="Anchor Panasonic"> Anchor</label>
           <label class="cb-label"><input type="checkbox" name="elec-brand" value="Legrand"> Legrand</label>
           <label class="cb-label"><input type="checkbox" name="elec-brand" value="Schneider Electric"> Schneider</label>
-          <label class="cb-label"><input type="checkbox" name="elec-brand" value="ABB"> ABB</label>
           <label class="cb-label"><input type="checkbox" name="elec-brand" value="Syska LED"> Syska LED</label>
-          <label class="cb-label"><input type="checkbox" name="elec-brand" value="Orient Electric"> Orient Electric</label>
           <label class="cb-label"><input type="checkbox" name="elec-brand" value="Other Brand"> Other Brand</label>
         </div>
       </div>
 
-      <!-- ===== CHEMICALS DYNAMIC ===== -->
+      <!-- CHEMICALS -->
       <div class="dyn-box" id="dyn-chemicals">
-        <div class="dyn-title">🧪 Construction Chemicals Details <span>FILL ALL</span></div>
-        <div class="sub-title">Chemical Products You Sell</div>
+        <div class="dyn-title">🧪 Chemicals Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Products</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="chem-type" value="Waterproofing Compounds"> Waterproofing Compounds</label>
+          <label class="cb-label"><input type="checkbox" name="chem-type" value="Waterproofing Compounds"> Waterproofing</label>
           <label class="cb-label"><input type="checkbox" name="chem-type" value="Tile Adhesive"> Tile Adhesive</label>
-          <label class="cb-label"><input type="checkbox" name="chem-type" value="Tile Grout"> Tile Grout / Filler</label>
-          <label class="cb-label"><input type="checkbox" name="chem-type" value="Concrete Admixtures"> Concrete Admixtures</label>
-          <label class="cb-label"><input type="checkbox" name="chem-type" value="Epoxy Grout/Adhesive"> Epoxy Grout / Adhesive</label>
-          <label class="cb-label"><input type="checkbox" name="chem-type" value="Bonding Agent"> Bonding Agent</label>
+          <label class="cb-label"><input type="checkbox" name="chem-type" value="Tile Grout Filler"> Tile Grout</label>
+          <label class="cb-label"><input type="checkbox" name="chem-type" value="Concrete Admixtures"> Admixtures</label>
+          <label class="cb-label"><input type="checkbox" name="chem-type" value="Epoxy Grout Adhesive"> Epoxy Grout</label>
           <label class="cb-label"><input type="checkbox" name="chem-type" value="Floor Hardener"> Floor Hardener</label>
-          <label class="cb-label"><input type="checkbox" name="chem-type" value="Anti-Corrosion Coating"> Anti-Corrosion Coating</label>
+          <label class="cb-label"><input type="checkbox" name="chem-type" value="Anti-Corrosion Coating"> Anti-Corrosion</label>
           <label class="cb-label"><input type="checkbox" name="chem-type" value="Repair Mortar"> Repair Mortar</label>
-          <label class="cb-label"><input type="checkbox" name="chem-type" value="White Cement Putty"> White Cement Putty</label>
-          <label class="cb-label"><input type="checkbox" name="chem-type" value="Curing Compound"> Curing Compound</label>
           <label class="cb-label"><input type="checkbox" name="chem-type" value="Silicone Sealant"> Silicone Sealant</label>
         </div>
-        <div class="sub-title">Brands You Deal In</div>
-        <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="chem-brand" value="Pidilite (Dr.Fixit)"> Pidilite (Dr. Fixit)</label>
-          <label class="cb-label"><input type="checkbox" name="chem-brand" value="Fosroc"> Fosroc</label>
-          <label class="cb-label"><input type="checkbox" name="chem-brand" value="BASF Construction"> BASF Construction</label>
-          <label class="cb-label"><input type="checkbox" name="chem-brand" value="STP Ltd"> STP Ltd</label>
-          <label class="cb-label"><input type="checkbox" name="chem-brand" value="Sika"> Sika</label>
-          <label class="cb-label"><input type="checkbox" name="chem-brand" value="Asian Paints SmartCare"> Asian SmartCare</label>
-          <label class="cb-label"><input type="checkbox" name="chem-brand" value="Berger Waterproofing"> Berger WP</label>
-          <label class="cb-label"><input type="checkbox" name="chem-brand" value="Other Brand"> Other Brand</label>
-        </div>
       </div>
 
-      <!-- ===== HARDWARE DYNAMIC ===== -->
+      <!-- HARDWARE -->
       <div class="dyn-box" id="dyn-hardware">
-        <div class="dyn-title">🔩 Hardware Details <span>FILL ALL</span></div>
-        <div class="sub-title">Hardware Products You Sell</div>
+        <div class="dyn-title">🔩 Hardware Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Products</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="hw-type" value="Nuts, Bolts & Screws"> Nuts, Bolts & Screws</label>
-          <label class="cb-label"><input type="checkbox" name="hw-type" value="Door Fittings & Locks"> Door Fittings & Locks</label>
-          <label class="cb-label"><input type="checkbox" name="hw-type" value="Window Fittings & Grills"> Window Fittings / Grills</label>
-          <label class="cb-label"><input type="checkbox" name="hw-type" value="Wire Mesh / Jali"> Wire Mesh / Jali</label>
-          <label class="cb-label"><input type="checkbox" name="hw-type" value="Safety Nets & Equipment"> Safety Nets & Equipment</label>
-          <label class="cb-label"><input type="checkbox" name="hw-type" value="Hand Tools (Hammer/Drill)"> Hand Tools</label>
+          <label class="cb-label"><input type="checkbox" name="hw-type" value="Nuts Bolts Screws"> Nuts/Bolts/Screws</label>
+          <label class="cb-label"><input type="checkbox" name="hw-type" value="Door Fittings Locks"> Door Fittings</label>
+          <label class="cb-label"><input type="checkbox" name="hw-type" value="Window Fittings Grills"> Window Fittings</label>
+          <label class="cb-label"><input type="checkbox" name="hw-type" value="Wire Mesh Jali"> Wire Mesh/Jali</label>
+          <label class="cb-label"><input type="checkbox" name="hw-type" value="Safety Equipment Nets"> Safety Equipment</label>
+          <label class="cb-label"><input type="checkbox" name="hw-type" value="Hand Tools"> Hand Tools</label>
           <label class="cb-label"><input type="checkbox" name="hw-type" value="Power Tools"> Power Tools</label>
-          <label class="cb-label"><input type="checkbox" name="hw-type" value="Nails & Fasteners"> Nails & Fasteners</label>
-          <label class="cb-label"><input type="checkbox" name="hw-type" value="Hinges & Brackets"> Hinges & Brackets</label>
-          <label class="cb-label"><input type="checkbox" name="hw-type" value="Scaffolding Material"> Scaffolding Material</label>
-          <label class="cb-label"><input type="checkbox" name="hw-type" value="GI Products"> GI Products (Sheets/Pipes)</label>
-          <label class="cb-label"><input type="checkbox" name="hw-type" value="Adhesives (Fevicol/Araldite)"> Adhesives (Fevicol etc.)</label>
+          <label class="cb-label"><input type="checkbox" name="hw-type" value="Scaffolding Material"> Scaffolding</label>
         </div>
       </div>
 
-      <!-- ===== BATHWARE DYNAMIC ===== -->
+      <!-- BATHWARE -->
       <div class="dyn-box" id="dyn-bathware">
-        <div class="dyn-title">🛁 Bathware Details <span>FILL ALL</span></div>
-        <div class="sub-title">Bathware Products You Sell</div>
+        <div class="dyn-title">🛁 Bathware Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Products</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="bath-type" value="Bathtubs"> Bathtubs</label>
           <label class="cb-label"><input type="checkbox" name="bath-type" value="Shower Enclosures"> Shower Enclosures</label>
-          <label class="cb-label"><input type="checkbox" name="bath-type" value="Jacuzzi / Whirlpool"> Jacuzzi / Whirlpool</label>
-          <label class="cb-label"><input type="checkbox" name="bath-type" value="Steam Showers"> Steam Showers</label>
+          <label class="cb-label"><input type="checkbox" name="bath-type" value="Jacuzzi Whirlpool"> Jacuzzi/Whirlpool</label>
           <label class="cb-label"><input type="checkbox" name="bath-type" value="Bathroom Mirrors"> Bathroom Mirrors</label>
           <label class="cb-label"><input type="checkbox" name="bath-type" value="Vanity Units"> Vanity Units</label>
-          <label class="cb-label"><input type="checkbox" name="bath-type" value="Shower Columns"> Shower Columns</label>
           <label class="cb-label"><input type="checkbox" name="bath-type" value="Bathroom Cabinets"> Bathroom Cabinets</label>
         </div>
-        <div class="ff" style="margin-top:12px"><label>Brands You Deal In</label>
-          <input type="text" id="bath-brands" placeholder="e.g. Jaquar, Kohler, TOTO, Hindware, Sanjay Chilly..."/>
+        <div class="ff" style="margin-top:10px"><label>Brands You Deal In</label>
+          <input type="text" id="bath-brands" placeholder="e.g. Jaquar, Kohler, TOTO, Hindware..."/>
         </div>
       </div>
 
-      <!-- ===== GFRP DYNAMIC ===== -->
+      <!-- GFRP -->
       <div class="dyn-box" id="dyn-gfrp">
-        <div class="dyn-title">🏗️ GFRP Rebars Details <span>FILL ALL</span></div>
-        <div class="sub-title">GFRP Product Types</div>
+        <div class="dyn-title">🔧 GFRP Rebars Details <span class="badge">Fill All</span></div>
+        <div class="sub-title">Products</div>
         <div class="cb-grid">
-          <label class="cb-label"><input type="checkbox" name="gfrp-type" value="GFRP Rebars (Round)"> GFRP Rebars (Round)</label>
+          <label class="cb-label"><input type="checkbox" name="gfrp-type" value="GFRP Rebars Round"> GFRP Rebars</label>
           <label class="cb-label"><input type="checkbox" name="gfrp-type" value="GFRP Flat Bars"> GFRP Flat Bars</label>
-          <label class="cb-label"><input type="checkbox" name="gfrp-type" value="GFRP Mesh/Grid"> GFRP Mesh / Grid</label>
-          <label class="cb-label"><input type="checkbox" name="gfrp-type" value="Basalt Fiber Rebars"> Basalt Fiber Rebars</label>
-          <label class="cb-label"><input type="checkbox" name="gfrp-type" value="Carbon Fiber Rebars"> Carbon Fiber Rebars</label>
+          <label class="cb-label"><input type="checkbox" name="gfrp-type" value="GFRP Mesh Grid"> GFRP Mesh</label>
+          <label class="cb-label"><input type="checkbox" name="gfrp-type" value="Basalt Fiber Rebars"> Basalt Fiber</label>
+          <label class="cb-label"><input type="checkbox" name="gfrp-type" value="Carbon Fiber Rebars"> Carbon Fiber</label>
         </div>
-        <div class="sub-title">Diameters Available (mm)</div>
+        <div class="sub-title">Diameters</div>
         <div class="cb-grid">
           <label class="cb-label"><input type="checkbox" name="gfrp-size" value="6mm GFRP"> 6 mm</label>
           <label class="cb-label"><input type="checkbox" name="gfrp-size" value="8mm GFRP"> 8 mm</label>
@@ -724,37 +681,37 @@ body{font-family:'DM Sans',sans-serif;background:#F8FAFC;margin:0;padding:0}
           <label class="cb-label"><input type="checkbox" name="gfrp-size" value="16mm GFRP"> 16 mm</label>
           <label class="cb-label"><input type="checkbox" name="gfrp-size" value="20mm GFRP"> 20 mm</label>
         </div>
-        <div class="ff"><label>BIS Certification</label>
-          <select id="gfrp-bis"><option>BIS IS:18256:2023 Certified</option><option>Not yet certified</option></select>
-        </div>
       </div>
 
-      <!-- Other -->
+      <!-- OTHER -->
       <div class="dyn-box" id="dyn-other">
-        <div class="dyn-title">📦 Other Products Details <span>FILL ALL</span></div>
+        <div class="dyn-title">📦 Other Products <span class="badge">Describe</span></div>
         <div class="ff"><label>Describe Your Products *</label>
-          <textarea id="other-desc" placeholder="Describe what you sell — products, materials, brands, specifications..."></textarea>
+          <textarea id="other-desc" placeholder="Products, materials, brands, specifications..."></textarea>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- STEP 4 — Multiple Products -->
+  <!-- STEP 4 -->
   <div class="step-box">
-    <div class="step-head"><div class="snum">4</div><h3>Add Your Products (Up to 10 products)</h3></div>
+    <div class="step-head">
+      <div class="snum">4</div>
+      <div><h3>Add Your Products</h3><p>Up to 10 products — each shows separately to customers</p></div>
+    </div>
     <div class="step-body">
-      <p style="font-size:13px;color:#64748B;margin-bottom:16px">Add all products you sell — each product will show separately in Browse Categories with full details for customers.</p>
-      <div id="productsSection"></div>
-      <button class="add-prod-btn" onclick="addProductForm()" id="addProdBtn">
-        ➕ Add Another Product (Max 10)
-      </button>
+      <div id="prodsSection"></div>
+      <button class="add-prod-btn" onclick="addProd()" id="addProdBtn">➕ Add Another Product (Max 10)</button>
     </div>
   </div>
 
-  <!-- STEP 5 — Preference -->
+  <!-- STEP 5 -->
   <div class="step-box">
-    <div class="step-head"><div class="snum">5</div><h3>Order & Payment Preference</h3></div>
+    <div class="step-head">
+      <div class="snum">5</div>
+      <div><h3>Order Preferences</h3><p>How do you want to receive orders?</p></div>
+    </div>
     <div class="step-body">
       <div class="fr">
         <div class="ff"><label>How to Receive Orders *</label>
@@ -766,12 +723,12 @@ body{font-family:'DM Sans',sans-serif;background:#F8FAFC;margin:0;padding:0}
             <option>Through GroutGrove Website</option>
           </select>
         </div>
-        <div class="ff"><label>Payment Methods You Accept</label>
+        <div class="ff"><label>Payment Methods Accepted</label>
           <select id="payMethod">
             <option>UPI + Cash</option>
             <option>UPI Only (GPay/PhonePe)</option>
             <option>Cash Only</option>
-            <option>All Methods (UPI, Card, Cash, Cheque)</option>
+            <option>All Methods (UPI/Card/Cash/Cheque)</option>
           </select>
         </div>
       </div>
@@ -779,18 +736,23 @@ body{font-family:'DM Sans',sans-serif;background:#F8FAFC;margin:0;padding:0}
   </div>
 
   <div class="notice">
-    🔒 <strong>Privacy Protected:</strong> Your WhatsApp number will NOT be shown to customers directly. All orders come through GroutGrove — we forward details to you securely.
+    <span>🔒</span>
+    <div><strong>Your privacy is protected.</strong> Your WhatsApp number will NOT be shown to customers. All orders come through GroutGrove — we forward details to you securely.</div>
   </div>
 
   <button class="btn-submit" id="submitBtn" onclick="submitSeller()">
-    🚀 Register & Go LIVE — It's FREE!
+    🚀 Register Now & Go LIVE — 100% FREE!
   </button>
-  <a href="https://wa.me/919654171005?text=I want to register as seller on GroutGrove. Please help." target="_blank" class="wa-help-btn">
+  <a href="https://wa.me/919654171005?text=I want to register as seller on GroutGrove. Please help." target="_blank" class="wa-help">
     💬 Need Help? WhatsApp: +91 96541 71005
   </a>
 </div>
 
-<script src="../script.js"></script>
+<div class="wa-float">
+  <a href="https://wa.me/919654171005" target="_blank" class="wa-btn">💬</a>
+</div>
+<div class="call-float"><a href="tel:+919654171005" class="call-btn">📞 Call Us Free</a></div>
+
 <script>
 const { createClient } = supabase;
 const sb = createClient(
@@ -798,343 +760,244 @@ const sb = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo'
 );
 
-let selCats = [];
-let productCount = 0;
+function toggleNav(){document.getElementById('navLinks').classList.toggle('open');}
 
-// ===== CATEGORY TOGGLE — Shows dynamic questions =====
+let selCats=[], prodCount=0;
+
 function toggleCat(el, cat) {
   el.classList.toggle('sel');
-  const dynBox = document.getElementById('dyn-' + cat);
+  const box = document.getElementById('dyn-'+cat);
   if(el.classList.contains('sel')) {
     if(!selCats.includes(cat)) selCats.push(cat);
-    if(dynBox) {
-      dynBox.classList.add('show');
-      dynBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-    if(productCount === 0) addProductForm();
+    if(box) { box.classList.add('show'); box.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+    if(prodCount===0) addProd();
   } else {
-    selCats = selCats.filter(c => c !== cat);
-    if(dynBox) dynBox.classList.remove('show');
+    selCats=selCats.filter(c=>c!==cat);
+    if(box) box.classList.remove('show');
   }
-  // Update product category dropdowns
-  updateProductCatDropdowns();
+  updateProdCats();
 }
 
-// Update all product category dropdowns based on selected cats
-function updateProductCatDropdowns() {
-  const catNames = {
-    cement:'Cement', steel:'Steel / TMT Bars', bricks:'Bricks',
-    tiles:'Tiles', sand:'Sand / Grit', paint:'Paint',
-    pvc_pipes:'PVC Pipes', plumbing:'Plumbing',
-    sanitaryware:'Sanitaryware', electrical:'Electrical',
-    hardware:'Hardware', chemicals:'Construction Chemicals',
-    bathware:'Bathware', gfrp:'GFRP Rebars', other:'Other'
-  };
-  const cats = selCats.length > 0 ? selCats : Object.keys(catNames);
-  const opts = cats.map(c => `<option value="${c}">${catNames[c]||c}</option>`).join('');
-  document.querySelectorAll('.prod-cat-select').forEach(sel => {
-    const current = sel.value;
-    sel.innerHTML = opts;
-    if(current) sel.value = current;
-  });
+function updateProdCats() {
+  const catNames={cement:'Cement',steel:'Steel/TMT',bricks:'Bricks',tiles:'Tiles',sand:'Sand/Grit',paint:'Paint',pvc_pipes:'PVC Pipes',plumbing:'Plumbing',sanitaryware:'Sanitaryware',electrical:'Electrical',hardware:'Hardware',chemicals:'Chemicals',bathware:'Bathware',gfrp:'GFRP Rebars',other:'Other'};
+  const cats=selCats.length>0?selCats:Object.keys(catNames);
+  const opts=cats.map(c=>`<option value="${c}">${catNames[c]||c}</option>`).join('');
+  document.querySelectorAll('.prod-cat-sel').forEach(s=>{const v=s.value;s.innerHTML=opts;if(v)s.value=v;});
 }
 
-// ===== ADD PRODUCT FORM =====
-function addProductForm() {
-  if(productCount >= 10) {
-    if(typeof showToast === 'function') showToast('⚠️ Maximum 10 products allowed!');
-    return;
-  }
-  productCount++;
-  const idx = productCount;
-  const sec = document.getElementById('productsSection');
-
-  const catNames = {
-    cement:'Cement', steel:'Steel / TMT Bars', bricks:'Bricks',
-    tiles:'Tiles', sand:'Sand / Grit', paint:'Paint',
-    pvc_pipes:'PVC Pipes', plumbing:'Plumbing',
-    sanitaryware:'Sanitaryware', electrical:'Electrical',
-    hardware:'Hardware', chemicals:'Construction Chemicals',
-    bathware:'Bathware', gfrp:'GFRP Rebars', other:'Other'
-  };
-  const cats = selCats.length > 0 ? selCats : Object.keys(catNames);
-  const opts = cats.map(c => `<option value="${c}">${catNames[c]||c}</option>`).join('');
-
-  const div = document.createElement('div');
-  div.className = 'prod-card-wrap';
-  div.id = 'pf-' + idx;
-  div.innerHTML = `
-    <div class="prod-num-badge">Product #${idx}</div>
-    ${idx > 1 ? `<button class="rm-prod-btn" onclick="removeProduct(${idx})">× Remove</button>` : ''}
-    <div style="margin-top:12px">
+function addProd() {
+  if(prodCount>=10){showErr('Max 10 products allowed!');return;}
+  prodCount++;
+  const i=prodCount;
+  const catNames={cement:'Cement',steel:'Steel/TMT',bricks:'Bricks',tiles:'Tiles',sand:'Sand/Grit',paint:'Paint',pvc_pipes:'PVC Pipes',plumbing:'Plumbing',sanitaryware:'Sanitaryware',electrical:'Electrical',hardware:'Hardware',chemicals:'Chemicals',bathware:'Bathware',gfrp:'GFRP Rebars',other:'Other'};
+  const cats=selCats.length>0?selCats:Object.keys(catNames);
+  const opts=cats.map(c=>`<option value="${c}">${catNames[c]||c}</option>`).join('');
+  const div=document.createElement('div');
+  div.className='prod-card'; div.id='pc-'+i;
+  div.innerHTML=`
+    <div class="prod-num">Product #${i}</div>
+    ${i>1?`<button class="rm-prod" onclick="rmProd(${i})">× Remove</button>`:''}
+    <div style="margin-top:14px">
       <div class="fr">
-        <div class="ff"><label>Product Name *</label>
-          <input type="text" id="pn-${idx}" placeholder="e.g. UltraTech PPC Cement 50kg"/>
-        </div>
-        <div class="ff"><label>Category *</label>
-          <select id="pc-${idx}" class="prod-cat-select">${opts}</select>
-        </div>
+        <div class="ff"><label>Product Name *</label><input type="text" id="pn-${i}" placeholder="e.g. UltraTech PPC Cement 50kg"/></div>
+        <div class="ff"><label>Category *</label><select id="pc-${i}" class="prod-cat-sel">${opts}</select></div>
       </div>
       <div class="fr">
-        <div class="ff"><label>Brand Name *</label>
-          <input type="text" id="pb-${idx}" placeholder="e.g. UltraTech, Kajaria"/>
-        </div>
-        <div class="ff"><label>Specifications / Details</label>
-          <input type="text" id="ps-${idx}" placeholder="e.g. 50kg, PPC Grade, ISI Certified"/>
-        </div>
+        <div class="ff"><label>Brand Name *</label><input type="text" id="pb-${i}" placeholder="e.g. UltraTech, Kajaria"/></div>
+        <div class="ff"><label>Specifications</label><input type="text" id="ps-${i}" placeholder="e.g. 50kg, ISI Certified"/></div>
       </div>
       <div class="fr">
-        <div class="ff"><label>Your Selling Price (₹) *</label>
-          <input type="number" id="pp-${idx}" placeholder="380" min="1"/>
-        </div>
-        <div class="ff"><label>MRP / Market Price (₹) — For discount %</label>
-          <input type="number" id="pm-${idx}" placeholder="420 — leave blank if no discount"/>
-        </div>
+        <div class="ff"><label>Selling Price (₹) *</label><input type="number" id="pp-${i}" placeholder="380" min="1"/></div>
+        <div class="ff"><label>MRP (₹) — For showing discount</label><input type="number" id="pm-${i}" placeholder="420 (optional)"/></div>
       </div>
       <div class="fr">
-        <div class="ff"><label>Unit of Sale *</label>
-          <select id="pu-${idx}">
+        <div class="ff"><label>Unit *</label>
+          <select id="pu-${i}">
             <option>/bag</option><option>/kg</option><option>/tonne</option>
             <option>/piece</option><option>/sqft</option><option>/sqm</option>
             <option>/litre</option><option>/metre</option><option>/set</option>
             <option>/box</option><option>/CFT</option><option>/truck</option>
           </select>
         </div>
-        <div class="ff"><label>Minimum Order Quantity</label>
-          <input type="text" id="pmo-${idx}" placeholder="e.g. 10 bags, 1 tonne"/>
-        </div>
+        <div class="ff"><label>Min Order Qty</label><input type="text" id="pmo-${i}" placeholder="e.g. 10 bags, 1 tonne"/></div>
       </div>
       <div class="fr">
         <div class="ff"><label>Delivery Time</label>
-          <select id="pd-${idx}">
-            <option>Same Day</option><option>Next Day</option>
-            <option>2-3 Days</option><option>3-5 Days</option>
-          </select>
+          <select id="pd-${i}"><option>Same Day</option><option>Next Day</option><option>2-3 Days</option><option>3-5 Days</option></select>
         </div>
-        <div class="ff"><label>Special Offer Tag (Optional)</label>
-          <input type="text" id="pot-${idx}" placeholder="e.g. Best Seller, New Stock, ISI Certified"/>
-        </div>
+        <div class="ff"><label>Special Tag (Optional)</label><input type="text" id="pot-${i}" placeholder="e.g. Best Seller, ISI Certified"/></div>
       </div>
-      <div class="ff"><label>Product Photo (Recommended — gets 3× more orders)</label>
-        <div class="photo-upload" onclick="document.getElementById('ph-${idx}').click()">
-          <div style="font-size:28px;margin-bottom:6px">📷</div>
-          <div style="font-size:13px;color:#64748B"><strong>Click to upload photo</strong> — JPG or PNG accepted</div>
-          <input type="file" id="ph-${idx}" accept="image/*" style="display:none" onchange="previewPhoto(this,${idx})"/>
+      <div class="ff"><label>Product Photo (Optional — gets 3× more orders!)</label>
+        <div class="photo-box" onclick="document.getElementById('ph-${i}').click()">
+          <div style="font-size:30px;margin-bottom:6px">📷</div>
+          <div style="font-size:13px;color:#64748B"><strong>Click to upload</strong> — JPG/PNG</div>
+          <input type="file" id="ph-${i}" accept="image/*" style="display:none" onchange="prevPhoto(this,${i})"/>
         </div>
-        <div class="ph-previews" id="php-${idx}"></div>
+        <div class="ph-prev" id="php-${i}"></div>
       </div>
       <div class="ff"><label>Product Description (Optional)</label>
-        <textarea id="pdesc-${idx}" placeholder="Describe quality, features, certifications, offers..."></textarea>
+        <textarea id="pdesc-${i}" placeholder="Quality, features, certifications, special offers..."></textarea>
       </div>
     </div>`;
-  sec.appendChild(div);
-  if(productCount >= 10) document.getElementById('addProdBtn').style.display = 'none';
+  document.getElementById('prodsSection').appendChild(div);
+  if(prodCount>=10) document.getElementById('addProdBtn').style.display='none';
 }
 
-function removeProduct(idx) {
-  const el = document.getElementById('pf-' + idx);
-  if(el) {
-    el.remove();
-    productCount--;
-    document.getElementById('addProdBtn').style.display = 'block';
-  }
+function rmProd(i) {
+  const el=document.getElementById('pc-'+i);
+  if(el){el.remove();prodCount--;document.getElementById('addProdBtn').style.display='block';}
 }
 
-function previewPhoto(input, idx) {
-  const file = input.files[0];
+function prevPhoto(input, i) {
+  const file=input.files[0];
   if(!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const prev = document.getElementById('php-' + idx);
-    prev.innerHTML = `<div class="ph-thumb">
-      <img src="${e.target.result}"/>
-      <button class="ph-rm" onclick="this.parentNode.parentNode.innerHTML=''">×</button>
-    </div>`;
+  const r=new FileReader();
+  r.onload=e=>{
+    document.getElementById('php-'+i).innerHTML=`<div class="ph-thumb"><img src="${e.target.result}"/><button class="ph-rm" onclick="this.parentNode.parentNode.innerHTML=''">×</button></div>`;
   };
-  reader.readAsDataURL(file);
+  r.readAsDataURL(file);
 }
 
-// ===== ERROR =====
 function showErr(msg) {
-  const e = document.getElementById('errBox');
-  e.innerHTML = '❌ ' + msg;
-  e.style.display = 'block';
-  e.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const e=document.getElementById('errBox');
+  e.innerHTML='❌ '+msg; e.style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ===== COLLECT CHECKED VALUES =====
 function getChecked(name) {
-  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
-    .map(i => i.value).join(', ');
+  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(i=>i.value).join(', ');
 }
 
-// ===== SUBMIT =====
 async function submitSeller() {
-  const bizName = document.getElementById('bizName').value.trim();
-  const ownerName = document.getElementById('ownerName').value.trim();
-  const waPhone = document.getElementById('waPhone').value.trim().replace(/\D/g,'');
-  const bizType = document.getElementById('bizType').value;
-  const bizYears = document.getElementById('bizYears').value;
-  const addr = document.getElementById('bizAddr').value.trim();
-  const city = document.getElementById('bizCity').value;
-  const state = document.getElementById('bizState').value;
-  const pin = document.getElementById('bizPin').value.trim();
-  const orderPref = document.getElementById('orderPref').value;
+  const bizName=document.getElementById('bizName').value.trim();
+  const ownerName=document.getElementById('ownerName').value.trim();
+  const waPhone=document.getElementById('waPhone').value.trim().replace(/\D/g,'');
+  const bizType=document.getElementById('bizType').value;
+  const bizYears=document.getElementById('bizYears').value;
+  const addr=document.getElementById('bizAddr').value.trim();
+  const city=document.getElementById('bizCity').value;
+  const state=document.getElementById('bizState').value;
+  const pin=document.getElementById('bizPin').value.trim();
+  const orderPref=document.getElementById('orderPref').value;
 
-  if(!bizName) { showErr('Enter business / shop name!'); return; }
-  if(!ownerName) { showErr('Enter your name!'); return; }
-  if(!waPhone || waPhone.length < 10) { showErr('Enter valid 10-digit WhatsApp number!'); return; }
-  if(!bizType) { showErr('Select your business type!'); return; }
-  if(!bizYears) { showErr('Select years in business!'); return; }
-  if(!addr) { showErr('Enter your business address!'); return; }
-  if(!city) { showErr('Select your city!'); return; }
-  if(!state) { showErr('Select your state!'); return; }
-  if(!pin || pin.length < 6) { showErr('Enter valid 6-digit pincode!'); return; }
-  if(selCats.length === 0) { showErr('Select at least one product category (Step 3)!'); return; }
-  if(!orderPref) { showErr('Select how you want to receive orders!'); return; }
-  if(productCount === 0) { showErr('Add at least one product (Step 4)!'); return; }
+  if(!bizName){showErr('Enter business/shop name!');return;}
+  if(!ownerName){showErr('Enter owner name!');return;}
+  if(!waPhone||waPhone.length<10){showErr('Enter valid 10-digit WhatsApp number!');return;}
+  if(!bizType){showErr('Select business type!');return;}
+  if(!bizYears){showErr('Select years in business!');return;}
+  if(!addr){showErr('Enter business address!');return;}
+  if(!city){showErr('Select city!');return;}
+  if(!state){showErr('Select state!');return;}
+  if(!pin||pin.length<6){showErr('Enter valid 6-digit pincode!');return;}
+  if(selCats.length===0){showErr('Select at least one category (Step 3)!');return;}
+  if(!orderPref){showErr('Select order preference (Step 5)!');return;}
+  if(prodCount===0){showErr('Add at least one product (Step 4)!');return;}
 
-  const pName1 = document.getElementById('pn-1')?.value.trim();
-  const pPrice1 = parseFloat(document.getElementById('pp-1')?.value || 0);
-  if(!pName1) { showErr('Enter product name for Product #1!'); return; }
-  if(!pPrice1 || pPrice1 <= 0) { showErr('Enter valid price for Product #1!'); return; }
+  const pName=document.getElementById('pn-1')?.value.trim();
+  const pPrice=parseFloat(document.getElementById('pp-1')?.value||0);
+  if(!pName){showErr('Enter product name for Product #1!');return;}
+  if(!pPrice||pPrice<=0){showErr('Enter valid price for Product #1!');return;}
 
-  const btn = document.getElementById('submitBtn');
-  btn.textContent = '⏳ Registering & Going Live...'; btn.disabled = true;
-  document.getElementById('errBox').style.display = 'none';
+  const btn=document.getElementById('submitBtn');
+  btn.textContent='⏳ Registering & Going Live...'; btn.disabled=true;
+  document.getElementById('errBox').style.display='none';
 
-  const sellerId = 'GG-S-' + Date.now().toString().slice(-6);
+  const sellerId='GG-S-'+Date.now().toString().slice(-6);
 
-  // Collect all specialization data
-  const specialization = [
-    getChecked('cement-type'), getChecked('cement-brand'),
-    getChecked('tile-type'), getChecked('tile-area'), getChecked('tile-size'), getChecked('tile-finish'), getChecked('tile-brand'),
-    getChecked('brick-type'), getChecked('brick-grade'), getChecked('brick-size'),
-    getChecked('steel-type'), getChecked('steel-size'), getChecked('steel-brand'),
-    getChecked('sand-type'), getChecked('paint-type'), getChecked('paint-brand'),
-    getChecked('pipe-type'), getChecked('pipe-size'), getChecked('pipe-brand'),
-    getChecked('plumb-type'), getChecked('plumb-brand'),
-    getChecked('san-type'), getChecked('san-brand'),
-    getChecked('elec-type'), getChecked('elec-brand'),
-    getChecked('chem-type'), getChecked('chem-brand'),
-    getChecked('hw-type'), getChecked('bath-type'), getChecked('gfrp-type'), getChecked('gfrp-size')
+  const spec=[
+    getChecked('cement-type'),getChecked('cement-brand'),
+    getChecked('tile-type'),getChecked('tile-area'),getChecked('tile-size'),getChecked('tile-finish'),getChecked('tile-brand'),
+    getChecked('brick-type'),getChecked('brick-grade'),getChecked('brick-size'),
+    getChecked('steel-type'),getChecked('steel-size'),getChecked('steel-brand'),
+    getChecked('sand-type'),getChecked('paint-type'),getChecked('paint-brand'),
+    getChecked('pipe-type'),getChecked('pipe-size'),getChecked('pipe-brand'),
+    getChecked('plumb-type'),getChecked('san-type'),getChecked('san-brand'),
+    getChecked('elec-type'),getChecked('elec-brand'),
+    getChecked('chem-type'),getChecked('hw-type'),
+    getChecked('bath-type'),getChecked('gfrp-type'),getChecked('gfrp-size')
   ].filter(Boolean).join(' | ');
 
   try {
-    // 1. Save seller
-    const { error: sellerErr } = await sb.from('sellers').insert([{
-      seller_id: sellerId,
-      business_name: bizName,
-      owner_name: ownerName,
-      phone: waPhone,
-      whatsapp: waPhone,
-      alt_phone: document.getElementById('altPhone').value.trim() || null,
-      business_type: bizType,
-      years_in_business: bizYears,
-      gst_number: document.getElementById('gstNum').value.trim() || null,
-      address: addr,
-      city: city,
-      state: state,
-      pincode: pin,
-      delivery_area: document.getElementById('deliveryArea').value.trim() || city,
-      categories: selCats.join(', '),
-      product_specialization: specialization || null,
-      order_preference: orderPref,
-      payment_methods: document.getElementById('payMethod').value,
-      status: 'active'
+    const{error:se}=await sb.from('sellers').insert([{
+      seller_id:sellerId,business_name:bizName,owner_name:ownerName,
+      phone:waPhone,whatsapp:waPhone,
+      alt_phone:document.getElementById('altPhone').value.trim()||null,
+      business_type:bizType,years_in_business:bizYears,
+      gst_number:document.getElementById('gstNum').value.trim()||null,
+      address:addr,city,state,pincode:pin,
+      delivery_area:document.getElementById('deliveryArea').value.trim()||city,
+      categories:selCats.join(', '),
+      product_specialization:spec||null,
+      order_preference:orderPref,
+      payment_methods:document.getElementById('payMethod').value,
+      status:'active'
     }]);
+    if(se) throw new Error(se.message);
 
-    if(sellerErr) throw new Error('Seller save error: ' + sellerErr.message);
-
-    // 2. Save ALL products — status ACTIVE (shows immediately in Browse Categories!)
-    const productInserts = [];
-    for(let i = 1; i <= productCount; i++) {
-      const pEl = document.getElementById('pf-' + i);
-      if(!pEl) continue;
-      const name = document.getElementById('pn-'+i)?.value.trim();
+    // Save products
+    const inserts=[];
+    for(let i=1;i<=prodCount;i++){
+      const el=document.getElementById('pc-'+i);
+      if(!el) continue;
+      const name=document.getElementById('pn-'+i)?.value.trim();
       if(!name) continue;
-      const price = parseFloat(document.getElementById('pp-'+i)?.value || 0);
-      if(!price || price <= 0) continue;
-      const mrp = parseFloat(document.getElementById('pm-'+i)?.value || 0);
-      const discount = (mrp > price) ? Math.round((mrp - price) / mrp * 100) : 0;
-
-      // Convert photo to base64 if exists
-      let photoUrl = null;
-      const phInput = document.getElementById('ph-'+i);
-      if(phInput?.files?.[0]) {
-        try {
-          photoUrl = await new Promise((res, rej) => {
-            const r = new FileReader();
-            r.onload = e => res(e.target.result);
-            r.onerror = () => res(null);
-            r.readAsDataURL(phInput.files[0]);
-          });
-        } catch(e) { photoUrl = null; }
+      const price=parseFloat(document.getElementById('pp-'+i)?.value||0);
+      if(!price) continue;
+      const mrp=parseFloat(document.getElementById('pm-'+i)?.value||0);
+      const disc=mrp>price?Math.round((mrp-price)/mrp*100):0;
+      let photo=null;
+      const phInput=document.getElementById('ph-'+i);
+      if(phInput?.files?.[0]){
+        photo=await new Promise(res=>{
+          const r=new FileReader();
+          r.onload=e=>res(e.target.result);
+          r.onerror=()=>res(null);
+          r.readAsDataURL(phInput.files[0]);
+        });
       }
-
-      productInserts.push(sb.from('products').insert([{
-        product_name: name,
-        category: document.getElementById('pc-'+i)?.value || selCats[0] || 'other',
-        brand_name: document.getElementById('pb-'+i)?.value.trim() || bizName,
-        specs: document.getElementById('ps-'+i)?.value.trim() || null,
-        price: price,
-        unit: document.getElementById('pu-'+i)?.value || '/piece',
-        discount: discount,
-        min_order: document.getElementById('pmo-'+i)?.value.trim() || null,
-        delivery_time: document.getElementById('pd-'+i)?.value || 'Next Day',
-        offer_text: document.getElementById('pot-'+i)?.value.trim() || null,
-        description: document.getElementById('pdesc-'+i)?.value.trim() || null,
-        photo_url: photoUrl,
-        seller_phone: waPhone,
-        seller_name: bizName,
-        seller_years: bizYears,
-        rating: 4.5,
-        reviews_count: 0,
-        status: 'active'   // ← ACTIVE: Shows in Browse Categories immediately!
+      inserts.push(sb.from('products').insert([{
+        product_name:name,
+        category:document.getElementById('pc-'+i)?.value||selCats[0]||'other',
+        brand_name:document.getElementById('pb-'+i)?.value.trim()||bizName,
+        specs:document.getElementById('ps-'+i)?.value.trim()||null,
+        price,unit:document.getElementById('pu-'+i)?.value||'/piece',
+        discount:disc,
+        min_order:document.getElementById('pmo-'+i)?.value.trim()||null,
+        delivery_time:document.getElementById('pd-'+i)?.value||'Next Day',
+        offer_text:document.getElementById('pot-'+i)?.value.trim()||null,
+        description:document.getElementById('pdesc-'+i)?.value.trim()||null,
+        photo_url:photo,
+        seller_phone:waPhone,seller_name:bizName,seller_years:bizYears,
+        rating:4.5,reviews_count:0,
+        status:'active'  // LIVE INSTANTLY!
       }]));
     }
+    await Promise.all(inserts);
 
-    // Run all product inserts
-    const results = await Promise.all(productInserts);
-    const failed = results.filter(r => r.error);
-    if(failed.length > 0) console.warn('Some products failed:', failed);
+    // Save to local storage for dashboard
+    try {
+      const rec={seller_id:sellerId,business_name:bizName,owner_name:ownerName,phone:waPhone,city,state,pincode:pin,categories:selCats.join(', '),business_type:bizType,years_in_business:bizYears,gst_number:document.getElementById('gstNum').value.trim()||'Not provided',address:addr,status:'Active',registered_at:new Date().toLocaleString('en-IN')};
+      const ex=JSON.parse(localStorage.getItem('groutgrove_sellers')||'[]');
+      ex.unshift(rec);
+      localStorage.setItem('groutgrove_sellers',JSON.stringify(ex));
+    } catch(e){}
 
-    // 3. WhatsApp notification to admin
-    const successProds = productInserts.length - failed.length;
-    const adminMsg = encodeURIComponent(
-`🏭 *NEW SELLER — GROUTGROVE!*
+    // WhatsApp admin notify
+    const msg=encodeURIComponent(`🏭 *NEW SELLER — GROUTGROVE!*\n\n*ID:* ${sellerId}\n*Business:* ${bizName}\n*Owner:* ${ownerName}\n*WhatsApp:* ${waPhone}\n*City:* ${city}, ${state}\n*Categories:* ${selCats.join(', ')}\n*Products:* ${inserts.length}\n\n✅ Products are LIVE now!`);
+    setTimeout(()=>window.open(`https://wa.me/919654171005?text=${msg}`,'_blank'),800);
 
-*Seller ID:* ${sellerId}
-*Business:* ${bizName}
-*Owner:* ${ownerName}
-*WhatsApp:* ${waPhone}
-*City:* ${city}, ${state} — ${pin}
-*Type:* ${bizType} | ${bizYears}
-*Categories:* ${selCats.join(', ')}
-*Products Listed:* ${successProds}
-
-✅ Products are LIVE on website!
-⚡ Please verify seller details.`
-    );
-    setTimeout(() => window.open(`https://wa.me/919654171005?text=${adminMsg}`, '_blank'), 1000);
-
-    // 4. Show success
-    document.getElementById('sellerId').textContent = sellerId;
-    document.getElementById('successOverlay').classList.add('show');
+    document.getElementById('sId').textContent=sellerId;
+    document.getElementById('sOverlay').classList.add('show');
 
   } catch(err) {
-    console.error('Registration error:', err);
-    showErr('Registration failed: ' + err.message +
-      '<br><br>Please WhatsApp us directly: ' +
-      '<a href="https://wa.me/919654171005" target="_blank" style="color:#DC2626;font-weight:700">+91 96541 71005</a>');
-    btn.textContent = '🚀 Register & Go LIVE — It\'s FREE!';
-    btn.disabled = false;
+    showErr('Error: '+err.message+'<br>WhatsApp: <a href="https://wa.me/919654171005" style="color:#DC2626;font-weight:700">+91 96541 71005</a>');
+    btn.textContent='🚀 Register Now & Go LIVE — 100% FREE!';
+    btn.disabled=false;
   }
 }
 
 // Add first product on load
-addProductForm();
+addProd();
 </script>
 </body>
 </html>

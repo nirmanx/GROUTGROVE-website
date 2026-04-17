@@ -1,137 +1,251 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Products – GroutGrove</title>
+  <title>All Products – GroutGrove</title>
+  <meta name="description" content="Buy cement, steel, bricks, tiles at best prices in Delhi NCR. Genuine brands, fast delivery."/>
   <link rel="stylesheet" href="../style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Hind:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
-    .page-hero{background:linear-gradient(135deg,#1A1208,#2D2010);padding:40px 24px;text-align:center}
-    .page-hero h1{font-family:'Baloo 2';font-size:36px;font-weight:800;color:white}
-    .page-hero h1 span{color:var(--orange)}
-    .page-hero p{color:#C4B5A5;margin-top:8px}
-    .filter-bar{background:white;border-bottom:2px solid var(--border);padding:14px 24px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;position:sticky;top:68px;z-index:10}
-    .filter-btn{background:var(--light);border:1.5px solid var(--border);color:var(--dark);font-family:'Hind';font-size:13px;font-weight:600;padding:8px 16px;border-radius:25px;cursor:pointer;transition:all .2s}
-    .filter-btn.active,.filter-btn:hover{background:var(--orange);border-color:var(--orange);color:white}
-    .products-page{max-width:1200px;margin:36px auto;padding:0 24px}
-    .prod-count{font-size:14px;color:var(--gray);margin-bottom:20px}
-    .prod-count span{color:var(--orange);font-weight:700}
-    .offer-badge{background:linear-gradient(135deg,#E74C3C,#C0392B);color:white;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;display:inline-block;margin-top:6px}
-    .min-order{font-size:11px;color:var(--gray);margin-top:4px}
-    .no-prod{text-align:center;padding:60px 20px;grid-column:1/-1}
-    .loading{text-align:center;padding:60px;color:var(--gray);font-size:15px;grid-column:1/-1}
+    .prod-hero{background:linear-gradient(135deg,#0F172A,#1E293B);padding:50px 24px;text-align:center}
+    .prod-hero h1{font-family:'Playfair Display',serif;font-size:40px;font-weight:800;color:white;margin-bottom:8px}
+    .prod-hero h1 span{color:#F59E0B}
+    .prod-hero p{color:rgba(255,255,255,.5);font-size:15px;max-width:500px;margin:0 auto}
+    .filters-wrap{background:white;border-bottom:1px solid #E2E8F0;padding:16px 24px;position:sticky;top:64px;z-index:90;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+    .filters-inner{max-width:1280px;margin:0 auto;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .search-input{flex:1;min-width:220px;border:1.5px solid #E2E8F0;border-radius:50px;padding:10px 18px;font-family:'DM Sans';font-size:14px;outline:none;background:#FAFCFB;color:#1E293B;transition:border .2s}
+    .search-input:focus{border-color:#1E293B;background:white}
+    .filter-tabs{display:flex;gap:6px;flex-wrap:wrap}
+    .ftab{background:#F1F5F9;border:1.5px solid #E2E8F0;color:#475569;font-family:'DM Sans';font-size:12px;font-weight:700;padding:8px 14px;border-radius:50px;cursor:pointer;transition:all .2s;white-space:nowrap}
+    .ftab:hover{border-color:#1E293B;color:#1E293B}
+    .ftab.active{background:#1E293B;border-color:#1E293B;color:white}
+    .sort-select{border:1.5px solid #E2E8F0;border-radius:50px;padding:9px 14px;font-family:'DM Sans';font-size:13px;outline:none;background:#FAFCFB;color:#1E293B;cursor:pointer}
+    .prods-page{max-width:1280px;margin:32px auto;padding:0 24px 80px}
+    .results-info{font-size:14px;color:#64748B;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+    .results-info span{color:#1E293B;font-weight:700}
+    .empty-prods{text-align:center;padding:70px 20px;background:white;border-radius:20px;border:1.5px solid #E2E8F0;grid-column:1/-1}
+    .empty-prods .e-ico{font-size:60px;margin-bottom:16px}
+    .empty-prods h3{font-family:'Playfair Display',serif;font-size:24px;margin-bottom:10px}
+    .empty-prods p{color:#64748B;margin-bottom:20px}
+    .loading-prods{text-align:center;padding:60px;color:#64748B;grid-column:1/-1;font-size:15px}
+    .pin-filter{background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:50px;padding:8px 16px;font-size:12px;font-weight:700;color:#166534;display:none;align-items:center;gap:6px}
+    .pin-filter.show{display:inline-flex}
+    .pin-filter button{background:none;border:none;cursor:pointer;color:#166534;font-size:14px;font-weight:800}
+    @media(max-width:768px){.prod-hero h1{font-size:28px}.filters-inner{gap:8px}}
   </style>
 </head>
 <body>
-  <div class="ticker-wrap"><div class="ticker"><span>Free Delivery ₹5000+</span><span>Delhi NCR Same Day Delivery</span><span>Bulk: +91 96541 71005</span><span>100% Genuine Material</span><span>Free Delivery ₹5000+</span></div></div>
 
-  <nav>
-    <div class="nav-inner">
-      <a href="../index.html" class="logo">Grout<span>Grove</span></a>
-      <div class="nav-links" id="navLinks">
-        <a href="../index.html">🏠 Home</a>
-        <a href="products.html">📦 Products</a>
-        <a href="track.html">🔄 Track Order</a>
-        <a href="contact.html">📞 Contact</a>
-        <a href="login.html" id="loginNavBtn">👤 Login</a>
-        <span id="userBadge" style="display:none;background:var(--orange);color:white;font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px;cursor:pointer;" onclick="logoutUser()">👤 <span id="userName"></span> ✕</span>
-        <a href="cart.html" class="nav-cta">🛒 Cart</a>
+<div class="ticker-wrap"><div class="ticker">
+  <span>Free Delivery on orders above ₹5000</span>
+  <span>Same Day Delivery — Delhi, Noida, Ghaziabad, Gurugram</span>
+  <span>Bulk Orders: +91 96541 71005</span>
+  <span>100% Genuine Material — Best Price Guaranteed</span>
+  <span>Free Delivery on orders above ₹5000</span>
+</div></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Grout<span>Grove</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="track.html">Track Order</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html" id="loginNavBtn">Login</a>
+      <span id="userBadge" style="display:none;background:#1E293B;color:white;font-size:13px;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer;" onclick="logoutUser()">👤 <span id="userName"></span> ✕</span>
+      <a href="cart.html" class="nav-cta">🛒 Cart</a>
+    </div>
+    <button class="hamburger" onclick="toggleNav()">☰</button>
+  </div>
+</nav>
+
+<div class="prod-hero">
+  <h1>All <span>Products</span></h1>
+  <p>Genuine brands — best prices — fast delivery to your construction site</p>
+</div>
+
+<!-- FILTERS -->
+<div class="filters-wrap">
+  <div class="filters-inner">
+    <input type="text" class="search-input" id="searchBox" placeholder="🔍 Search cement, steel, bricks..." oninput="applyFilters()"/>
+    <div class="filter-tabs">
+      <div class="ftab active" onclick="setCat('all',this)">🏪 All</div>
+      <div class="ftab" onclick="setCat('cement',this)">🏗️ Cement</div>
+      <div class="ftab" onclick="setCat('steel',this)">⚙️ Steel</div>
+      <div class="ftab" onclick="setCat('bricks',this)">🧱 Bricks</div>
+      <div class="ftab" onclick="setCat('tiles',this)">🪟 Tiles</div>
+      <div class="ftab" onclick="setCat('sand',this)">🪣 Sand</div>
+      <div class="ftab" onclick="setCat('paint',this)">🎨 Paint</div>
+      <div class="ftab" onclick="setCat('pvc_pipes',this)">🔵 Pipes</div>
+      <div class="ftab" onclick="setCat('electrical',this)">⚡ Electrical</div>
+      <div class="ftab" onclick="setCat('hardware',this)">🔩 Hardware</div>
+      <div class="ftab" onclick="setCat('chemicals',this)">🧪 Chemicals</div>
+    </div>
+    <select class="sort-select" id="sortBy" onchange="applyFilters()">
+      <option value="new">Newest First</option>
+      <option value="low">Price: Low to High</option>
+      <option value="high">Price: High to Low</option>
+      <option value="rating">Top Rated</option>
+    </select>
+    <div class="pin-filter" id="pinFilter">
+      📍 Near You <button onclick="clearPinFilter()">✕</button>
+    </div>
+  </div>
+</div>
+
+<div class="prods-page">
+  <div class="results-info">
+    <div id="resultsText">Loading products...</div>
+  </div>
+  <div class="prod-grid" id="productGrid">
+    <div class="loading-prods">⏳ Loading products...</div>
+  </div>
+</div>
+
+<div class="wa-float">
+  <div class="wa-bubble" id="waBubble">💬 <strong>Need help ordering?</strong><br><small>+91 96541 71005</small></div>
+  <a href="https://wa.me/919654171005?text=I need construction material — please help." target="_blank" class="wa-btn" id="waBtn">💬</a>
+</div>
+<div class="call-float"><a href="tel:+919654171005" class="call-btn">📞 Call for Best Price</a></div>
+
+<script src="../script.js"></script>
+<script>
+const { createClient } = supabase;
+const sb = createClient(
+  'https://ddgwdesqicrneikxrcnj.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo'
+);
+
+const nxUser = JSON.parse(localStorage.getItem('nx_user'));
+if(nxUser) {
+  document.getElementById('loginNavBtn').style.display='none';
+  document.getElementById('userBadge').style.display='inline-flex';
+  document.getElementById('userName').textContent = nxUser.name.split(' ')[0];
+}
+function logoutUser(){localStorage.removeItem('nx_user');window.location.reload();}
+
+let allProds = [];
+let currentCat = 'all';
+let userPincode = nxUser?.pincode || null;
+
+const catIcons = {cement:'🏗️',steel:'⚙️',bricks:'🧱',tiles:'🪟',sand:'🪣',paint:'🎨',pvc_pipes:'🔵',plumbing:'🚿',sanitaryware:'🚽',electrical:'⚡',hardware:'🔩',chemicals:'🧪',bathware:'🛁',gfrp:'🏗️',other:'📦'};
+
+async function loadProducts() {
+  const { data, error } = await sb.from('products').select('*').eq('status','active').order('created_at',{ascending:false});
+  if(error) { console.error('Load error:', error); }
+  allProds = data || [];
+
+  // Check URL for search/category
+  const urlP = new URLSearchParams(window.location.search);
+  const s = urlP.get('search');
+  const c = urlP.get('cat');
+  if(s) document.getElementById('searchBox').value = s;
+  if(c) {
+    currentCat = c;
+    document.querySelectorAll('.ftab').forEach(t => {
+      t.classList.toggle('active', t.onclick?.toString().includes(`'${c}'`));
+    });
+  }
+
+  // Show pincode filter if user logged in
+  if(userPincode) document.getElementById('pinFilter').classList.add('show');
+
+  applyFilters();
+}
+
+function setCat(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  applyFilters();
+}
+
+function clearPinFilter() {
+  userPincode = null;
+  document.getElementById('pinFilter').classList.remove('show');
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.getElementById('searchBox').value.toLowerCase().trim();
+  const sort = document.getElementById('sortBy').value;
+
+  let filtered = [...allProds];
+
+  // Category filter
+  if(currentCat !== 'all') filtered = filtered.filter(p => p.category === currentCat);
+
+  // Search filter
+  if(q) filtered = filtered.filter(p =>
+    (p.product_name||'').toLowerCase().includes(q) ||
+    (p.brand_name||'').toLowerCase().includes(q) ||
+    (p.category||'').toLowerCase().includes(q) ||
+    (p.specs||'').toLowerCase().includes(q)
+  );
+
+  // Sort
+  if(sort==='low') filtered.sort((a,b) => parseFloat(a.price||0)-parseFloat(b.price||0));
+  else if(sort==='high') filtered.sort((a,b) => parseFloat(b.price||0)-parseFloat(a.price||0));
+  else if(sort==='rating') filtered.sort((a,b) => parseFloat(b.rating||4.5)-parseFloat(a.rating||4.5));
+
+  renderProducts(filtered);
+}
+
+function renderProducts(prods) {
+  const grid = document.getElementById('productGrid');
+  const info = document.getElementById('resultsText');
+
+  if(!prods.length) {
+    info.innerHTML = 'No products found';
+    grid.innerHTML = `<div class="empty-prods">
+      <div class="e-ico">🔍</div>
+      <h3>No Products Found</h3>
+      <p>Try different search or category. Or WhatsApp us — we will find it!</p>
+      <a href="https://wa.me/919654171005?text=I need construction material but couldn't find it on website." target="_blank" class="btn-primary" style="text-decoration:none;display:inline-flex">💬 WhatsApp Us</a>
+    </div>`;
+    return;
+  }
+
+  info.innerHTML = `Showing <span>${prods.length}</span> product${prods.length!==1?'s':''}`;
+
+  grid.innerHTML = prods.map(p => {
+    const orig = p.discount > 0 ? Math.round(parseFloat(p.price)*100/(100-parseFloat(p.discount))) : null;
+    const ico = catIcons[p.category] || '📦';
+    const stars = '★'.repeat(Math.floor(p.rating||4.5)) + '☆'.repeat(5-Math.floor(p.rating||4.5));
+    return `<div class="prod-card">
+      <div class="prod-img">
+        ${p.photo_url && p.photo_url.startsWith('data:') ? `<img src="${p.photo_url}" style="width:100%;height:100%;object-fit:cover">` : ico}
+        ${p.discount>0 ? `<span class="badge-sale">-${p.discount}%</span>` : ''}
+        ${p.offer_text ? `<span class="badge-best">${p.offer_text}</span>` : `<span class="badge-best">${p.delivery_time||'Fast Delivery'}</span>`}
       </div>
-      <button class="hamburger" onclick="toggleNav()">☰</button>
-    </div>
-  </nav>
+      <div class="prod-body">
+        <div class="prod-brand">${p.brand_name||''}</div>
+        <div class="prod-name">${p.product_name}</div>
+        <div class="prod-specs">${p.specs||''}</div>
+        <div class="prod-rating">
+          <span class="stars">${stars}</span>
+          ${p.reviews_count>0?`(${p.reviews_count} reviews)`:' — New'}
+        </div>
+        ${p.seller_years ? `<div style="font-size:11px;color:#94A3B8;margin-bottom:6px">🏭 ${p.seller_name||'Verified Seller'} — ${p.seller_years} experience</div>` : ''}
+        ${p.min_order ? `<div style="font-size:11px;color:#64748B;margin-bottom:6px">📦 Min: ${p.min_order}</div>` : ''}
+        <div class="prod-price">
+          <span class="price-now">₹${parseFloat(p.price).toLocaleString('en-IN')}</span>
+          ${orig?`<span class="price-old">₹${orig.toLocaleString('en-IN')}</span>`:''}
+          <span class="price-unit">${p.unit||''}</span>
+        </div>
+        <div class="prod-actions">
+          <button class="btn-cart" onclick="addToCart('${p.product_name.replace(/'/g,"\\'")}',${p.price})">🛒 Add to Cart</button>
+          <a href="https://wa.me/919654171005?text=I need ${encodeURIComponent(p.product_name)}" target="_blank" class="btn-wa">💬</a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
 
-  <div class="page-hero">
-    <h1>Saare <span>Products</span></h1>
-    <p>Genuine brands — best prices — fast delivery</p>
-  </div>
-
-  <div class="filter-bar">
-    <button class="filter-btn active" onclick="filterCat('all',this)">🏪 Sab</button>
-    <button class="filter-btn" onclick="filterCat('cement',this)">🏗️ Cement</button>
-    <button class="filter-btn" onclick="filterCat('steel',this)">⚙️ Steel</button>
-    <button class="filter-btn" onclick="filterCat('bricks',this)">🧱 Bricks</button>
-    <button class="filter-btn" onclick="filterCat('tiles',this)">🪟 Tiles</button>
-    <button class="filter-btn" onclick="filterCat('sand',this)">🪣 Sand</button>
-    <button class="filter-btn" onclick="filterCat('paint',this)">🎨 Paint</button>
-    <button class="filter-btn" onclick="filterCat('hardware',this)">🔩 Hardware</button>
-    <button class="filter-btn" onclick="filterCat('plumbing',this)">🪛 Plumbing</button>
-  </div>
-
-  <div class="products-page">
-    <div class="prod-count" id="prodCount"></div>
-    <div class="prod-grid" id="productGrid">
-      <div class="loading">⏳ Products load ho rahe hain...</div>
-    </div>
-  </div>
-
-  <div class="wa-float">
-    <div class="wa-bubble" id="waBubble">💬 <strong>Order karo WhatsApp par!</strong><br><small>+91 96541 71005</small></div>
-    <a href="https://wa.me/919654171005?text=Namaste! Mujhe construction material chahiye." target="_blank" class="wa-btn" id="waBtn">💬</a>
-  </div>
-
-  <script src="../script.js"></script>
-  <script>
-    const{createClient}=supabase;
-    const sb=createClient('https://ddgwdesqicrneikxrcnj.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo');
-    const nxUser=JSON.parse(localStorage.getItem('nx_user'));
-    if(nxUser){const lb=document.getElementById('loginNavBtn');const ub=document.getElementById('userBadge');const un=document.getElementById('userName');if(lb)lb.style.display='none';if(ub)ub.style.display='inline-flex';if(un)un.textContent=nxUser.name.split(' ')[0];}
-    function logoutUser(){localStorage.removeItem('nx_user');window.location.reload();}
-    const catEmojis={cement:'🏗️',steel:'⚙️',bricks:'🧱',tiles:'🪟',sand:'🪣',paint:'🎨',hardware:'🔩',plumbing:'🪛'};
-    let allProducts=[];
-    async function loadProducts(){
-      const grid=document.getElementById('productGrid');
-      const{data,error}=await sb.from('products').select('*').eq('status','active').order('created_at',{ascending:false});
-      if(error){grid.innerHTML='<div class="no-prod">❌ Products load nahi hue. Refresh karo.</div>';return;}
-      allProducts=data||[];
-      renderProducts(allProducts);
-    }
-    function renderProducts(prods){
-      const grid=document.getElementById('productGrid');
-      const count=document.getElementById('prodCount');
-      if(!prods||prods.length===0){
-        count.innerHTML='';
-        grid.innerHTML=`<div class="no-prod"><div style="font-size:60px;margin-bottom:16px">📦</div><h3 style="font-family:'Baloo 2';font-size:22px;margin-bottom:8px">Is category mein abhi koi product nahi</h3><p style="color:var(--gray);margin-bottom:20px">Jald hi products add honge!</p><a href="https://wa.me/919654171005?text=Mujhe material chahiye" target="_blank" class="btn-primary" style="text-decoration:none">💬 WhatsApp Order</a><br><br><a href="seller.html" class="btn-primary" style="text-decoration:none;background:var(--dark)">🏭 Seller Bano</a></div>`;
-        return;
-      }
-      count.innerHTML=`<span>${prods.length}</span> products mil gaye`;
-      grid.innerHTML=prods.map(p=>{
-        const emoji=catEmojis[p.category]||'📦';
-        const hasPhoto=p.photo_url&&p.photo_url.length>100;
-        const orig=p.discount>0?Math.round(p.price*100/(100-p.discount)):null;
-        return`<div class="prod-card">
-          <div class="prod-img" style="${hasPhoto?'padding:0':''}">
-            ${hasPhoto?`<img src="${p.photo_url}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='${emoji}'">`:`${emoji}`}
-            ${p.discount>0?`<span class="badge-sale">-${p.discount}%</span>`:''}
-            <span class="badge-best">${p.delivery_time||'Fast'}</span>
-          </div>
-          <div class="prod-body">
-            <div class="prod-brand">${p.brand_name}</div>
-            <div class="prod-name">${p.product_name}</div>
-            <div class="prod-specs">${p.specs||''}</div>
-            ${p.offer_text?`<div class="offer-badge">🔥 ${p.offer_text}</div>`:''}
-            ${p.min_order?`<div class="min-order">📦 Min: ${p.min_order}</div>`:''}
-            <div class="prod-price">
-              <span class="price-now">₹${parseFloat(p.price).toLocaleString('en-IN')}</span>
-              ${orig?`<span class="price-old">₹${orig.toLocaleString('en-IN')}</span>`:''}
-              <span class="price-unit">${p.unit||''}</span>
-            </div>
-            <div class="prod-actions">
-              <button class="btn-cart" onclick="addToCart('${p.product_name.replace(/'/g,"\\'")}',${p.price})">🛒 Cart</button>
-              <a href="https://wa.me/919654171005?text=Mujhe ${encodeURIComponent(p.product_name)} chahiye" target="_blank" class="btn-wa">💬</a>
-            </div>
-          </div>
-        </div>`;
-      }).join('');
-    }
-    function filterCat(cat,btn){
-      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      renderProducts(cat==='all'?allProducts:allProducts.filter(p=>p.category===cat));
-    }
-    loadProducts();
-  </script>
+loadProducts();
+</script>
 </body>
 </html>
