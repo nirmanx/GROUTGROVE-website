@@ -1,210 +1,352 @@
-
-<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cart – GroutGrove</title>
-  <link rel="stylesheet" href="../style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-  <style>
-    .page-hero{background:linear-gradient(135deg,#0F172A,#1E293B);padding:44px 24px;text-align:center}
-    .page-hero h1{font-family:'Playfair Display',serif;font-size:36px;font-weight:800;color:white}
-    .page-hero h1 span{color:#F59E0B}
-    .page-hero p{color:rgba(255,255,255,.45);margin-top:8px;font-size:14px}
-    .cart-page{max-width:960px;margin:36px auto;padding:0 24px 120px}
-    .cart-empty{text-align:center;padding:70px 20px;background:white;border-radius:24px;border:1.5px solid #E2E8F0;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-    .cart-empty .e-icon{font-size:70px;margin-bottom:20px}
-    .cart-empty h2{font-family:'Playfair Display',serif;font-size:26px;margin-bottom:12px;color:#1E293B}
-    .cart-empty p{color:#64748B;margin-bottom:24px}
-    .cart-item{background:white;border:1.5px solid #E2E8F0;border-radius:18px;padding:18px 20px;display:flex;align-items:center;gap:16px;margin-bottom:12px;flex-wrap:wrap;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-    .cart-item:hover{border-color:#F59E0B;box-shadow:0 4px 16px rgba(245,158,11,.1)}
-    .ci-icon{font-size:32px;width:56px;height:56px;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    .ci-info{flex:1;min-width:120px}
-    .ci-name{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:#1E293B;margin-bottom:3px}
-    .ci-price{color:#0F172A;font-family:'Playfair Display',serif;font-size:15px;font-weight:700}
-    .qty-row{display:flex;align-items:center;gap:10px}
-    .q-btn{width:34px;height:34px;border-radius:10px;border:1.5px solid #E2E8F0;background:white;font-size:18px;font-weight:800;cursor:pointer;color:#1E293B;transition:all .2s;display:flex;align-items:center;justify-content:center}
-    .q-btn:hover{background:#1E293B;color:white;border-color:#1E293B}
-    .q-num{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;min-width:28px;text-align:center;color:#1E293B}
-    .rm-btn{background:#FEF2F2;color:#DC2626;border:none;border-radius:10px;padding:8px 14px;cursor:pointer;font-size:12px;font-weight:700;transition:all .2s}
-    .rm-btn:hover{background:#DC2626;color:white}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Cart – GroutGrove</title>
+<meta name="description" content="Review your cart and place order for construction material in Delhi NCR."/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#F8FAFC;color:#1E293B}
+.ticker-wrap{background:#1E293B;overflow:hidden;padding:8px 0;white-space:nowrap}
+.ticker{display:inline-flex;animation:tick 30s linear infinite}
+.ticker span{color:rgba(255,255,255,.7);font-size:12px;padding:0 32px}
+.ticker span::after{content:'•';margin-left:32px;color:#F59E0B}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+nav{background:white;border-bottom:1px solid #E2E8F0;padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:#004225;text-decoration:none}
+.logo span{color:#EF4444}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{color:#475569;font-size:14px;font-weight:500;text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:#1E293B}
+.nav-cta{background:#1E293B!important;color:white!important;padding:8px 20px;border-radius:50px;font-weight:700!important}
+.hamburger{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:#1E293B}
+@media(max-width:768px){.nav-links{display:none;position:absolute;top:64px;left:0;right:0;background:white;flex-direction:column;padding:20px;border-bottom:1px solid #E2E8F0;gap:16px;z-index:99}.nav-links.open{display:flex}.hamburger{display:block}}
 
-    /* DELIVERY CHARGES — VISIBLE */
-    .delivery-section{background:white;border:1.5px solid #E2E8F0;border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-    .delivery-section h3{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:800;margin-bottom:14px;color:#1E293B}
-    .delivery-options{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-    .del-opt{border:2px solid #E2E8F0;border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s}
-    .del-opt:hover,.del-opt.sel{border-color:#1E293B;background:#F8FAFC}
-    .del-opt.sel{border-color:#F59E0B;background:#FFFBEB}
-    .del-ico{font-size:24px;margin-bottom:6px}
-    .del-name{font-size:12px;font-weight:700;color:#1E293B;margin-bottom:3px}
-    .del-price{font-family:'Playfair Display',serif;font-size:15px;font-weight:800}
-    .del-free{color:#22C55E}
-    .del-paid{color:#EF4444}
-    .del-time{font-size:11px;color:#64748B}
+/* QTY POPUP */
+.qty-popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.qty-popup{background:white;border-radius:24px;padding:32px 28px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.qty-popup h3{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#1E293B;margin-bottom:8px}
+.qp-price{font-size:24px;font-weight:800;color:#F59E0B;font-family:'Playfair Display',serif;margin-bottom:20px}
+.qty-controls{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:14px}
+.qty-controls button{width:40px;height:40px;border-radius:50%;border:2px solid #1E293B;background:white;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.qty-controls button:hover{background:#1E293B;color:white}
+.qty-controls span{font-size:26px;font-weight:800;min-width:40px;text-align:center}
+.qp-total{font-size:16px;font-weight:700;color:#64748B;margin-bottom:20px}
+.qp-btns{display:flex;gap:10px}
+.qp-cancel{flex:1;background:#F1F5F9;color:#475569;border:1.5px solid #E2E8F0;border-radius:50px;padding:12px;font-family:'DM Sans';font-size:15px;cursor:pointer}
+.qp-add{flex:2;background:#1E293B;color:white;border:none;border-radius:50px;padding:12px;font-family:'DM Sans';font-size:15px;font-weight:700;cursor:pointer;transition:all .2s}
+.qp-add:hover{background:#0F172A;transform:translateY(-1px)}
 
-    .cart-summary{background:white;border:1.5px solid #E2E8F0;border-radius:18px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-    .cart-summary h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:16px;color:#1E293B}
-    .s-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F1F5F9;font-size:14px;color:#475569;align-items:center}
-    .s-row:last-child{border-bottom:none}
-    .s-row.total{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#1E293B;padding-top:14px}
-    .del-tag{background:#D1FAE5;color:#065F46;font-size:11px;font-weight:700;padding:3px 8px;border-radius:8px}
-    .del-tag.paid{background:#FEE2E2;color:#DC2626}
-    .savings-badge{background:#FFFBEB;border:1px solid #F59E0B;border-radius:10px;padding:10px 14px;font-size:13px;color:#92400E;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-    .co-btns{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
-    .btn-co{flex:1;background:#1E293B;color:white;border:none;border-radius:50px;padding:14px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;min-width:200px;transition:all .2s}
-    .btn-co:hover{background:#0F172A;transform:translateY(-1px)}
-    .btn-wa-co{background:#25D366;color:white;border:none;border-radius:50px;padding:14px 20px;font-size:20px;cursor:pointer;text-decoration:none;display:flex;align-items:center;transition:all .2s;flex-shrink:0}
-    .btn-wa-co:hover{background:#128C7E}
+/* CART HERO */
+.cart-hero{background:linear-gradient(135deg,#0F172A,#1E293B);padding:40px 24px;text-align:center}
+.cart-hero h1{font-family:'Playfair Display',serif;font-size:36px;font-weight:800;color:white;margin-bottom:8px}
+.cart-hero h1 span{color:#F59E0B}
+.cart-hero p{color:rgba(255,255,255,.5);font-size:14px}
 
-    /* CHECKOUT OVERLAY */
-    .co-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9998;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
-    .co-overlay.show{display:flex}
-    .co-box{background:white;border-radius:24px;padding:28px;max-width:520px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-    .co-box h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;margin-bottom:18px;color:#1E293B}
-    .co-box h3 span{color:#F59E0B}
-    .co-sec{font-size:11px;font-weight:700;color:#94A3B8;margin:16px 0 10px;text-transform:uppercase;letter-spacing:1px;padding-bottom:6px;border-bottom:1px solid #F1F5F9}
-    .co-field{margin-bottom:13px}
-    .co-field label{display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
-    .co-field input,.co-field select,.co-field textarea{width:100%;border:1.5px solid #E2E8F0;border-radius:10px;padding:11px 13px;font-family:'DM Sans';font-size:14px;outline:none;background:#FAFCFB;color:#1E293B;transition:border .2s}
-    .co-field input:focus,.co-field select:focus{border-color:#1E293B;background:white}
-    .co-field textarea{height:70px;resize:vertical}
-    .co-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .pay-card{border:2px solid #E2E8F0;border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s}
-    .pay-card:hover,.pay-card.sel{border-color:#F59E0B;background:#FFFBEB}
-    .pay-card .p-ico{font-size:22px;margin-bottom:5px}
-    .pay-card .p-lbl{font-size:12px;font-weight:700;color:#1E293B}
-    .order-mini{background:#F8FAFC;border-radius:12px;padding:14px;margin-bottom:14px}
-    .order-mini h4{font-size:12px;font-weight:700;color:#64748B;margin-bottom:8px;text-transform:uppercase}
-    .order-mini p{font-size:13px;color:#1E293B;margin-bottom:4px}
-    .order-mini .o-total{font-family:'Playfair Display',serif;font-size:18px;font-weight:800;color:#1E293B;margin-top:8px}
-    .order-mini .o-del{font-size:12px;color:#64748B;margin-top:2px}
+/* MAIN LAYOUT */
+.cart-wrap{max-width:1100px;margin:32px auto;padding:0 20px 80px;display:grid;grid-template-columns:1fr 380px;gap:24px}
+@media(max-width:900px){.cart-wrap{grid-template-columns:1fr}}
 
-    /* AI MATCHING INDICATOR */
-    .ai-match{background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
-    .ai-match .ai-ico{font-size:24px;flex-shrink:0}
-    .ai-match p{font-size:13px;color:rgba(255,255,255,.7);margin:0}
-    .ai-match strong{color:#F59E0B}
+/* CART ITEMS */
+.cart-card{background:white;border-radius:20px;border:1.5px solid #E2E8F0;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.cart-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.cart-card-head h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#1E293B}
+.cart-count{background:#1E293B;color:#F59E0B;font-size:11px;font-weight:800;padding:4px 12px;border-radius:50px}
+.empty-cart{text-align:center;padding:60px 20px}
+.empty-cart .e-ico{font-size:60px;margin-bottom:16px}
+.empty-cart h3{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:10px}
+.empty-cart p{color:#64748B;margin-bottom:24px}
+.btn-shop{display:inline-flex;align-items:center;gap:8px;background:#1E293B;color:white;padding:13px 28px;border-radius:50px;font-family:'DM Sans';font-size:15px;font-weight:700;text-decoration:none;transition:all .2s}
+.btn-shop:hover{background:#0F172A;transform:translateY(-1px)}
 
-    .btn-place{width:100%;background:linear-gradient(135deg,#F59E0B,#D97706);color:#1E293B;border:none;border-radius:50px;padding:16px;font-family:'DM Sans';font-size:17px;font-weight:800;cursor:pointer;margin-top:14px;transition:all .2s}
-    .btn-place:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,158,11,.4)}
-    .btn-place:disabled{background:#94A3B8;color:white;cursor:not-allowed;transform:none;box-shadow:none}
-    .btn-back-co{width:100%;background:#F1F5F9;color:#64748B;border:none;border-radius:50px;padding:12px;font-family:'DM Sans';font-size:14px;cursor:pointer;margin-top:8px}
+/* CART ITEM ROW */
+.cart-item{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid #F1F5F9}
+.cart-item:last-child{border-bottom:none}
+.ci-icon{width:60px;height:60px;border-radius:14px;background:linear-gradient(135deg,#1E293B,#334155);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-size:14px;font-weight:700;color:#1E293B;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-price{font-size:16px;font-weight:800;color:#F59E0B;font-family:'Playfair Display',serif}
+.ci-unit{font-size:12px;color:#94A3B8}
+.ci-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ci-btn{width:32px;height:32px;border-radius:50%;border:1.5px solid #E2E8F0;background:white;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-weight:700}
+.ci-btn:hover{border-color:#1E293B;background:#1E293B;color:white}
+.ci-qty{font-size:16px;font-weight:800;min-width:28px;text-align:center}
+.ci-total{font-size:14px;font-weight:700;color:#1E293B;min-width:70px;text-align:right}
+.ci-rm{background:none;border:none;color:#EF4444;font-size:18px;cursor:pointer;padding:4px;margin-left:4px;transition:all .2s}
+.ci-rm:hover{color:#DC2626;transform:scale(1.2)}
 
-    /* SUCCESS */
-    .success-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
-    .success-overlay.show{display:flex}
-    .success-box{background:white;border-radius:28px;padding:44px 32px;text-align:center;max-width:440px;width:100%}
-    .s-ico{font-size:64px;margin-bottom:16px;display:block}
-    .s-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:#1E293B;margin-bottom:8px}
-    .s-title span{color:#22C55E}
-    .oid{background:#F0FDF4;border:2px solid #22C55E;border-radius:12px;padding:10px 20px;font-family:'Playfair Display',serif;font-size:20px;font-weight:800;color:#166534;margin:12px 0;display:inline-block}
-    .s-details{background:#F8FAFC;border-radius:12px;padding:14px;margin:12px 0;text-align:left;font-size:13px;color:#475569;line-height:1.8}
-    .s-details strong{color:#1E293B}
-    .s-note{background:#FFFBEB;border-radius:10px;padding:12px;font-size:13px;color:#92400E;margin-bottom:18px;text-align:left}
-    .s-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-    .s-btn-home{background:#1E293B;color:white;border:none;border-radius:50px;padding:12px 28px;font-family:'DM Sans';font-size:15px;font-weight:700;cursor:pointer}
-    .s-btn-track{background:#F1F5F9;color:#475569;border:1px solid #E2E8F0;border-radius:50px;padding:11px 22px;font-family:'DM Sans';font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block}
-  </style>
+/* DELIVERY SECTION */
+.delivery-section{background:#F0FDF4;border-radius:14px;padding:16px;margin:16px 0;border:1.5px solid #86EFAC}
+.delivery-section h4{font-size:13px;font-weight:800;color:#166534;margin-bottom:12px}
+.del-options{display:flex;gap:10px}
+.del-opt{flex:1;background:white;border:2px solid #E2E8F0;border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all .2s}
+.del-opt.sel{border-color:#22C55E;background:#F0FDF4}
+.del-opt .d-icon{font-size:22px;margin-bottom:5px}
+.del-opt .d-label{font-size:11px;font-weight:700;color:#1E293B}
+.del-opt .d-price{font-size:13px;font-weight:800;color:#22C55E;margin-top:3px}
+.del-opt .d-time{font-size:10px;color:#64748B}
+.free-badge{display:inline-flex;align-items:center;gap:5px;background:#D1FAE5;color:#065F46;font-size:12px;font-weight:700;padding:5px 12px;border-radius:50px;margin-top:8px}
+
+/* ORDER SUMMARY */
+.summary-card{background:white;border-radius:20px;border:1.5px solid #E2E8F0;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,.05);position:sticky;top:88px}
+.summary-card h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#1E293B;margin-bottom:20px}
+.sum-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:14px}
+.sum-row .sum-lbl{color:#64748B}
+.sum-row .sum-val{font-weight:700;color:#1E293B}
+.sum-row.total{border-top:1.5px solid #E2E8F0;padding-top:14px;margin-top:6px}
+.sum-row.total .sum-lbl{font-size:16px;font-weight:700;color:#1E293B}
+.sum-row.total .sum-val{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:#1E293B}
+.sum-row.discount .sum-val{color:#22C55E}
+.sum-row.free .sum-val{color:#22C55E;font-weight:800}
+
+/* FORM */
+.order-form{margin-top:20px}
+.order-form h3{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:14px;color:#1E293B}
+.ff{margin-bottom:12px}
+.ff label{display:block;font-size:10px;font-weight:700;color:#64748B;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.ff input,.ff select,.ff textarea{width:100%;border:1.5px solid #E2E8F0;border-radius:10px;padding:11px 14px;font-family:'DM Sans';font-size:14px;outline:none;background:#FAFCFB;color:#1E293B;transition:border .2s}
+.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:#1E293B;background:white}
+.ff textarea{height:70px;resize:vertical}
+
+/* PAYMENT */
+.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.pay-opt{border:2px solid #E2E8F0;border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all .2s}
+.pay-opt:hover{border-color:#94A3B8}
+.pay-opt.sel{border-color:#1E293B;background:#F1F5F9}
+.pay-opt .p-ico{font-size:22px;margin-bottom:4px}
+.pay-opt .p-lbl{font-size:11px;font-weight:700;color:#1E293B}
+
+/* BUTTONS */
+.btn-order{width:100%;background:linear-gradient(135deg,#1E293B,#0F172A);color:white;border:none;border-radius:50px;padding:16px;font-family:'DM Sans';font-size:17px;font-weight:800;cursor:pointer;transition:all .3s;box-shadow:0 8px 24px rgba(30,41,59,.3);margin-bottom:10px}
+.btn-order:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(30,41,59,.4)}
+.btn-order:disabled{background:#94A3B8;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-wa-order{width:100%;background:#25D366;color:white;border:none;border-radius:50px;padding:14px;font-family:'DM Sans';font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-wa-order:hover{background:#22C55E;transform:translateY(-1px)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E293B;color:white;padding:12px 26px;border-radius:50px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 30px rgba(0,0,0,.3);transition:opacity .3s;opacity:0;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+
+/* SUCCESS OVERLAY */
+.success-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)}
+.success-overlay.show{display:flex}
+.success-card{background:white;border-radius:28px;padding:48px 36px;text-align:center;max-width:440px;width:100%;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.s-ico{font-size:72px;margin-bottom:16px;display:block}
+.s-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:#1E293B;margin-bottom:8px}
+.s-order-id{background:#F0FDF4;border:2px solid #22C55E;border-radius:14px;padding:12px 24px;font-family:'Playfair Display',serif;font-size:24px;font-weight:800;color:#166534;margin:14px 0;display:inline-block;letter-spacing:2px}
+.s-msg{color:#64748B;font-size:14px;line-height:1.8;margin-bottom:24px}
+.s-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.s-btn-home{background:#1E293B;color:white;border:none;border-radius:50px;padding:13px 28px;font-family:'DM Sans';font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none}
+.s-btn-home:hover{background:#0F172A}
+.s-btn-track{background:#F0FDF4;color:#166534;border:2px solid #22C55E;border-radius:50px;padding:12px 28px;font-family:'DM Sans';font-size:15px;font-weight:700;cursor:pointer;text-decoration:none}
+
+/* PROMO */
+.promo-bar{background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:14px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.promo-bar .p-ico{font-size:24px;flex-shrink:0}
+.promo-bar .p-text{font-size:13px;font-weight:700;color:#1E293B;line-height:1.5}
+
+/* FLOAT */
+.wa-float{position:fixed;bottom:24px;right:24px;z-index:500}
+.wa-btn{width:58px;height:58px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;text-decoration:none;box-shadow:0 6px 20px rgba(37,211,102,.4);transition:all .2s}
+.wa-btn:hover{transform:scale(1.1)}
+.call-float{position:fixed;bottom:24px;left:24px;z-index:500}
+.call-btn{background:#1E293B;color:white;padding:10px 18px;border-radius:50px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+</style>
 </head>
 <body>
 
-<!-- CHECKOUT OVERLAY -->
-<div class="co-overlay" id="coOverlay">
-  <div class="co-box">
-    <h3>Complete Your <span>Order</span></h3>
-    <div class="order-mini" id="orderMini"></div>
-    <div class="ai-match">
-      <div class="ai-ico">🤖</div>
-      <p>Our <strong>AI system</strong> will automatically match your order to the nearest verified seller in your area for fastest delivery.</p>
-    </div>
-
-    <div class="co-sec">👤 Your Details</div>
-    <div class="co-field"><label>Full Name *</label><input type="text" id="coName" placeholder="Your full name"/></div>
-    <div class="co-row">
-      <div class="co-field"><label>Phone *</label><input type="tel" id="coPhone" placeholder="10-digit number"/></div>
-      <div class="co-field"><label>City *</label>
-        <select id="coCity">
-          <option value="">Select City</option>
-          <option>Delhi</option><option>Noida</option><option>Greater Noida</option>
-          <option>Gurugram</option><option>Ghaziabad</option><option>Faridabad</option><option>Other</option>
-        </select>
-      </div>
-    </div>
-    <div class="co-field"><label>Delivery Address *</label><textarea id="coAddr" placeholder="Plot no, Street, Area, Landmark..."></textarea></div>
-    <div class="co-row">
-      <div class="co-field"><label>Pincode *</label><input type="text" id="coPincode" placeholder="201301" maxlength="6"/></div>
-      <div class="co-field"><label>Preferred Delivery Date</label><input type="date" id="coDate"/></div>
-    </div>
-
-    <div class="co-sec">💳 Payment Method</div>
-    <div class="pay-grid">
-      <div class="pay-card" id="p-upi" onclick="selPay('upi')"><div class="p-ico">📱</div><div class="p-lbl">UPI / GPay</div></div>
-      <div class="pay-card" id="p-cash" onclick="selPay('cash')"><div class="p-ico">💵</div><div class="p-lbl">Cash on Delivery</div></div>
-      <div class="pay-card" id="p-card" onclick="selPay('card')"><div class="p-ico">💳</div><div class="p-lbl">Card</div></div>
-      <div class="pay-card" id="p-wa" onclick="selPay('wa')"><div class="p-ico">💬</div><div class="p-lbl">WhatsApp Order</div></div>
-    </div>
-
-    <button class="btn-place" id="placeBtn" onclick="placeOrder()">🚀 Confirm Order</button>
-    <button class="btn-back-co" onclick="closeCheckout()">← Back to Cart</button>
-  </div>
-</div>
-
 <!-- SUCCESS OVERLAY -->
 <div class="success-overlay" id="successOverlay">
-  <div class="success-box">
-    <span class="s-ico">✅</span>
-    <div class="s-title">Order <span>Placed!</span></div>
-    <div class="oid" id="sOrderId">GG-XXXXXX</div>
-    <div class="s-details" id="sDetails"></div>
-    <div class="s-note">⏰ You will receive WhatsApp confirmation within <strong>30 minutes</strong>. Save your Order ID for tracking!</div>
+  <div class="success-card">
+    <span class="s-ico">🎉</span>
+    <div class="s-title">Order Placed Successfully!</div>
+    <div class="s-order-id" id="successOrderId">GG-XXXXXX</div>
+    <div class="s-msg">
+      Your order has been placed!<br>
+      GroutGrove team will confirm on <strong>WhatsApp within 30 minutes.</strong><br>
+      Material will be delivered directly to your site!
+    </div>
     <div class="s-btns">
-      <button class="s-btn-home" onclick="window.location.href='../index.html'">🏠 Home</button>
-      <a class="s-btn-track" id="trackLink" href="track.html">📦 Track Order</a>
+      <a href="../index.html" class="s-btn-home">🏠 Go Home</a>
+      <a href="track.html" class="s-btn-track">📦 Track Order</a>
     </div>
   </div>
 </div>
 
+<!-- TICKER -->
 <div class="ticker-wrap"><div class="ticker">
-  <span>Free Delivery on orders above ₹5000</span>
-  <span>Same Day Delivery in Delhi NCR</span>
-  <span>WhatsApp: +91 96541 71005</span>
-  <span>100% Genuine Material — Best Prices Guaranteed</span>
-  <span>Free Delivery on orders above ₹5000</span>
+  <span>🛒 Free Delivery on ₹5000+</span>
+  <span>Same Day Delivery — Delhi NCR</span>
+  <span>📞 +91 96541 71005</span>
+  <span>100% Genuine Material</span>
+  <span>WhatsApp Order Confirmation</span>
+  <span>🛒 Free Delivery on ₹5000+</span>
+  <span>Same Day Delivery — Delhi NCR</span>
+  <span>📞 +91 96541 71005</span>
+  <span>100% Genuine Material</span>
+  <span>WhatsApp Order Confirmation</span>
 </div></div>
 
+<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <a href="../index.html" class="logo">Grout<span>Grove</span></a>
     <div class="nav-links" id="navLinks">
-      <a href="../index.html">Home</a><a href="products.html">Products</a>
-      <a href="track.html">Track Order</a><a href="contact.html">Contact</a>
+      <a href="../index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="track.html">Track Order</a>
+      <a href="contact.html">Contact</a>
       <a href="login.html" id="loginNavBtn">Login</a>
-      <span id="userBadge" style="display:none;background:#1E293B;color:white;font-size:13px;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer;" onclick="logoutUser()">👤 <span id="userName"></span> ✕</span>
-      <a href="cart.html" class="nav-cta">🛒 Cart</a>
+      <span id="userBadge" style="display:none;background:#1E293B;color:white;font-size:13px;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer" onclick="logoutUser()">👤 <span id="userName"></span> ✕</span>
+      <a href="cart.html" class="nav-cta">🛒 Cart <span id="cartBadge" style="background:#EF4444;color:white;font-size:11px;font-weight:800;padding:2px 7px;border-radius:50px;margin-left:4px;display:none">0</span></a>
     </div>
     <button class="hamburger" onclick="toggleNav()">☰</button>
   </div>
 </nav>
 
-<div class="page-hero">
+<!-- HERO -->
+<div class="cart-hero">
   <h1>Your <span>Cart</span></h1>
-  <p>Review your items and complete your order</p>
+  <p>Review your order and get material delivered to your construction site</p>
 </div>
 
-<div class="cart-page" id="cartPage">
-  <div style="text-align:center;padding:50px;color:#64748B">⏳ Loading cart...</div>
+<!-- MAIN -->
+<div class="cart-wrap" id="cartWrap">
+
+  <!-- LEFT: CART ITEMS -->
+  <div>
+    <div class="cart-card">
+      <div class="cart-card-head">
+        <h2>🛒 Cart Items</h2>
+        <span class="cart-count" id="itemCount">0 items</span>
+      </div>
+      <div id="cartItemsContainer">
+        <!-- Items render here -->
+      </div>
+    </div>
+
+    <!-- DELIVERY OPTIONS -->
+    <div class="cart-card" style="margin-top:16px" id="deliveryCard">
+      <h2 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:16px">🚚 Choose Delivery</h2>
+      <div class="delivery-section">
+        <h4>📍 Delivery Area: Delhi, Noida, Greater Noida, Ghaziabad, Gurugram, Faridabad</h4>
+        <div class="del-options">
+          <div class="del-opt sel" id="del-standard" onclick="selectDelivery('standard')">
+            <div class="d-icon">📦</div>
+            <div class="d-label">Standard</div>
+            <div class="d-price" id="std-price">₹149</div>
+            <div class="d-time">1-2 days</div>
+          </div>
+          <div class="del-opt" id="del-express" onclick="selectDelivery('express')">
+            <div class="d-icon">⚡</div>
+            <div class="d-label">Express</div>
+            <div class="d-price">₹299</div>
+            <div class="d-time">Same day</div>
+          </div>
+          <div class="del-opt" id="del-free" onclick="selectDelivery('free')" style="display:none">
+            <div class="d-icon">🎉</div>
+            <div class="d-label">FREE</div>
+            <div class="d-price">₹0</div>
+            <div class="d-time">1-2 days</div>
+          </div>
+        </div>
+        <div class="free-badge" id="freeBadge" style="display:none">
+          🎉 Congratulations! Free delivery unlocked on this order!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: ORDER SUMMARY + FORM -->
+  <div>
+    <!-- PROMO BAR -->
+    <div class="promo-bar" id="promoBar">
+      <div class="p-ico">🎁</div>
+      <div class="p-text">
+        <span id="promoText">Add items worth ₹5000 for FREE delivery!</span>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <!-- ORDER SUMMARY -->
+      <h2>Order Summary</h2>
+      <div class="sum-row"><span class="sum-lbl">Subtotal</span><span class="sum-val" id="subtotalVal">₹0</span></div>
+      <div class="sum-row discount" id="discountRow" style="display:none"><span class="sum-lbl">🎉 Discount</span><span class="sum-val" id="discountVal">-₹0</span></div>
+      <div class="sum-row"><span class="sum-lbl">Delivery</span><span class="sum-val" id="deliveryVal">₹149</span></div>
+      <div class="sum-row total"><span class="sum-lbl">Total</span><span class="sum-val" id="totalVal">₹0</span></div>
+
+      <!-- ORDER FORM -->
+      <div class="order-form">
+        <h3>📋 Delivery Details</h3>
+        <div class="ff"><label>Your Name *</label><input type="text" id="custName" placeholder="Rajesh Kumar"/></div>
+        <div class="ff"><label>Phone Number *</label><input type="tel" id="custPhone" placeholder="10-digit mobile number" maxlength="10"/></div>
+        <div class="ff"><label>City *</label>
+          <select id="custCity">
+            <option value="">Select City</option>
+            <option>Delhi</option><option>Noida</option><option>Greater Noida</option>
+            <option>Ghaziabad</option><option>Gurugram</option><option>Faridabad</option><option>Other NCR</option>
+          </select>
+        </div>
+        <div class="ff"><label>Delivery Address *</label>
+          <textarea id="custAddr" placeholder="House/Site no., Street, Area, Landmark..."></textarea>
+        </div>
+        <div class="ff"><label>Pincode *</label><input type="text" id="custPin" placeholder="201301" maxlength="6"/></div>
+
+        <!-- PAYMENT -->
+        <h3 style="margin:16px 0 12px">💳 Payment Method</h3>
+        <div class="pay-grid">
+          <div class="pay-opt sel" id="pay-upi" onclick="selectPay('upi')">
+            <div class="p-ico">📱</div>
+            <div class="p-lbl">UPI/GPay</div>
+          </div>
+          <div class="pay-opt" id="pay-cod" onclick="selectPay('cod')">
+            <div class="p-ico">💵</div>
+            <div class="p-lbl">Cash on Delivery</div>
+          </div>
+          <div class="pay-opt" id="pay-card" onclick="selectPay('card')">
+            <div class="p-ico">💳</div>
+            <div class="p-lbl">Card/Netbanking</div>
+          </div>
+          <div class="pay-opt" id="pay-wa" onclick="selectPay('whatsapp')">
+            <div class="p-ico">💬</div>
+            <div class="p-lbl">WhatsApp Order</div>
+          </div>
+        </div>
+
+        <button class="btn-order" id="placeOrderBtn" onclick="placeOrder()">
+          🚀 Place Order Now
+        </button>
+        <button class="btn-wa-order" onclick="waOrder()">
+          💬 Order via WhatsApp Instead
+        </button>
+      </div>
+    </div>
+
+    <!-- TRUST BADGES -->
+    <div style="background:white;border-radius:16px;padding:18px;border:1.5px solid #E2E8F0;margin-top:16px">
+      <div style="font-weight:800;font-size:14px;margin-bottom:12px;color:#1E293B">Why GroutGrove?</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#475569"><span style="font-size:18px">✅</span> 100% Genuine ISI/BIS Certified Material</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#475569"><span style="font-size:18px">🚚</span> Direct delivery to construction site</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#475569"><span style="font-size:18px">💰</span> Best wholesale prices — No broker!</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#475569"><span style="font-size:18px">📞</span> 24/7 WhatsApp support</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#475569"><span style="font-size:18px">🔄</span> 7-day return policy</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="wa-float">
-  <div class="wa-bubble" id="waBubble">💬 <strong>Need order help?</strong><br><small>+91 96541 71005</small></div>
-  <a href="https://wa.me/919654171005" target="_blank" class="wa-btn" id="waBtn">💬</a>
+  <a href="https://wa.me/919654171005?text=I need help with my cart order." target="_blank" class="wa-btn">💬</a>
 </div>
+<div class="call-float"><a href="tel:+919654171005" class="call-btn">📞 Call Us</a></div>
 
-<script src="../script.js"></script>
+<div class="toast" id="toast"></div>
+
 <script>
 const { createClient } = supabase;
 const sb = createClient(
@@ -212,333 +354,258 @@ const sb = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo'
 );
 
-// Delivery pricing config
-const DELIVERY = {
-  free: { name: 'Free Delivery', price: 0, time: 'Tomorrow', minOrder: 5000, icon: '🆓' },
-  express: { name: 'Express Same Day', price: 299, time: 'Today by 6PM', icon: '⚡' },
-  standard: { name: 'Standard Delivery', price: 149, time: '2-3 Days', icon: '🚚' }
-};
+const CART_KEY = 'groutgrove_cart';
 let selectedDelivery = 'standard';
-let selPayment = '';
+let selectedPay = 'upi';
 
-// User
+// ===== USER =====
+function toggleNav(){document.getElementById('navLinks').classList.toggle('open');}
 const nxUser = JSON.parse(localStorage.getItem('nx_user'));
-window.addEventListener('load', function() {
-  if(nxUser) {
-    const lb=document.getElementById('loginNavBtn');const ub=document.getElementById('userBadge');const un=document.getElementById('userName');
-    if(lb)lb.style.display='none';if(ub)ub.style.display='inline-flex';if(un)un.textContent=nxUser.name.split(' ')[0];
-    setTimeout(()=>{
-      const cn=document.getElementById('coName');const cp=document.getElementById('coPhone');
-      if(cn&&nxUser.name)cn.value=nxUser.name;
-      if(cp&&nxUser.phone)cp.value=nxUser.phone;
-    },500);
-  }
-  renderCart();
-  const di=document.getElementById('coDate');
-  if(di){const t=new Date();t.setDate(t.getDate()+1);di.min=t.toISOString().split('T')[0];}
-});
+if(nxUser){
+  document.getElementById('loginNavBtn').style.display='none';
+  document.getElementById('userBadge').style.display='inline-flex';
+  document.getElementById('userName').textContent = nxUser.name?.split(' ')[0]||'User';
+  if(nxUser.name) document.getElementById('custName').value = nxUser.name;
+  if(nxUser.phone) document.getElementById('custPhone').value = nxUser.phone;
+  if(nxUser.city) document.getElementById('custCity').value = nxUser.city;
+}
 function logoutUser(){localStorage.removeItem('nx_user');window.location.reload();}
 
-// ===== RENDER CART =====
-function renderCart() {
-  const cart = JSON.parse(localStorage.getItem('nirmanx_cart')) || [];
-  const container = document.getElementById('cartPage');
-  if(!cart || cart.length === 0) {
-    container.innerHTML = `<div class="cart-empty">
-      <div class="e-icon">🛒</div>
-      <h2>Your Cart is Empty</h2>
-      <p>You haven't added any products yet.</p>
-      <a href="products.html" class="btn-primary" style="text-decoration:none;display:inline-flex">📦 Browse Products</a>
+// ===== TOAST =====
+function showToast(msg, dur=3000){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+// ===== CART =====
+function getCart(){
+  try{
+    if(nxUser?.phone){
+      const uc=localStorage.getItem(CART_KEY+'_'+nxUser.phone);
+      if(uc) return JSON.parse(uc);
+    }
+    return JSON.parse(localStorage.getItem(CART_KEY)||'[]');
+  }catch(e){return [];}
+}
+
+function saveCart(cart){
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  localStorage.setItem('nirmanx_cart', JSON.stringify(cart));
+  if(nxUser?.phone) localStorage.setItem(CART_KEY+'_'+nxUser.phone, JSON.stringify(cart));
+  renderCart();
+}
+
+function getCartIcons(name){
+  const n=name.toLowerCase();
+  if(n.includes('cement')) return '🏗️';
+  if(n.includes('steel')||n.includes('tmt')) return '⚙️';
+  if(n.includes('brick')) return '🧱';
+  if(n.includes('tile')) return '🪟';
+  if(n.includes('sand')||n.includes('grit')) return '🪣';
+  if(n.includes('paint')) return '🎨';
+  if(n.includes('pipe')) return '🔵';
+  if(n.includes('electric')) return '⚡';
+  if(n.includes('hardware')) return '🔩';
+  if(n.includes('chemical')) return '🧪';
+  return '📦';
+}
+
+function renderCart(){
+  const cart = getCart();
+  const container = document.getElementById('cartItemsContainer');
+  const badge = document.getElementById('cartBadge');
+  const count = cart.reduce((s,i)=>s+(i.qty||1),0);
+  badge.textContent = count; badge.style.display = count>0?'inline':'none';
+  document.getElementById('itemCount').textContent = count+' item'+(count!==1?'s':'');
+
+  if(!cart.length){
+    container.innerHTML=`<div class="empty-cart">
+      <div class="e-ico">🛒</div>
+      <h3>Your cart is empty!</h3>
+      <p>Browse products and add items to your cart.</p>
+      <a href="products.html" class="btn-shop">🏪 Browse Products</a>
     </div>`;
+    document.getElementById('deliveryCard').style.display='none';
+    document.getElementById('placeOrderBtn').disabled=true;
+    updateSummary(0);
     return;
   }
 
-  const icons = {cement:'🏗️',steel:'⚙️',sariya:'⚙️',bricks:'🧱',tiles:'🪟',sand:'🪣',paint:'🎨',hardware:'🔩',plumbing:'🚿',pipe:'🔵',electrical:'⚡',chemical:'🧪',bath:'🛁'};
-  let subtotal = 0;
-  let html = '<div id="cartItems">';
+  document.getElementById('deliveryCard').style.display='block';
+  document.getElementById('placeOrderBtn').disabled=false;
 
-  cart.forEach((item, i) => {
-    const sub = item.price * item.qty;
-    subtotal += sub;
-    const key = Object.keys(icons).find(k => item.name.toLowerCase().includes(k));
-    const ico = key ? icons[key] : '📦';
-    html += `<div class="cart-item">
-      <div class="ci-icon">${ico}</div>
+  container.innerHTML = cart.map((item,idx)=>{
+    const icon = getCartIcons(item.name);
+    const total = (item.price*(item.qty||1)).toLocaleString('en-IN');
+    return `<div class="cart-item">
+      <div class="ci-icon">${icon}</div>
       <div class="ci-info">
         <div class="ci-name">${item.name}</div>
-        <div class="ci-price">₹${item.price.toLocaleString('en-IN')} × ${item.qty} = <strong>₹${sub.toLocaleString('en-IN')}</strong></div>
+        <div class="ci-price">₹${item.price.toLocaleString('en-IN')} <span class="ci-unit">each</span></div>
       </div>
-      <div class="qty-row">
-        <button class="q-btn" onclick="chQty(${i},-1)">−</button>
-        <span class="q-num">${item.qty}</span>
-        <button class="q-btn" onclick="chQty(${i},1)">+</button>
+      <div class="ci-controls">
+        <button class="ci-btn" onclick="changeQty(${idx},-1)">−</button>
+        <span class="ci-qty">${item.qty||1}</span>
+        <button class="ci-btn" onclick="changeQty(${idx},1)">+</button>
+        <div class="ci-total">₹${total}</div>
+        <button class="ci-rm" onclick="removeItem(${idx})" title="Remove">🗑️</button>
       </div>
-      <button class="rm-btn" onclick="rmItem(${i})">🗑️ Remove</button>
     </div>`;
+  }).join('');
+
+  const subtotal = cart.reduce((s,i)=>s+(i.price*(i.qty||1)),0);
+  updateSummary(subtotal);
+}
+
+function changeQty(idx, delta){
+  const cart = getCart();
+  if(!cart[idx]) return;
+  cart[idx].qty = Math.max(1, (cart[idx].qty||1)+delta);
+  saveCart(cart);
+}
+
+function removeItem(idx){
+  const cart = getCart();
+  const name = cart[idx]?.name||'Item';
+  cart.splice(idx,1);
+  saveCart(cart);
+  showToast('🗑️ '+name+' removed from cart');
+}
+
+function selectDelivery(type){
+  selectedDelivery=type;
+  ['standard','express','free'].forEach(t=>{
+    const el=document.getElementById('del-'+t);
+    if(el) el.classList.toggle('sel', t===type);
   });
-  html += '</div>';
-
-  // DELIVERY OPTIONS — clearly visible
-  html += `<div class="delivery-section">
-    <h3>🚚 Select Delivery Option</h3>
-    <div class="delivery-options">
-      <div class="del-opt ${subtotal >= 5000 ? 'sel' : ''}" id="del-free" onclick="selectDelivery('free',this)">
-        <div class="del-ico">🆓</div>
-        <div class="del-name">Free Delivery</div>
-        <div class="del-price del-free">${subtotal >= 5000 ? 'FREE ✅' : '₹0'}</div>
-        <div class="del-time">On orders ₹5000+</div>
-        ${subtotal < 5000 ? `<div style="font-size:10px;color:#EF4444;margin-top:3px">Add ₹${(5000-subtotal).toLocaleString('en-IN')} more</div>` : ''}
-      </div>
-      <div class="del-opt" id="del-express" onclick="selectDelivery('express',this)">
-        <div class="del-ico">⚡</div>
-        <div class="del-name">Express</div>
-        <div class="del-price del-paid">₹299</div>
-        <div class="del-time">Today by 6 PM</div>
-      </div>
-      <div class="del-opt ${subtotal < 5000 ? 'sel' : ''}" id="del-standard" onclick="selectDelivery('standard',this)">
-        <div class="del-ico">🚚</div>
-        <div class="del-name">Standard</div>
-        <div class="del-price del-paid">₹149</div>
-        <div class="del-time">2–3 Working Days</div>
-      </div>
-    </div>
-  </div>`;
-
-  // Auto-select free if eligible
-  if(subtotal >= 5000) selectedDelivery = 'free';
-  else selectedDelivery = 'standard';
-
-  const delPrice = subtotal >= 5000 ? 0 : DELIVERY[selectedDelivery].price;
-  const grand = subtotal + delPrice;
-
-  const waItems = cart.map(i => `• ${i.name} ×${i.qty} = ₹${(i.price*i.qty).toLocaleString('en-IN')}`).join('\n');
-  const waMsg = encodeURIComponent(`Hi GroutGrove!\n\nCart Order:\n${waItems}\n\nSubtotal: ₹${subtotal.toLocaleString('en-IN')}\nDelivery: ${delPrice === 0 ? 'FREE' : '₹'+delPrice}\nTotal: ₹${grand.toLocaleString('en-IN')}`);
-
-  html += `<div class="cart-summary">
-    <h3>Order Summary</h3>
-    ${subtotal >= 5000 ? '<div class="savings-badge">🎉 You saved ₹149 — Free Delivery Unlocked!</div>' : `<div class="savings-badge" style="background:#FEF2F2;border-color:#FCA5A5;color:#991B1B">💡 Add ₹${(5000-subtotal).toLocaleString('en-IN')} more to unlock FREE delivery!</div>`}
-    <div class="s-row"><span>Subtotal (${cart.length} item${cart.length>1?'s':''})</span><span>₹${subtotal.toLocaleString('en-IN')}</span></div>
-    <div class="s-row"><span>Delivery Charges</span>
-      <span id="delChargeDisplay">
-        ${delPrice === 0 ? '<span class="del-tag">FREE ✅</span>' : `<span class="del-tag paid">₹${delPrice}</span>`}
-      </span>
-    </div>
-    <div class="s-row"><span>GST (included)</span><span style="color:#22C55E">✅ Included</span></div>
-    <div class="s-row total"><span>Total Amount</span><span id="grandTotal">₹${grand.toLocaleString('en-IN')}</span></div>
-    <div class="co-btns">
-      <button class="btn-co" onclick="openCheckout()">📋 Proceed to Checkout →</button>
-      <a href="https://wa.me/919654171005?text=${waMsg}" target="_blank" class="btn-wa-co" title="Order via WhatsApp">💬</a>
-    </div>
-  </div>`;
-
-  container.innerHTML = html;
+  const cart=getCart();
+  const sub=cart.reduce((s,i)=>s+(i.price*(i.qty||1)),0);
+  updateSummary(sub);
 }
 
-function selectDelivery(type, el) {
-  selectedDelivery = type;
-  document.querySelectorAll('.del-opt').forEach(d => d.classList.remove('sel'));
-  el.classList.add('sel');
-  updateSummary();
-}
-
-function updateSummary() {
-  const cart = JSON.parse(localStorage.getItem('nirmanx_cart')) || [];
-  const subtotal = cart.reduce((s,i) => s+(i.price*i.qty), 0);
-  const delPrice = subtotal >= 5000 && selectedDelivery === 'free' ? 0 : DELIVERY[selectedDelivery].price;
-  const grand = subtotal + delPrice;
-  const el = document.getElementById('grandTotal');
-  const dc = document.getElementById('delChargeDisplay');
-  if(el) el.textContent = '₹' + grand.toLocaleString('en-IN');
-  if(dc) dc.innerHTML = delPrice === 0 ? '<span class="del-tag">FREE ✅</span>' : `<span class="del-tag paid">₹${delPrice}</span>`;
-}
-
-function chQty(i, d) {
-  let cart = JSON.parse(localStorage.getItem('nirmanx_cart')) || [];
-  cart[i].qty += d;
-  if(cart[i].qty <= 0) cart.splice(i, 1);
-  localStorage.setItem('nirmanx_cart', JSON.stringify(cart));
-  renderCart();
-  if(typeof updateCartBadge === 'function') updateCartBadge();
-}
-function rmItem(i) {
-  let cart = JSON.parse(localStorage.getItem('nirmanx_cart')) || [];
-  const name = cart[i].name;
-  cart.splice(i, 1);
-  localStorage.setItem('nirmanx_cart', JSON.stringify(cart));
-  renderCart();
-  if(typeof updateCartBadge === 'function') updateCartBadge();
-  if(typeof showToast === 'function') showToast('🗑️ ' + name + ' removed!');
-}
-
-// ===== CHECKOUT =====
-function openCheckout() {
-  const cart = JSON.parse(localStorage.getItem('nirmanx_cart')) || [];
-  if(!cart.length) { if(typeof showToast==='function')showToast('⚠️ Cart is empty!'); return; }
-  const subtotal = cart.reduce((s,i) => s+(i.price*i.qty), 0);
-  const delPrice = subtotal >= 5000 && selectedDelivery === 'free' ? 0 : DELIVERY[selectedDelivery].price;
-  const grand = subtotal + delPrice;
-  const delName = DELIVERY[selectedDelivery].name;
-
-  document.getElementById('orderMini').innerHTML = `
-    <h4>📦 Order Summary</h4>
-    ${cart.map(i=>`<p>• ${i.name} ×${i.qty} = <strong>₹${(i.price*i.qty).toLocaleString('en-IN')}</strong></p>`).join('')}
-    <div class="o-total">Total: ₹${grand.toLocaleString('en-IN')}</div>
-    <div class="o-del">🚚 ${delName}: ${delPrice === 0 ? 'FREE ✅' : '₹'+delPrice}</div>`;
-
-  document.getElementById('coOverlay').classList.add('show');
-}
-function closeCheckout() { document.getElementById('coOverlay').classList.remove('show'); }
-
-function selPay(m) {
-  selPayment = m;
-  ['upi','cash','card','wa'].forEach(x => {
-    const el = document.getElementById('p-'+x);
-    if(el) el.classList.remove('sel');
+function selectPay(type){
+  selectedPay=type;
+  ['upi','cod','card','wa'].forEach(t=>{
+    const el=document.getElementById('pay-'+t);
+    if(el) el.classList.toggle('sel', t===type);
   });
-  const sel = document.getElementById('p-'+m);
-  if(sel) sel.classList.add('sel');
+}
+
+function updateSummary(subtotal){
+  const free = subtotal >= 5000;
+  const deliveryEl=document.getElementById('del-free');
+  const freeBadge=document.getElementById('freeBadge');
+  const promoText=document.getElementById('promoText');
+
+  if(free){
+    if(deliveryEl) deliveryEl.style.display='block';
+    freeBadge.style.display='flex';
+    promoText.textContent='🎉 Free delivery unlocked! Order above ₹5000';
+    selectDelivery('free');
+  } else {
+    if(deliveryEl) deliveryEl.style.display='none';
+    freeBadge.style.display='none';
+    const remaining=(5000-subtotal).toLocaleString('en-IN');
+    promoText.textContent=`Add ₹${remaining} more for FREE delivery!`;
+    if(selectedDelivery==='free') selectDelivery('standard');
+  }
+
+  const delCharge = selectedDelivery==='express'?299:selectedDelivery==='free'?0:subtotal>=5000?0:149;
+  const total = subtotal+delCharge;
+
+  document.getElementById('subtotalVal').textContent='₹'+subtotal.toLocaleString('en-IN');
+  document.getElementById('deliveryVal').textContent = delCharge===0?'FREE 🎉':'₹'+delCharge;
+  document.getElementById('totalVal').textContent='₹'+total.toLocaleString('en-IN');
 }
 
 // ===== PLACE ORDER =====
-async function placeOrder() {
-  const name = document.getElementById('coName').value.trim();
-  const phone = document.getElementById('coPhone').value.trim().replace(/\D/g,'');
-  const city = document.getElementById('coCity').value;
-  const addr = document.getElementById('coAddr').value.trim();
-  const pin = document.getElementById('coPincode').value.trim();
+async function placeOrder(){
+  const cart=getCart();
+  if(!cart.length){showToast('❌ Cart is empty!');return;}
 
-  if(!name){if(typeof showToast==='function')showToast('⚠️ Enter your name!');return;}
-  if(!phone||phone.length<10){if(typeof showToast==='function')showToast('⚠️ Enter valid phone number!');return;}
-  if(!city){if(typeof showToast==='function')showToast('⚠️ Select your city!');return;}
-  if(!addr){if(typeof showToast==='function')showToast('⚠️ Enter delivery address!');return;}
-  if(!pin||pin.length<6){if(typeof showToast==='function')showToast('⚠️ Enter 6-digit pincode!');return;}
-  if(!selPayment){if(typeof showToast==='function')showToast('⚠️ Select payment method!');return;}
+  const name=document.getElementById('custName').value.trim();
+  const phone=document.getElementById('custPhone').value.trim().replace(/\D/g,'');
+  const city=document.getElementById('custCity').value;
+  const addr=document.getElementById('custAddr').value.trim();
+  const pin=document.getElementById('custPin').value.trim();
 
-  const btn = document.getElementById('placeBtn');
-  btn.textContent = '⏳ Placing order...'; btn.disabled = true;
+  if(!name){showToast('⚠️ Enter your name!');return;}
+  if(!phone||phone.length<10){showToast('⚠️ Enter valid 10-digit phone!');return;}
+  if(!city){showToast('⚠️ Select your city!');return;}
+  if(!addr){showToast('⚠️ Enter delivery address!');return;}
+  if(!pin||pin.length<6){showToast('⚠️ Enter valid 6-digit pincode!');return;}
 
-  const cart = JSON.parse(localStorage.getItem('nirmanx_cart')) || [];
-  const subtotal = cart.reduce((s,i) => s+(i.price*i.qty), 0);
-  const delPrice = subtotal >= 5000 && selectedDelivery === 'free' ? 0 : DELIVERY[selectedDelivery].price;
-  const grand = subtotal + delPrice;
-  const items = cart.map(i => `${i.name} ×${i.qty}`).join(', ');
-  const orderId = 'GG-' + Date.now().toString().slice(-6);
-  const fullAddr = `${addr}, ${city} - ${pin}`;
-  const payNames = {upi:'UPI/GPay',cash:'Cash on Delivery',card:'Card Payment',wa:'WhatsApp Order'};
+  const btn=document.getElementById('placeOrderBtn');
+  btn.textContent='⏳ Placing Order...'; btn.disabled=true;
 
-  // AI: Find nearest seller by city/category
-  let matchedSeller = null;
-  try {
-    const primaryCat = cart[0]?.name?.toLowerCase();
-    let catKey = 'cement';
-    if(primaryCat?.includes('steel')||primaryCat?.includes('tmt')) catKey='steel';
-    else if(primaryCat?.includes('brick')||primaryCat?.includes('eet')) catKey='bricks';
-    else if(primaryCat?.includes('tile')||primaryCat?.includes('farshi')) catKey='tiles';
+  const subtotal=cart.reduce((s,i)=>s+(i.price*(i.qty||1)),0);
+  const delCharge=selectedDelivery==='express'?299:selectedDelivery==='free'?0:subtotal>=5000?0:149;
+  const total=subtotal+delCharge;
+  const orderId='GG-'+Date.now().toString().slice(-8);
 
-    const { data: sellers } = await sb.from('sellers')
-      .select('*')
-      .eq('status','active')
-      .ilike('categories', '%'+catKey+'%')
-      .or(`city.ilike.%${city}%,delivery_area.ilike.%${city}%`);
+  const itemsText=cart.map(i=>`${i.name} ×${i.qty||1} @₹${i.price}=${i.price*(i.qty||1)}`).join('; ');
 
-    if(sellers && sellers.length > 0) {
-      matchedSeller = sellers[0]; // Pick first matched seller
-    }
-  } catch(e) { console.log('Seller match skipped:', e); }
-
-  try {
-    // Save order to Supabase
-    const { error } = await sb.from('orders').insert([{
-      order_id: orderId,
-      customer_phone: phone,
-      customer_name: name,
-      items: items,
-      total: grand,
-      delivery_address: fullAddr,
-      delivery_type: DELIVERY[selectedDelivery].name,
-      delivery_charge: delPrice,
-      payment_method: payNames[selPayment],
-      matched_seller_phone: matchedSeller ? matchedSeller.phone : null,
-      status: 'pending'
+  try{
+    await sb.from('orders').insert([{
+      order_id:orderId,
+      customer_name:name,
+      customer_phone:phone,
+      items:itemsText,
+      subtotal:subtotal,
+      delivery_type:selectedDelivery,
+      delivery_charge:delCharge,
+      total:total,
+      delivery_address:addr+', '+city+' - '+pin,
+      payment_method:selectedPay==='upi'?'UPI/GPay':selectedPay==='cod'?'Cash on Delivery':selectedPay==='card'?'Card/Netbanking':'WhatsApp Order',
+      status:'pending'
     }]);
-    if(error) throw error;
-
-    // Save order to localStorage for tracking
-    const orderData = {
-      order_id: orderId,
-      items: cart,
-      total: grand,
-      subtotal: subtotal,
-      delivery: DELIVERY[selectedDelivery],
-      delivery_charge: delPrice,
-      customer_name: name,
-      customer_phone: phone,
-      delivery_address: fullAddr,
-      payment: payNames[selPayment],
-      status: 'pending',
-      placed_at: new Date().toISOString()
-    };
-    // Save last 5 orders in localStorage
-    const myOrders = JSON.parse(localStorage.getItem('my_orders')) || [];
-    myOrders.unshift(orderData);
-    localStorage.setItem('my_orders', JSON.stringify(myOrders.slice(0, 5)));
-
-    // Admin WhatsApp notification
-    const adminMsg = encodeURIComponent(
-`🔔 *NEW ORDER — GROUTGROVE!*
-
-━━━━━━━━━━━━━━━━
-📋 *Order ID:* ${orderId}
-⏰ ${new Date().toLocaleString('en-IN')}
-━━━━━━━━━━━━━━━━
-
-👤 *CUSTOMER:*
-Name: ${name}
-Phone: ${phone}
-City: ${city}
-Address: ${fullAddr}
-
-📦 *ITEMS:*
-${cart.map(i=>`• ${i.name} ×${i.qty} = ₹${(i.price*i.qty).toLocaleString('en-IN')}`).join('\n')}
-
-🚚 Delivery: ${DELIVERY[selectedDelivery].name}
-💳 Payment: ${payNames[selPayment]}
-💰 *TOTAL: ₹${grand.toLocaleString('en-IN')}*
-${delPrice === 0 ? '✅ Free Delivery' : `🚚 Delivery: ₹${delPrice}`}
-
-${matchedSeller ? `🤖 AI MATCH: ${matchedSeller.business_name} (${matchedSeller.phone})` : '⚠️ No seller matched — assign manually'}
-
-━━━━━━━━━━━━━━━━
-⚡ Reply CONFIRM to admin panel`
-    );
 
     // Clear cart
+    localStorage.removeItem(CART_KEY);
     localStorage.removeItem('nirmanx_cart');
-    if(typeof updateCartBadge === 'function') updateCartBadge();
+    if(nxUser?.phone) localStorage.removeItem(CART_KEY+'_'+nxUser.phone);
 
-    // Close checkout
-    closeCheckout();
+    // WhatsApp admin notification
+    const msg=encodeURIComponent(`🛒 *NEW ORDER — GROUTGROVE!*\n\n*Order ID:* ${orderId}\n*Customer:* ${name}\n*Phone:* ${phone}\n*City:* ${city}\n*Address:* ${addr}\n*Pincode:* ${pin}\n\n*Items:*\n${cart.map(i=>`${i.name} ×${i.qty||1} = ₹${i.price*(i.qty||1)}`).join('\n')}\n\n*Subtotal:* ₹${subtotal.toLocaleString('en-IN')}\n*Delivery:* ₹${delCharge}\n*TOTAL:* ₹${total.toLocaleString('en-IN')}\n*Payment:* ${selectedPay}\n\n⚡ Please confirm within 30 minutes!`);
+    setTimeout(()=>window.open(`https://wa.me/919654171005?text=${msg}`,'_blank'),500);
 
     // Show success
-    document.getElementById('sOrderId').textContent = orderId;
-    document.getElementById('sDetails').innerHTML = `
-      <p>👤 <strong>${name}</strong> | 📱 <strong>${phone}</strong></p>
-      <p>📍 <strong>${fullAddr}</strong></p>
-      <p>📦 <strong>${items}</strong></p>
-      <p>🚚 <strong>${DELIVERY[selectedDelivery].name}</strong> ${delPrice === 0 ? '(FREE ✅)' : '(₹'+delPrice+')'}</p>
-      <p>💳 <strong>${payNames[selPayment]}</strong></p>
-      <p>💰 Total: <strong>₹${grand.toLocaleString('en-IN')}</strong></p>`;
-    document.getElementById('trackLink').href = `track.html?id=${orderId}`;
+    document.getElementById('successOrderId').textContent=orderId;
     document.getElementById('successOverlay').classList.add('show');
 
-    // WhatsApp to admin
-    setTimeout(() => { window.open('https://wa.me/919654171005?text='+adminMsg,'_blank'); }, 1000);
-
-  } catch(err) {
-    if(typeof showToast==='function') showToast('❌ Error: ' + err.message);
-    btn.textContent = '🚀 Confirm Order'; btn.disabled = false;
+  }catch(err){
+    showToast('❌ Error: '+err.message+' — Try WhatsApp order below!');
+    btn.textContent='🚀 Place Order Now'; btn.disabled=false;
   }
 }
+
+function waOrder(){
+  const cart=getCart();
+  if(!cart.length){showToast('⚠️ Cart is empty!');return;}
+  const name=document.getElementById('custName').value||'';
+  const phone=document.getElementById('custPhone').value||'';
+  const addr=document.getElementById('custAddr').value||'';
+  const subtotal=cart.reduce((s,i)=>s+(i.price*(i.qty||1)),0);
+  const itemsText=cart.map(i=>`• ${i.name} ×${i.qty||1} = ₹${(i.price*(i.qty||1)).toLocaleString('en-IN')}`).join('\n');
+  const msg=encodeURIComponent(`🛒 *Order Request — GroutGrove*\n\n*Name:* ${name||'[Your Name]'}\n*Phone:* ${phone||'[Your Phone]'}\n*Address:* ${addr||'[Your Address]'}\n\n*Items:*\n${itemsText}\n\n*Total:* ₹${subtotal.toLocaleString('en-IN')} + delivery\n\nPlease confirm this order!`);
+  window.open(`https://wa.me/919654171005?text=${msg}`,'_blank');
+}
+
+window.addToCart = function(name, price){
+  const safeName=String(name);
+  const safePrice=parseFloat(price);
+  if(!safeName||isNaN(safePrice)) return;
+  let cart=getCart();
+  const ex=cart.find(i=>i.name===safeName);
+  if(ex) ex.qty=(ex.qty||1)+1;
+  else cart.push({name:safeName, price:safePrice, qty:1});
+  saveCart(cart);
+  showToast('✅ '+safeName+' added to cart!');
+};
+
+// INIT
+renderCart();
 </script>
 </body>
 </html>
