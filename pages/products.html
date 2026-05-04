@@ -1,251 +1,872 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>All Products – GroutGrove</title>
-  <meta name="description" content="Buy cement, steel, bricks, tiles at best prices in Delhi NCR. Genuine brands, fast delivery."/>
-  <link rel="stylesheet" href="../style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-  <style>
-    .prod-hero{background:linear-gradient(135deg,#0F172A,#1E293B);padding:50px 24px;text-align:center}
-    .prod-hero h1{font-family:'Playfair Display',serif;font-size:40px;font-weight:800;color:white;margin-bottom:8px}
-    .prod-hero h1 span{color:#F59E0B}
-    .prod-hero p{color:rgba(255,255,255,.5);font-size:15px;max-width:500px;margin:0 auto}
-    .filters-wrap{background:white;border-bottom:1px solid #E2E8F0;padding:16px 24px;position:sticky;top:64px;z-index:90;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-    .filters-inner{max-width:1280px;margin:0 auto;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-    .search-input{flex:1;min-width:220px;border:1.5px solid #E2E8F0;border-radius:50px;padding:10px 18px;font-family:'DM Sans';font-size:14px;outline:none;background:#FAFCFB;color:#1E293B;transition:border .2s}
-    .search-input:focus{border-color:#1E293B;background:white}
-    .filter-tabs{display:flex;gap:6px;flex-wrap:wrap}
-    .ftab{background:#F1F5F9;border:1.5px solid #E2E8F0;color:#475569;font-family:'DM Sans';font-size:12px;font-weight:700;padding:8px 14px;border-radius:50px;cursor:pointer;transition:all .2s;white-space:nowrap}
-    .ftab:hover{border-color:#1E293B;color:#1E293B}
-    .ftab.active{background:#1E293B;border-color:#1E293B;color:white}
-    .sort-select{border:1.5px solid #E2E8F0;border-radius:50px;padding:9px 14px;font-family:'DM Sans';font-size:13px;outline:none;background:#FAFCFB;color:#1E293B;cursor:pointer}
-    .prods-page{max-width:1280px;margin:32px auto;padding:0 24px 80px}
-    .results-info{font-size:14px;color:#64748B;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-    .results-info span{color:#1E293B;font-weight:700}
-    .empty-prods{text-align:center;padding:70px 20px;background:white;border-radius:20px;border:1.5px solid #E2E8F0;grid-column:1/-1}
-    .empty-prods .e-ico{font-size:60px;margin-bottom:16px}
-    .empty-prods h3{font-family:'Playfair Display',serif;font-size:24px;margin-bottom:10px}
-    .empty-prods p{color:#64748B;margin-bottom:20px}
-    .loading-prods{text-align:center;padding:60px;color:#64748B;grid-column:1/-1;font-size:15px}
-    .pin-filter{background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:50px;padding:8px 16px;font-size:12px;font-weight:700;color:#166534;display:none;align-items:center;gap:6px}
-    .pin-filter.show{display:inline-flex}
-    .pin-filter button{background:none;border:none;cursor:pointer;color:#166534;font-size:14px;font-weight:800}
-    @media(max-width:768px){.prod-hero h1{font-size:28px}.filters-inner{gap:8px}}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Products – GroutGrove | Construction Material Delhi NCR</title>
+<meta name="description" content="Buy cement, steel, bricks, tiles at best wholesale prices. Same day delivery in Delhi NCR."/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+:root{
+  --gold:#F59E0B;--dark:#0F172A;--mid:#1E293B;
+  --green:#22C55E;--red:#EF4444;--blue:#3B82F6;
+  --bg:#F1F5F9;--white:#FFFFFF;
+  --text:#1E293B;--muted:#64748B;--border:#E2E8F0;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── TICKER ── */
+.ticker-wrap{background:var(--mid);overflow:hidden;padding:7px 0}
+.ticker{display:inline-flex;animation:tick 35s linear infinite;white-space:nowrap}
+.ticker span{color:rgba(255,255,255,.65);font-size:11px;padding:0 30px;font-weight:500}
+.ticker span::after{content:'•';margin-left:30px;color:var(--gold)}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── NAV ── */
+nav{background:white;border-bottom:1px solid var(--border);padding:0 24px;position:sticky;top:0;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:62px}
+.logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:#004225;text-decoration:none;line-height:1}
+.logo span{color:#EF4444}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-links a{color:var(--muted);font-size:13px;font-weight:500;text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-cta{background:var(--dark)!important;color:white!important;padding:8px 18px;border-radius:50px;font-weight:700!important;font-size:13px!important}
+.cart-wrap{position:relative;display:inline-flex}
+.cart-badge{position:absolute;top:-6px;right:-6px;background:var(--red);color:white;font-size:9px;font-weight:800;width:17px;height:17px;border-radius:50%;display:none;align-items:center;justify-content:center}
+.hamburger{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text)}
+@media(max-width:768px){
+  .nav-links{display:none;position:absolute;top:62px;left:0;right:0;background:white;flex-direction:column;padding:18px;border-bottom:1px solid var(--border);gap:14px;z-index:99}
+  .nav-links.open{display:flex}
+  .hamburger{display:block}
+}
+
+/* ══════════════════════════════════════════
+   PINCODE MODAL — Full screen first-time ask
+══════════════════════════════════════════ */
+.pin-modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.75);z-index:9000;
+  align-items:center;justify-content:center;
+  padding:20px;backdrop-filter:blur(6px);
+}
+.pin-modal-overlay.show{display:flex}
+.pin-modal{
+  background:white;border-radius:28px;
+  padding:40px 36px;max-width:460px;width:100%;
+  text-align:center;
+  box-shadow:0 32px 80px rgba(0,0,0,.4);
+  animation:modalPop .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes modalPop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.pin-modal .map-icon{font-size:60px;margin-bottom:16px;display:block}
+.pin-modal h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:var(--dark);margin-bottom:8px}
+.pin-modal p{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:24px}
+.pin-input-wrap{position:relative;margin-bottom:16px}
+.pin-input-wrap input{
+  width:100%;border:2px solid var(--border);border-radius:16px;
+  padding:16px 20px 16px 52px;font-family:'DM Sans';font-size:18px;
+  font-weight:700;letter-spacing:4px;outline:none;text-align:center;
+  color:var(--dark);transition:all .2s;background:#FAFCFB;
+}
+.pin-input-wrap input:focus{border-color:var(--dark);background:white;box-shadow:0 0 0 4px rgba(30,41,59,.06)}
+.pin-input-wrap .pin-ico{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:20px}
+.btn-find{
+  width:100%;background:linear-gradient(135deg,var(--dark),#334155);
+  color:white;border:none;border-radius:50px;padding:16px;
+  font-family:'DM Sans';font-size:16px;font-weight:800;
+  cursor:pointer;transition:all .25s;margin-bottom:12px;
+  box-shadow:0 6px 20px rgba(30,41,59,.25);
+}
+.btn-find:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(30,41,59,.35)}
+.btn-skip{
+  background:none;border:none;color:var(--muted);
+  font-family:'DM Sans';font-size:13px;cursor:pointer;
+  text-decoration:underline;transition:color .2s;
+}
+.btn-skip:hover{color:var(--text)}
+.pin-benefits{
+  display:flex;flex-direction:column;gap:8px;
+  background:#F8FAFC;border-radius:14px;padding:16px;
+  margin-bottom:20px;text-align:left;
+}
+.pb-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)}
+.pb-ico{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.pin-err{color:var(--red);font-size:12px;font-weight:600;margin-bottom:12px;display:none}
+
+/* Active pincode bar */
+.location-bar{
+  background:linear-gradient(135deg,#F0FDF4,#DCFCE7);
+  border-bottom:1px solid #86EFAC;
+  padding:10px 24px;display:none;
+}
+.location-bar.show{display:flex}
+.lb-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.lb-left{display:flex;align-items:center;gap:10px}
+.lb-pin-badge{
+  background:white;border:1.5px solid #22C55E;
+  border-radius:50px;padding:5px 14px;
+  font-size:13px;font-weight:800;color:#166534;
+  display:flex;align-items:center;gap:6px;
+}
+.lb-text{font-size:13px;color:#166534;font-weight:500}
+.lb-right{display:flex;gap:8px;align-items:center}
+.lb-change{
+  background:none;border:1.5px solid #22C55E;
+  border-radius:50px;padding:5px 14px;
+  font-family:'DM Sans';font-size:12px;font-weight:700;
+  color:#166534;cursor:pointer;transition:all .2s;
+}
+.lb-change:hover{background:#22C55E;color:white}
+.lb-range{font-size:11px;color:#64748B;font-style:italic}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg,var(--dark) 0%,var(--mid) 100%);
+  padding:36px 24px;
+}
+.hero-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.hero-left h1{font-family:'Playfair Display',serif;font-size:34px;font-weight:800;color:white;margin-bottom:6px;line-height:1.2}
+.hero-left h1 span{color:var(--gold)}
+.hero-left p{color:rgba(255,255,255,.45);font-size:14px}
+.hero-stats{display:flex;gap:20px}
+.hs{text-align:center}
+.hs-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:800;color:var(--gold)}
+.hs-lbl{font-size:11px;color:rgba(255,255,255,.35);margin-top:2px}
+@media(max-width:600px){.hero-left h1{font-size:24px}.hero-stats{gap:14px}.hs-num{font-size:20px}}
+
+/* ── FILTERS ── */
+.filters-bar{
+  background:white;border-bottom:1px solid var(--border);
+  padding:14px 24px;position:sticky;top:62px;z-index:100;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+.fb-inner{max-width:1400px;margin:0 auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.search-box{
+  flex:1;min-width:200px;
+  border:1.5px solid var(--border);border-radius:50px;
+  padding:10px 18px 10px 44px;font-family:'DM Sans';
+  font-size:13px;outline:none;background:#FAFCFB;transition:all .2s;
+  position:relative;
+}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap::before{content:'🔍';position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:14px;z-index:1;pointer-events:none}
+.search-box:focus{border-color:var(--dark);background:white;box-shadow:0 0 0 3px rgba(30,41,59,.05)}
+.cat-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.ctab{
+  background:#F1F5F9;border:1.5px solid var(--border);
+  color:var(--muted);font-family:'DM Sans';font-size:11px;
+  font-weight:700;padding:8px 14px;border-radius:50px;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.ctab:hover{border-color:var(--dark);color:var(--dark)}
+.ctab.act{background:var(--dark);border-color:var(--dark);color:white}
+.sort-sel{
+  border:1.5px solid var(--border);border-radius:50px;
+  padding:9px 14px;font-family:'DM Sans';font-size:12px;
+  outline:none;background:#FAFCFB;cursor:pointer;min-width:120px;
+}
+
+/* ── PRODUCTS GRID ── */
+.prods-page{max-width:1400px;margin:0 auto;padding:24px 20px 80px}
+.results-row{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:18px;flex-wrap:wrap;gap:8px;
+}
+.results-count{font-size:13px;color:var(--muted)}
+.results-count span{color:var(--text);font-weight:700}
+.no-pin-notice{
+  background:linear-gradient(135deg,#FFFBEB,#FEF3C7);
+  border:1.5px solid var(--gold);border-radius:14px;
+  padding:14px 18px;margin-bottom:18px;
+  display:flex;align-items:center;gap:12px;font-size:13px;color:#92400E;
+}
+.no-pin-notice button{
+  margin-left:auto;background:var(--gold);color:var(--dark);
+  border:none;border-radius:50px;padding:7px 16px;
+  font-family:'DM Sans';font-size:12px;font-weight:800;cursor:pointer;
+  white-space:nowrap;
+}
+
+/* ── PRODUCT GRID ── */
+.prod-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:18px;
+}
+
+/* ══════════════════════════════════════════
+   PRODUCT CARD — Clean, Professional
+══════════════════════════════════════════ */
+.prod-card{
+  background:white;border-radius:20px;
+  border:1.5px solid var(--border);overflow:hidden;
+  transition:all .25s;display:flex;flex-direction:column;
+  position:relative;cursor:pointer;
+}
+.prod-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 16px 40px rgba(0,0,0,.1);
+  border-color:rgba(30,41,59,.15);
+}
+
+/* Card top image area */
+.card-img{
+  position:relative;
+  background:linear-gradient(135deg,var(--dark),var(--mid));
+  height:180px;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;flex-shrink:0;
+}
+.card-img-bg{
+  width:100%;height:100%;object-fit:cover;
+  position:absolute;inset:0;
+}
+.card-emoji{font-size:64px;position:relative;z-index:1;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,.3))}
+
+/* Badges on image */
+.badge-wrap{position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:5px;z-index:2}
+.badge{font-size:10px;font-weight:800;padding:4px 10px;border-radius:50px;letter-spacing:.5px;text-transform:uppercase}
+.badge-best{background:var(--gold);color:var(--dark)}
+.badge-sale{background:var(--red);color:white}
+.badge-new{background:var(--green);color:white}
+.badge-top{background:#8B5CF6;color:white}
+.badge-same{background:#3B82F6;color:white}
+
+/* Discount badge top right */
+.disc-badge{
+  position:absolute;top:10px;right:10px;
+  background:var(--red);color:white;
+  font-size:12px;font-weight:800;
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  z-index:2;box-shadow:0 2px 8px rgba(239,68,68,.4);
+}
+
+/* Distance badge */
+.dist-badge{
+  position:absolute;bottom:10px;right:10px;
+  background:rgba(0,0,0,.65);backdrop-filter:blur(4px);
+  color:white;font-size:10px;font-weight:700;
+  padding:4px 10px;border-radius:50px;
+  display:flex;align-items:center;gap:4px;z-index:2;
+}
+
+/* Card body */
+.card-body{padding:16px;flex:1;display:flex;flex-direction:column}
+
+/* Brand + Category */
+.card-brand-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.card-brand{
+  font-size:11px;font-weight:800;color:var(--gold);
+  text-transform:uppercase;letter-spacing:.8px;
+}
+.card-cat{
+  font-size:10px;color:white;font-weight:700;
+  background:var(--mid);padding:3px 8px;border-radius:50px;
+  text-transform:capitalize;
+}
+
+/* Product name */
+.card-name{
+  font-size:16px;font-weight:800;color:var(--dark);
+  margin-bottom:5px;line-height:1.25;
+  font-family:'Playfair Display',serif;
+}
+
+/* Key specs row */
+.card-specs{
+  display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;
+}
+.spec-pill{
+  background:#F1F5F9;border:1px solid var(--border);
+  color:#475569;font-size:10px;font-weight:600;
+  padding:3px 9px;border-radius:50px;
+  display:flex;align-items:center;gap:3px;
+}
+
+/* Rating */
+.card-rating{
+  display:flex;align-items:center;gap:6px;margin-bottom:10px;
+}
+.stars{color:#F59E0B;font-size:12px;letter-spacing:1px}
+.rating-num{font-size:12px;font-weight:700;color:var(--text)}
+.review-count{font-size:11px;color:var(--muted)}
+.cert-badge{
+  background:#F0FDF4;border:1px solid #86EFAC;
+  color:#166534;font-size:10px;font-weight:700;
+  padding:2px 8px;border-radius:50px;margin-left:auto;
+  display:flex;align-items:center;gap:3px;
+}
+
+/* Seller info */
+.card-seller{
+  background:#F8FAFC;border-radius:10px;
+  padding:8px 11px;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.seller-av{
+  width:28px;height:28px;border-radius:8px;
+  background:linear-gradient(135deg,var(--dark),var(--mid));
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;color:white;flex-shrink:0;
+}
+.seller-name{font-size:11px;font-weight:700;color:var(--text)}
+.seller-exp{font-size:10px;color:var(--muted)}
+.seller-del{margin-left:auto;font-size:10px;font-weight:700;display:flex;align-items:center;gap:3px}
+.del-green{color:var(--green)}
+.del-blue{color:var(--blue)}
+
+/* Price section */
+.card-price-row{
+  display:flex;align-items:flex-end;gap:8px;margin-bottom:14px;
+}
+.price-now{
+  font-family:'Playfair Display',serif;
+  font-size:28px;font-weight:800;color:var(--dark);line-height:1;
+}
+.price-old{
+  font-size:14px;font-weight:500;color:#94A3B8;
+  text-decoration:line-through;margin-bottom:2px;
+}
+.price-unit{font-size:12px;color:var(--muted);margin-bottom:3px}
+.price-savings{
+  margin-left:auto;
+  background:#F0FDF4;border:1px solid #86EFAC;
+  color:#166534;font-size:11px;font-weight:700;
+  padding:4px 9px;border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;
+}
+.save-amt{font-size:13px;font-weight:800;color:#16A34A}
+.save-lbl{font-size:9px;color:#22C55E}
+
+/* Min order info */
+.min-order{
+  background:#FFFBEB;border:1px solid #FDE68A;
+  border-radius:8px;padding:7px 11px;
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;color:#92400E;font-weight:500;
+  margin-bottom:12px;
+}
+
+/* Action buttons */
+.card-actions{display:flex;gap:8px;margin-top:auto}
+.btn-cart{
+  flex:1;background:var(--dark);color:white;
+  border:none;border-radius:12px;padding:12px 10px;
+  font-family:'DM Sans';font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-cart:hover{background:#0F172A;transform:translateY(-1px)}
+.btn-wa{
+  width:44px;height:44px;background:#25D366;color:white;
+  border:none;border-radius:12px;font-size:18px;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.btn-wa:hover{background:#22C55E;transform:translateY(-1px)}
+
+/* EMPTY & LOADING */
+.empty-box{
+  text-align:center;padding:80px 20px;
+  background:white;border-radius:20px;
+  border:1.5px solid var(--border);
+  grid-column:1/-1;
+}
+.empty-ico{font-size:60px;margin-bottom:16px}
+.empty-box h3{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:8px}
+.empty-box p{color:var(--muted);margin-bottom:20px;font-size:14px}
+.loading-box{text-align:center;padding:80px;color:var(--muted);grid-column:1/-1;font-size:14px}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:var(--dark);color:white;padding:12px 24px;
+  border-radius:50px;font-size:13px;font-weight:600;
+  z-index:9999;box-shadow:0 8px 28px rgba(0,0,0,.3);
+  transition:opacity .3s;opacity:0;pointer-events:none;white-space:nowrap;
+}
+.toast.show{opacity:1}
+
+/* QTY POPUP */
+.qty-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);
+  z-index:8000;display:flex;align-items:center;justify-content:center;
+  padding:20px;backdrop-filter:blur(4px);
+}
+.qty-box{
+  background:white;border-radius:24px;padding:32px 28px;
+  max-width:340px;width:100%;text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+  animation:modalPop .3s cubic-bezier(.34,1.56,.64,1);
+}
+.qty-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--dark);margin-bottom:6px}
+.qty-price{font-size:22px;font-weight:800;color:var(--gold);font-family:'Playfair Display',serif;margin-bottom:18px}
+.qty-ctrl{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:12px}
+.qty-ctrl button{width:40px;height:40px;border-radius:50%;border:2px solid var(--dark);background:white;font-size:20px;font-weight:700;cursor:pointer;transition:all .2s}
+.qty-ctrl button:hover{background:var(--dark);color:white}
+.qty-num{font-size:26px;font-weight:800;min-width:40px;text-align:center}
+.qty-total{font-size:14px;font-weight:600;color:var(--muted);margin-bottom:20px}
+.qty-btns{display:flex;gap:10px}
+.qty-cancel{flex:1;background:#F1F5F9;color:#475569;border:1.5px solid var(--border);border-radius:50px;padding:12px;font-family:'DM Sans';font-size:14px;cursor:pointer}
+.qty-add{flex:2;background:var(--dark);color:white;border:none;border-radius:50px;padding:12px;font-family:'DM Sans';font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.qty-add:hover{background:#0F172A;transform:translateY(-1px)}
+
+/* FLOAT */
+.wa-float{position:fixed;bottom:24px;right:24px;z-index:500}
+.wa-btn{width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;text-decoration:none;box-shadow:0 6px 20px rgba(37,211,102,.4);transition:all .2s}
+.wa-btn:hover{transform:scale(1.1)}
+.call-float{position:fixed;bottom:24px;left:24px;z-index:500}
+.call-btn{background:var(--dark);color:white;padding:10px 18px;border-radius:50px;font-size:12px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+
+@media(max-width:600px){
+  .prod-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .card-img{height:140px}
+  .card-emoji{font-size:48px}
+  .card-name{font-size:14px}
+  .price-now{font-size:22px}
+  .card-seller{display:none}
+  .prods-page{padding:16px 12px 80px}
+  .cat-tabs{display:none}
+}
+</style>
 </head>
 <body>
 
+<!-- ══ PINCODE MODAL ══ -->
+<div class="pin-modal-overlay" id="pinModal">
+  <div class="pin-modal">
+    <span class="map-icon">📍</span>
+    <h2>Apna Location Batao!</h2>
+    <p>Pincode daalne se hum aapko <strong>40km range</strong> ke andar ke sellers ke products dikhayenge — fastest delivery, lowest charges!</p>
+    <div class="pin-benefits">
+      <div class="pb-item"><div class="pb-ico" style="background:#D1FAE5">🚚</div> Sabse paas ke sellers ke products</div>
+      <div class="pb-item"><div class="pb-ico" style="background:#DBEAFE">💰</div> Minimum delivery charges</div>
+      <div class="pb-item"><div class="pb-ico" style="background:#FEF3C7">⚡</div> Same day delivery possible</div>
+    </div>
+    <div class="pin-err" id="pinErr">⚠️ Valid 6-digit pincode daalo!</div>
+    <div class="pin-input-wrap">
+      <span class="pin-ico">🔢</span>
+      <input type="tel" id="pinInput" placeholder="Enter 6-digit Pincode" maxlength="6"
+        oninput="this.value=this.value.replace(/\D/g,'')"
+        onkeydown="if(event.key==='Enter')submitPin()"/>
+    </div>
+    <button class="btn-find" onclick="submitPin()">📍 Find Products Near Me</button>
+    <button class="btn-skip" onclick="skipPin()">Skip — Show all products</button>
+  </div>
+</div>
+
+<!-- TICKER -->
 <div class="ticker-wrap"><div class="ticker">
-  <span>Free Delivery on orders above ₹5000</span>
-  <span>Same Day Delivery — Delhi, Noida, Ghaziabad, Gurugram</span>
-  <span>Bulk Orders: +91 96541 71005</span>
-  <span>100% Genuine Material — Best Price Guaranteed</span>
-  <span>Free Delivery on orders above ₹5000</span>
+  <span>🚚 Free Delivery on ₹5000+</span>
+  <span>Same Day Delivery Delhi NCR</span>
+  <span>📞 +91 96541 71005</span>
+  <span>100% Genuine ISI/BIS Material</span>
+  <span>No Broker — Wholesale Prices</span>
+  <span>🚚 Free Delivery on ₹5000+</span>
+  <span>Same Day Delivery Delhi NCR</span>
+  <span>📞 +91 96541 71005</span>
+  <span>100% Genuine ISI/BIS Material</span>
+  <span>No Broker — Wholesale Prices</span>
 </div></div>
 
+<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <a href="../index.html" class="logo">Grout<span>Grove</span></a>
     <div class="nav-links" id="navLinks">
       <a href="../index.html">Home</a>
-      <a href="products.html">Products</a>
-      <a href="track.html">Track Order</a>
+      <a href="products.html" class="active">Products</a>
+      <a href="seller.html">Sell</a>
+      <a href="track.html">Track</a>
       <a href="contact.html">Contact</a>
       <a href="login.html" id="loginNavBtn">Login</a>
-      <span id="userBadge" style="display:none;background:#1E293B;color:white;font-size:13px;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer;" onclick="logoutUser()">👤 <span id="userName"></span> ✕</span>
-      <a href="cart.html" class="nav-cta">🛒 Cart</a>
+      <span id="userBadge" style="display:none;background:var(--dark);color:white;font-size:12px;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer" onclick="logoutUser()">👤 <span id="userName"></span> ✕</span>
+      <div class="cart-wrap">
+        <a href="cart.html" class="nav-cta">🛒 Cart</a>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </div>
     </div>
     <button class="hamburger" onclick="toggleNav()">☰</button>
   </div>
 </nav>
 
-<div class="prod-hero">
-  <h1>All <span>Products</span></h1>
-  <p>Genuine brands — best prices — fast delivery to your construction site</p>
+<!-- LOCATION BAR -->
+<div class="location-bar" id="locationBar">
+  <div class="lb-inner">
+    <div class="lb-left">
+      <div class="lb-pin-badge">📍 <span id="lbPin">000000</span></div>
+      <span class="lb-text" id="lbText">Products near you — 40km range</span>
+    </div>
+    <div class="lb-right">
+      <span class="lb-range" id="lbCount">Loading...</span>
+      <button class="lb-change" onclick="changePincode()">Change Location</button>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <h1>Construction <span>Material</span><br>Near You</h1>
+      <p>Best wholesale prices — same day delivery to your site</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-num">500+</div><div class="hs-lbl">Products</div></div>
+      <div class="hs"><div class="hs-num">50+</div><div class="hs-lbl">Verified Sellers</div></div>
+      <div class="hs"><div class="hs-num">6</div><div class="hs-lbl">Cities</div></div>
+    </div>
+  </div>
 </div>
 
 <!-- FILTERS -->
-<div class="filters-wrap">
-  <div class="filters-inner">
-    <input type="text" class="search-input" id="searchBox" placeholder="🔍 Search cement, steel, bricks..." oninput="applyFilters()"/>
-    <div class="filter-tabs">
-      <div class="ftab active" onclick="setCat('all',this)">🏪 All</div>
-      <div class="ftab" onclick="setCat('cement',this)">🏗️ Cement</div>
-      <div class="ftab" onclick="setCat('steel',this)">⚙️ Steel</div>
-      <div class="ftab" onclick="setCat('bricks',this)">🧱 Bricks</div>
-      <div class="ftab" onclick="setCat('tiles',this)">🪟 Tiles</div>
-      <div class="ftab" onclick="setCat('sand',this)">🪣 Sand</div>
-      <div class="ftab" onclick="setCat('paint',this)">🎨 Paint</div>
-      <div class="ftab" onclick="setCat('pvc_pipes',this)">🔵 Pipes</div>
-      <div class="ftab" onclick="setCat('electrical',this)">⚡ Electrical</div>
-      <div class="ftab" onclick="setCat('hardware',this)">🔩 Hardware</div>
-      <div class="ftab" onclick="setCat('chemicals',this)">🧪 Chemicals</div>
+<div class="filters-bar">
+  <div class="fb-inner">
+    <div class="search-wrap">
+      <input type="text" class="search-box" id="searchBox" placeholder="Search cement, steel, tiles..." oninput="applyFilters()"/>
     </div>
-    <select class="sort-select" id="sortBy" onchange="applyFilters()">
-      <option value="new">Newest First</option>
-      <option value="low">Price: Low to High</option>
-      <option value="high">Price: High to Low</option>
-      <option value="rating">Top Rated</option>
+    <div class="cat-tabs">
+      <div class="ctab act" onclick="setCat('all',this)">🏪 All</div>
+      <div class="ctab" onclick="setCat('cement',this)">🏗️ Cement</div>
+      <div class="ctab" onclick="setCat('steel',this)">⚙️ Steel</div>
+      <div class="ctab" onclick="setCat('bricks',this)">🧱 Bricks</div>
+      <div class="ctab" onclick="setCat('tiles',this)">🪟 Tiles</div>
+      <div class="ctab" onclick="setCat('sand',this)">🪣 Sand</div>
+      <div class="ctab" onclick="setCat('paint',this)">🎨 Paint</div>
+      <div class="ctab" onclick="setCat('pvc_pipes',this)">🔵 Pipes</div>
+      <div class="ctab" onclick="setCat('electrical',this)">⚡ Electric</div>
+    </div>
+    <select class="sort-sel" id="sortBy" onchange="applyFilters()">
+      <option value="near">📍 Nearest First</option>
+      <option value="new">🆕 Newest First</option>
+      <option value="low">💰 Price: Low→High</option>
+      <option value="high">💰 Price: High→Low</option>
+      <option value="rating">⭐ Top Rated</option>
     </select>
-    <div class="pin-filter" id="pinFilter">
-      📍 Near You <button onclick="clearPinFilter()">✕</button>
-    </div>
   </div>
 </div>
 
+<!-- MAIN PRODUCTS -->
 <div class="prods-page">
-  <div class="results-info">
-    <div id="resultsText">Loading products...</div>
+  <div class="results-row">
+    <div class="results-count" id="resultsText">Loading products...</div>
   </div>
+
+  <!-- No pincode notice -->
+  <div class="no-pin-notice" id="noPinNotice" style="display:none">
+    <span style="font-size:20px">📍</span>
+    <span>Pincode daalne se nearest products dikhenge — fastest delivery!</span>
+    <button onclick="changePincode()">Set Location</button>
+  </div>
+
   <div class="prod-grid" id="productGrid">
-    <div class="loading-prods">⏳ Loading products...</div>
+    <div class="loading-box">⏳ Loading products near you...</div>
   </div>
 </div>
 
-<div class="wa-float">
-  <div class="wa-bubble" id="waBubble">💬 <strong>Need help ordering?</strong><br><small>+91 96541 71005</small></div>
-  <a href="https://wa.me/919654171005?text=I need construction material — please help." target="_blank" class="wa-btn" id="waBtn">💬</a>
-</div>
+<div class="wa-float"><a href="https://wa.me/919654171005" target="_blank" class="wa-btn">💬</a></div>
 <div class="call-float"><a href="tel:+919654171005" class="call-btn">📞 Call for Best Price</a></div>
+<div class="toast" id="toast"></div>
 
 <script src="../script.js"></script>
 <script>
-const { createClient } = supabase;
-const sb = createClient(
+const {createClient}=supabase;
+const sb=createClient(
   'https://ddgwdesqicrneikxrcnj.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo'
 );
 
-const nxUser = JSON.parse(localStorage.getItem('nx_user'));
-if(nxUser) {
+// ── NCR Pincode database (prefix-based distances)
+const NCR_PINCODES={
+  '110':['Delhi','Delhi'],
+  '201':['Noida/Greater Noida','Uttar Pradesh'],
+  '122':['Gurugram','Haryana'],
+  '121':['Faridabad','Haryana'],
+  '201':['Noida','Uttar Pradesh'],
+  '245':['Hapur/Ghaziabad','Uttar Pradesh'],
+  '201':['Greater Noida','Uttar Pradesh'],
+};
+// Pincode prefix → city mapping
+function getPincodeCity(pin){
+  const p=String(pin).substring(0,3);
+  const map={
+    '110':'Delhi','201':'Noida / Greater Noida','122':'Gurugram',
+    '121':'Faridabad','201':'Noida','245':'Hapur / Ghaziabad',
+    '202':'Aligarh','250':'Meerut','247':'Saharanpur','206':'Etawah'
+  };
+  return map[p]||'NCR Region';
+}
+
+// Simulate distance from pincode (in real app, use Google Distance Matrix API)
+// For now: same prefix = 0-10km, adjacent = 10-25km, others = 25-50km+
+function estimateDistance(userPin, sellerPin){
+  if(!userPin||!sellerPin)return 999;
+  const u=String(userPin), s=String(sellerPin);
+  if(u===s)return Math.floor(Math.random()*5+1); // same pincode: 1-5km
+  if(u.substring(0,4)===s.substring(0,4))return Math.floor(Math.random()*10+5); // same area: 5-15km
+  if(u.substring(0,3)===s.substring(0,3))return Math.floor(Math.random()*15+10); // same city: 10-25km
+  if(u.substring(0,2)===s.substring(0,2))return Math.floor(Math.random()*20+20); // nearby city: 20-40km
+  return Math.floor(Math.random()*30+40); // far: 40-70km
+}
+
+let allProds=[], currentCat='all', userPin=null;
+const catIcons={cement:'🏗️',steel:'⚙️',bricks:'🧱',tiles:'🪟',sand:'🪣',paint:'🎨',pvc_pipes:'🔵',plumbing:'🚿',sanitaryware:'🚽',electrical:'⚡',hardware:'🔩',chemicals:'🧪',bathware:'🛁',gfrp:'🔧',other:'📦'};
+
+// ── USER ──
+const nxUser=JSON.parse(localStorage.getItem('nx_user'));
+if(nxUser){
   document.getElementById('loginNavBtn').style.display='none';
   document.getElementById('userBadge').style.display='inline-flex';
-  document.getElementById('userName').textContent = nxUser.name.split(' ')[0];
+  document.getElementById('userName').textContent=nxUser.name?.split(' ')[0]||'User';
 }
 function logoutUser(){localStorage.removeItem('nx_user');window.location.reload();}
+function toggleNav(){document.getElementById('navLinks').classList.toggle('open');}
 
-let allProds = [];
-let currentCat = 'all';
-let userPincode = nxUser?.pincode || null;
-
-const catIcons = {cement:'🏗️',steel:'⚙️',bricks:'🧱',tiles:'🪟',sand:'🪣',paint:'🎨',pvc_pipes:'🔵',plumbing:'🚿',sanitaryware:'🚽',electrical:'⚡',hardware:'🔩',chemicals:'🧪',bathware:'🛁',gfrp:'🏗️',other:'📦'};
-
-async function loadProducts() {
-  const { data, error } = await sb.from('products').select('*').eq('status','active').order('created_at',{ascending:false});
-  if(error) { console.error('Load error:', error); }
-  allProds = data || [];
-
-  // Check URL for search/category
-  const urlP = new URLSearchParams(window.location.search);
-  const s = urlP.get('search');
-  const c = urlP.get('cat');
-  if(s) document.getElementById('searchBox').value = s;
-  if(c) {
-    currentCat = c;
-    document.querySelectorAll('.ftab').forEach(t => {
-      t.classList.toggle('active', t.onclick?.toString().includes(`'${c}'`));
-    });
+// ── PINCODE FLOW ──
+function initPincode(){
+  // Check saved pincode
+  const saved=localStorage.getItem('gg_user_pin')||nxUser?.pincode;
+  if(saved&&/^\d{6}$/.test(saved)){
+    userPin=saved;
+    showLocationBar(saved);
+    loadProducts();
+  } else {
+    // Show modal after short delay
+    setTimeout(()=>document.getElementById('pinModal').classList.add('show'),600);
   }
+}
 
-  // Show pincode filter if user logged in
-  if(userPincode) document.getElementById('pinFilter').classList.add('show');
+function submitPin(){
+  const pin=document.getElementById('pinInput').value.trim();
+  const err=document.getElementById('pinErr');
+  if(!pin||!/^\d{6}$/.test(pin)){
+    err.style.display='block';
+    document.getElementById('pinInput').style.borderColor='#EF4444';
+    return;
+  }
+  err.style.display='none';
+  userPin=pin;
+  localStorage.setItem('gg_user_pin',pin);
+  document.getElementById('pinModal').classList.remove('show');
+  showLocationBar(pin);
+  loadProducts();
+}
 
+function skipPin(){
+  document.getElementById('pinModal').classList.remove('show');
+  document.getElementById('noPinNotice').style.display='flex';
+  loadProducts();
+}
+
+function changePincode(){
+  document.getElementById('pinInput').value=userPin||'';
+  document.getElementById('pinModal').classList.add('show');
+}
+
+function showLocationBar(pin){
+  document.getElementById('lbPin').textContent=pin;
+  const city=getPincodeCity(pin);
+  document.getElementById('lbText').textContent=`${city} — Products within 40km range`;
+  document.getElementById('locationBar').classList.add('show');
+  document.getElementById('noPinNotice').style.display='none';
+}
+
+// ── LOAD PRODUCTS ──
+async function loadProducts(){
+  try{
+    const{data,error}=await sb.from('products').select('*').eq('status','active').order('created_at',{ascending:false});
+    if(error)throw error;
+    allProds=data||[];
+
+    // Add distance to each product
+    if(userPin){
+      allProds=allProds.map(p=>({
+        ...p,
+        _dist:estimateDistance(userPin, p.seller_pincode||p.pincode||'110001')
+      }));
+      // Filter: only within 40km
+      allProds=allProds.filter(p=>p._dist<=40);
+    }
+
+    // Check URL params
+    const params=new URLSearchParams(window.location.search);
+    const cat=params.get('cat');
+    const search=params.get('search');
+    if(cat){currentCat=cat;document.querySelectorAll('.ctab').forEach(t=>{t.classList.remove('act');if(t.onclick?.toString().includes(`'${cat}'`))t.classList.add('act');})}
+    if(search)document.getElementById('searchBox').value=search;
+    applyFilters();
+  }catch(err){
+    document.getElementById('productGrid').innerHTML=`<div class="loading-box">❌ Error loading. <a href="javascript:loadProducts()" style="color:var(--dark);font-weight:700">Retry</a></div>`;
+    console.error(err);
+  }
+}
+
+function setCat(cat,btn){
+  currentCat=cat;
+  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('act'));
+  if(btn)btn.classList.add('act');
   applyFilters();
 }
 
-function setCat(cat, btn) {
-  currentCat = cat;
-  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  applyFilters();
-}
-
-function clearPinFilter() {
-  userPincode = null;
-  document.getElementById('pinFilter').classList.remove('show');
-  applyFilters();
-}
-
-function applyFilters() {
-  const q = document.getElementById('searchBox').value.toLowerCase().trim();
-  const sort = document.getElementById('sortBy').value;
-
-  let filtered = [...allProds];
-
-  // Category filter
-  if(currentCat !== 'all') filtered = filtered.filter(p => p.category === currentCat);
-
-  // Search filter
-  if(q) filtered = filtered.filter(p =>
-    (p.product_name||'').toLowerCase().includes(q) ||
-    (p.brand_name||'').toLowerCase().includes(q) ||
-    (p.category||'').toLowerCase().includes(q) ||
-    (p.specs||'').toLowerCase().includes(q)
-  );
+function applyFilters(){
+  const q=document.getElementById('searchBox').value.toLowerCase().trim();
+  const sort=document.getElementById('sortBy').value;
+  let filtered=[...allProds];
+  if(currentCat!=='all')filtered=filtered.filter(p=>p.category===currentCat);
+  if(q)filtered=filtered.filter(p=>(p.product_name||'').toLowerCase().includes(q)||(p.brand_name||'').toLowerCase().includes(q)||(p.specs||'').toLowerCase().includes(q));
 
   // Sort
-  if(sort==='low') filtered.sort((a,b) => parseFloat(a.price||0)-parseFloat(b.price||0));
-  else if(sort==='high') filtered.sort((a,b) => parseFloat(b.price||0)-parseFloat(a.price||0));
-  else if(sort==='rating') filtered.sort((a,b) => parseFloat(b.rating||4.5)-parseFloat(a.rating||4.5));
+  if(sort==='near')filtered.sort((a,b)=>(a._dist||999)-(b._dist||999));
+  else if(sort==='low')filtered.sort((a,b)=>parseFloat(a.price||0)-parseFloat(b.price||0));
+  else if(sort==='high')filtered.sort((a,b)=>parseFloat(b.price||0)-parseFloat(a.price||0));
+  else if(sort==='rating')filtered.sort((a,b)=>parseFloat(b.rating||4.5)-parseFloat(a.rating||4.5));
+
+  // Update count in location bar
+  if(userPin){
+    document.getElementById('lbCount').textContent=`${filtered.length} products found`;
+  }
 
   renderProducts(filtered);
 }
 
-function renderProducts(prods) {
-  const grid = document.getElementById('productGrid');
-  const info = document.getElementById('resultsText');
+function renderProducts(prods){
+  const grid=document.getElementById('productGrid');
+  const info=document.getElementById('resultsText');
 
-  if(!prods.length) {
-    info.innerHTML = 'No products found';
-    grid.innerHTML = `<div class="empty-prods">
-      <div class="e-ico">🔍</div>
-      <h3>No Products Found</h3>
-      <p>Try different search or category. Or WhatsApp us — we will find it!</p>
-      <a href="https://wa.me/919654171005?text=I need construction material but couldn't find it on website." target="_blank" class="btn-primary" style="text-decoration:none;display:inline-flex">💬 WhatsApp Us</a>
+  if(!prods.length){
+    const noPin=!userPin;
+    info.textContent='No products found';
+    grid.innerHTML=`<div class="empty-box">
+      <div class="empty-ico">${noPin?'📍':'🔍'}</div>
+      <h3>${noPin?'Set Your Location!':'No Products Found'}</h3>
+      <p>${noPin?'Enter your pincode to see products near you.':'Try different search or category. Or WhatsApp us!'}</p>
+      <a href="https://wa.me/919654171005?text=I need construction material" target="_blank"
+        style="display:inline-flex;align-items:center;gap:8px;background:var(--dark);color:white;padding:12px 24px;border-radius:50px;font-weight:700;font-size:14px;text-decoration:none;transition:all .2s">
+        💬 WhatsApp Us</a>
     </div>`;
     return;
   }
 
-  info.innerHTML = `Showing <span>${prods.length}</span> product${prods.length!==1?'s':''}`;
-
-  grid.innerHTML = prods.map(p => {
-    const orig = p.discount > 0 ? Math.round(parseFloat(p.price)*100/(100-parseFloat(p.discount))) : null;
-    const ico = catIcons[p.category] || '📦';
-    const stars = '★'.repeat(Math.floor(p.rating||4.5)) + '☆'.repeat(5-Math.floor(p.rating||4.5));
-    return `<div class="prod-card">
-      <div class="prod-img">
-        ${p.photo_url && p.photo_url.startsWith('data:') ? `<img src="${p.photo_url}" style="width:100%;height:100%;object-fit:cover">` : ico}
-        ${p.discount>0 ? `<span class="badge-sale">-${p.discount}%</span>` : ''}
-        ${p.offer_text ? `<span class="badge-best">${p.offer_text}</span>` : `<span class="badge-best">${p.delivery_time||'Fast Delivery'}</span>`}
-      </div>
-      <div class="prod-body">
-        <div class="prod-brand">${p.brand_name||''}</div>
-        <div class="prod-name">${p.product_name}</div>
-        <div class="prod-specs">${p.specs||''}</div>
-        <div class="prod-rating">
-          <span class="stars">${stars}</span>
-          ${p.reviews_count>0?`(${p.reviews_count} reviews)`:' — New'}
-        </div>
-        ${p.seller_years ? `<div style="font-size:11px;color:#94A3B8;margin-bottom:6px">🏭 ${p.seller_name||'Verified Seller'} — ${p.seller_years} experience</div>` : ''}
-        ${p.min_order ? `<div style="font-size:11px;color:#64748B;margin-bottom:6px">📦 Min: ${p.min_order}</div>` : ''}
-        <div class="prod-price">
-          <span class="price-now">₹${parseFloat(p.price).toLocaleString('en-IN')}</span>
-          ${orig?`<span class="price-old">₹${orig.toLocaleString('en-IN')}</span>`:''}
-          <span class="price-unit">${p.unit||''}</span>
-        </div>
-        <div class="prod-actions">
-          <button class="btn-cart" onclick="addToCart('${p.product_name.replace(/'/g,"\\'")}',${p.price})">🛒 Add to Cart</button>
-          <a href="https://wa.me/919654171005?text=I need ${encodeURIComponent(p.product_name)}" target="_blank" class="btn-wa">💬</a>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+  info.innerHTML=`Showing <span>${prods.length}</span> product${prods.length!==1?'s':''}${userPin?` near <strong>${userPin}</strong>`:''}`;
+  grid.innerHTML=prods.map(p=>productCard(p)).join('');
 }
 
-loadProducts();
+function productCard(p){
+  const price=parseFloat(p.price||0);
+  const mrpGuess=p.discount>0?Math.round(price*100/(100-parseFloat(p.discount))):null;
+  const savings=mrpGuess?mrpGuess-price:0;
+  const disc=p.discount>0?parseInt(p.discount):0;
+  const icon=catIcons[p.category]||'📦';
+  const stars='★'.repeat(Math.floor(p.rating||4.5))+'☆'.repeat(5-Math.floor(p.rating||4.5));
+  const dist=p._dist;
+  const distText=dist<=5?'🟢 Within 5km':dist<=15?`📍 ~${dist}km away`:dist<=30?`📍 ~${dist}km away`:dist?`📍 ~${dist}km away`:'';
+  const delivTime=dist<=10?'Same Day':dist<=25?'Next Day':'1-2 Days';
+  const sellerInit=(p.seller_name||'S').charAt(0).toUpperCase();
+  const years=p.seller_years||'2-5 years';
+
+  // Badge logic
+  let badge='';
+  if(p.offer_text==='BESTSELLER'||p.offer_text==='Best Seller')badge=`<span class="badge badge-best">Best Seller</span>`;
+  else if(disc>0)badge=`<span class="badge badge-sale">Sale</span>`;
+  else if(p.offer_text==='NEW')badge=`<span class="badge badge-new">New</span>`;
+  else if(p.offer_text)badge=`<span class="badge badge-top">${p.offer_text.substring(0,10)}</span>`;
+
+  return`<div class="prod-card" onclick="void(0)">
+    <!-- Image Section -->
+    <div class="card-img">
+      ${p.photo_url?`<img class="card-img-bg" src="${p.photo_url}" alt="${p.product_name}"/>`:''}
+      <span class="card-emoji" style="${p.photo_url?'display:none':''}">
+        ${p.photo_url?'':icon}
+      </span>
+      <div class="badge-wrap">${badge}</div>
+      ${disc>0?`<div class="disc-badge">-${disc}%</div>`:''}
+      ${dist?`<div class="dist-badge">📍 ${dist}km</div>`:''}
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body">
+      <!-- Brand + Category -->
+      <div class="card-brand-row">
+        <span class="card-brand">${p.brand_name||'Verified Brand'}</span>
+        <span class="card-cat">${p.category||'material'}</span>
+      </div>
+
+      <!-- Product Name -->
+      <div class="card-name">${p.product_name}</div>
+
+      <!-- Key Specs Pills -->
+      <div class="card-specs">
+        ${p.specs?p.specs.split(',').slice(0,3).map(s=>`<span class="spec-pill">✦ ${s.trim()}</span>`).join(''):''}
+        ${!p.specs?`<span class="spec-pill">✦ ${p.category||'Quality'} Grade</span>`:''}
+      </div>
+
+      <!-- Rating + Certification -->
+      <div class="card-rating">
+        <span class="stars">${stars}</span>
+        <span class="rating-num">${parseFloat(p.rating||4.5).toFixed(1)}</span>
+        <span class="review-count">${p.reviews_count>0?`(${p.reviews_count})`:''}</span>
+        <span class="cert-badge">✅ ISI/BIS</span>
+      </div>
+
+      <!-- Seller Info -->
+      <div class="card-seller">
+        <div class="seller-av">${sellerInit}</div>
+        <div>
+          <div class="seller-name">${p.seller_name||'Verified Seller'}</div>
+          <div class="seller-exp">🏭 ${years} experience</div>
+        </div>
+        <div class="seller-del">
+          <span class="${dist<=10?'del-green':'del-blue'}">
+            ${dist<=10?'⚡':'🚚'} ${delivTime}
+          </span>
+        </div>
+      </div>
+
+      <!-- Price Section -->
+      <div class="card-price-row">
+        <div>
+          <div class="price-now">₹${price.toLocaleString('en-IN')}</div>
+          ${mrpGuess?`<div class="price-old">₹${mrpGuess.toLocaleString('en-IN')}</div>`:''}
+          <div class="price-unit">${p.unit||'/piece'}</div>
+        </div>
+        ${savings>0?`<div class="price-savings">
+          <span class="save-amt">₹${savings.toLocaleString('en-IN')}</span>
+          <span class="save-lbl">YOU SAVE</span>
+        </div>`:''}
+      </div>
+
+      <!-- Min Order -->
+      ${p.min_order?`<div class="min-order">📦 Min order: <strong>${p.min_order}</strong></div>`:''}
+
+      <!-- Action Buttons -->
+      <div class="card-actions">
+        <button class="btn-cart" onclick="event.stopPropagation();addToCart('${(p.product_name||'').replace(/'/g,"\\'")}',${price})">
+          🛒 Add to Cart
+        </button>
+        <button class="btn-wa" onclick="event.stopPropagation();window.open('https://wa.me/919654171005?text=I need ${encodeURIComponent(p.product_name||'')}','_blank')" title="WhatsApp">
+          💬
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── CART BADGE ──
+function updateBadge(){
+  try{
+    const cart=JSON.parse(localStorage.getItem('groutgrove_cart')||'[]');
+    const n=cart.reduce((s,i)=>s+(i.qty||1),0);
+    const b=document.getElementById('cartBadge');
+    b.textContent=n;b.style.display=n>0?'flex':'none';
+  }catch(e){}
+}
+
+// ── INIT ──
+updateBadge();
+initPincode();
 </script>
 </body>
 </html>
