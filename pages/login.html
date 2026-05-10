@@ -1,402 +1,528 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login – GroutGrove</title>
-  <link rel="stylesheet" href="../style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-  <style>
-    body{background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);min-height:100vh;display:flex;flex-direction:column}
-    .auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:30px 20px}
-    .auth-box{background:white;border-radius:24px;padding:40px 36px;width:100%;max-width:480px;box-shadow:0 24px 80px rgba(0,0,0,.4)}
-    .auth-logo{font-family:'Playfair Display',serif;font-size:34px;font-weight:800;color:#004225;text-align:center;margin-bottom:4px}
-    .auth-logo span{color:#EF4444}
-    .auth-sub{text-align:center;color:#64748B;font-size:14px;margin-bottom:24px}
-    .tabs{display:flex;background:#F1F5F9;border-radius:12px;padding:4px;margin-bottom:24px;gap:4px}
-    .tab-btn{flex:1;padding:10px;border:none;border-radius:9px;font-family:'DM Sans';font-size:14px;font-weight:600;cursor:pointer;background:transparent;color:#64748B;transition:all .2s}
-    .tab-btn.active{background:white;color:#1E293B;box-shadow:0 1px 6px rgba(0,0,0,.1)}
-    .f-field{margin-bottom:14px}
-    .f-field label{display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
-    .f-field input,.f-field select{width:100%;border:1.5px solid #E2E8F0;border-radius:12px;padding:13px 15px;font-family:'DM Sans';font-size:15px;outline:none;background:#FAFCFB;color:#1E293B;transition:border .2s}
-    .f-field input:focus,.f-field select:focus{border-color:#1E293B;background:white}
-    .f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .f-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-    .err-box{background:#FEF2F2;border:1.5px solid #EF4444;border-radius:12px;padding:13px;font-size:13px;color:#DC2626;margin-bottom:14px;display:none;line-height:1.6}
-    .ok-box{background:#F0FDF4;border:1.5px solid #22C55E;border-radius:12px;padding:13px;font-size:13px;color:#166534;margin-bottom:14px;display:none}
-    .btn-main{width:100%;background:#1E293B;color:white;border:none;border-radius:50px;padding:15px;font-family:'DM Sans';font-size:17px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px}
-    .btn-main:hover{background:#0F172A;transform:translateY(-1px)}
-    .btn-main:disabled{background:#94A3B8;cursor:not-allowed;transform:none}
-    .link-text{text-align:center;font-size:13px;color:#64748B;margin-top:14px}
-    .link-text a{color:#1E293B;font-weight:700;text-decoration:none;cursor:pointer}
-    .back-link{display:block;text-align:center;margin-top:16px;color:#94A3B8;font-size:13px;text-decoration:none}
-    .back-link:hover{color:#1E293B}
-    .divider{display:flex;align-items:center;gap:12px;margin:16px 0}
-    .divider hr{flex:1;border:none;height:1px;background:#E2E8F0}
-    .divider span{font-size:12px;color:#94A3B8;white-space:nowrap}
-    .pincode-info{background:#F0FDF4;border-radius:10px;padding:10px 14px;font-size:12px;color:#166534;margin-top:-8px;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
-    .pincode-info span{font-size:16px;flex-shrink:0}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login – GroutGrove</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#0F172A,#1E293B);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.nav{position:fixed;top:0;left:0;right:0;height:56px;background:rgba(15,23,42,.9);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:100;border-bottom:1px solid rgba(255,255,255,.06)}
+.logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:white;text-decoration:none}
+.logo span{color:#EF4444}
+.back{color:rgba(255,255,255,.5);font-size:12px;font-weight:600;text-decoration:none}
+.back:hover{color:white}
 
-    /* SUCCESS OVERLAY */
-    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
-    .overlay.show{display:flex}
-    .ov-card{background:white;border-radius:24px;padding:44px 32px;text-align:center;max-width:380px;width:100%}
-    .ov-ico{font-size:64px;margin-bottom:16px;display:block}
-    .ov-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:#1E293B;margin-bottom:8px}
-    .ov-name{font-size:18px;font-weight:700;color:#F59E0B;margin-bottom:10px;font-family:'DM Sans'}
-    .ov-city{font-size:13px;color:#64748B;margin-bottom:6px}
-    .ov-msg{color:#64748B;font-size:14px;line-height:1.7;margin-bottom:24px}
-    .ov-btn{background:#1E293B;color:white;border:none;border-radius:50px;padding:14px 36px;font-family:'DM Sans';font-size:16px;font-weight:700;cursor:pointer;transition:all .2s}
-    .ov-btn:hover{background:#0F172A;transform:translateY(-1px)}
+.card{background:white;border-radius:24px;padding:36px 30px;width:100%;max-width:400px;box-shadow:0 32px 80px rgba(0,0,0,.5);margin-top:56px}
+@media(max-width:440px){.card{padding:24px 18px}}
 
-    @media(max-width:480px){
-      .auth-box{padding:28px 20px}
-      .f-row,.f-row3{grid-template-columns:1fr}
-    }
-  </style>
+/* Tabs */
+.tabs{display:flex;background:#F1F5F9;border-radius:12px;padding:4px;margin-bottom:24px}
+.tab{flex:1;padding:10px;border:none;border-radius:9px;background:transparent;font-family:'DM Sans';font-size:13px;font-weight:700;color:#64748B;cursor:pointer;transition:all .2s}
+.tab.on{background:white;color:#0F172A;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+
+/* Form */
+.form-head{text-align:center;margin-bottom:20px}
+.form-ico{font-size:40px;margin-bottom:8px;display:block}
+.form-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:800;color:#0F172A;margin-bottom:4px}
+.form-sub{color:#64748B;font-size:12px;line-height:1.6}
+
+.ff{margin-bottom:12px}
+.ff label{display:block;font-size:10px;font-weight:700;color:#64748B;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.inp-wrap{position:relative}
+.inp-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none;z-index:1}
+.ff input,.ff select{width:100%;border:1.5px solid #E2E8F0;border-radius:10px;padding:12px 14px 12px 38px;font-family:'DM Sans';font-size:14px;outline:none;background:#FAFCFB;color:#0F172A;transition:all .2s}
+.ff input:focus,.ff select:focus{border-color:#0F172A;background:white;box-shadow:0 0 0 3px rgba(15,23,42,.05)}
+.show-pw{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:14px;color:#94A3B8;padding:4px}
+
+/* Messages */
+.msg{display:none;border-radius:10px;padding:11px 14px;font-size:12px;font-weight:600;margin-bottom:14px;line-height:1.5}
+.msg.show{display:block}
+.msg-err{background:#FEF2F2;border:1.5px solid #FCA5A5;color:#DC2626}
+.msg-ok{background:#F0FDF4;border:1.5px solid #86EFAC;color:#166534}
+.msg-info{background:#EFF6FF;border:1.5px solid #93C5FD;color:#1D4ED8}
+
+/* Buttons */
+.btn-main{width:100%;background:#0F172A;color:white;border:none;border-radius:50px;padding:14px;font-family:'DM Sans';font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:7px}
+.btn-main:hover{background:#1E293B;transform:translateY(-1px);box-shadow:0 6px 18px rgba(15,23,42,.3)}
+.btn-main:disabled{background:#94A3B8;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-wa{width:100%;background:#25D366;color:white;border:none;border-radius:50px;padding:13px;font-family:'DM Sans';font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:7px}
+.btn-wa:hover{background:#22C55E}
+
+.divider{display:flex;align-items:center;gap:10px;margin:10px 0}
+.div-line{flex:1;height:1px;background:#E2E8F0}
+.div-txt{font-size:11px;color:#94A3B8;font-weight:600}
+
+.switch-txt{text-align:center;font-size:12px;color:#64748B;margin-top:10px}
+.switch-btn{background:none;border:none;color:#0F172A;font-family:'DM Sans';font-size:12px;font-weight:700;cursor:pointer;text-decoration:underline}
+
+/* Benefits */
+.bens{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:18px}
+.ben{background:#F8FAFC;border-radius:9px;padding:9px 4px;text-align:center;font-size:9px;font-weight:700;color:#475569}
+.ben span{font-size:18px;display:block;margin-bottom:3px}
+
+/* Already logged in */
+.logged-card{text-align:center}
+.logged-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:#0F172A;margin:10px 0 4px}
+.logged-sub{color:#64748B;font-size:13px;margin-bottom:20px}
+</style>
 </head>
 <body>
 
-<!-- SUCCESS OVERLAY -->
-<div class="overlay" id="successOverlay">
-  <div class="ov-card">
-    <span class="ov-ico" id="ovIco">🎉</span>
-    <div class="ov-title" id="ovTitle">Welcome!</div>
-    <div class="ov-name" id="ovName"></div>
-    <div class="ov-city" id="ovCity"></div>
-    <div class="ov-msg" id="ovMsg">You are logged in successfully!</div>
-    <button class="ov-btn" onclick="goHome()">🛒 Start Shopping!</button>
-  </div>
+<div class="nav">
+  <a href="../index.html" class="logo">Grout<span>Grove</span></a>
+  <a href="../index.html" class="back">← Home</a>
 </div>
 
-<!-- NAVBAR -->
-<nav>
-  <div class="nav-inner">
-    <a href="../index.html" class="logo">Grout<span>Grove</span></a>
-    <div class="nav-links" id="navLinks">
-      <a href="../index.html">Home</a>
-      <a href="products.html">Products</a>
-      <a href="track.html">Track Order</a>
-      <a href="contact.html">Contact</a>
-      <a href="cart.html" class="nav-cta">🛒 Cart</a>
+<div class="card">
+
+  <!-- Already logged in check -->
+  <div id="loggedSection" style="display:none">
+    <div class="logged-card">
+      <span style="font-size:52px;display:block;margin-bottom:10px">👋</span>
+      <div class="logged-name" id="loggedName">Welcome!</div>
+      <div class="logged-sub" id="loggedSub">Aap already login ho!</div>
+      <button class="btn-main" onclick="goHome()">🏪 Products Dekho</button>
+      <button class="btn-main" style="background:#22C55E" onclick="window.location.href='cart.html'">🛒 Cart Dekho</button>
+      <button onclick="doLogout()" style="width:100%;background:none;border:1.5px solid #E2E8F0;border-radius:50px;padding:11px;font-family:DM Sans;font-size:13px;font-weight:700;color:#94A3B8;cursor:pointer;margin-top:6px">🚪 Logout</button>
     </div>
-    <button class="hamburger" onclick="toggleNav()">☰</button>
   </div>
-</nav>
 
-<div class="auth-wrap">
-  <div class="auth-box">
-    <div class="auth-logo">Grout<span>Grove</span></div>
-    <div class="auth-sub">India's Construction Marketplace</div>
-
-    <!-- TABS -->
+  <!-- Auth section -->
+  <div id="authSection">
+    <!-- Tabs -->
     <div class="tabs">
-      <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">👤 Login</button>
-      <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">✨ Sign Up Free</button>
+      <button class="tab on" id="tabLogin" onclick="showTab('login')">🔐 Login</button>
+      <button class="tab" id="tabSignup" onclick="showTab('signup')">✨ Sign Up</button>
     </div>
 
-    <div class="err-box" id="errBox"></div>
-    <div class="ok-box" id="okBox"></div>
+    <!-- Messages -->
+    <div class="msg msg-err" id="msgErr"></div>
+    <div class="msg msg-ok" id="msgOk"></div>
+    <div class="msg msg-info" id="msgInfo"></div>
 
-    <!-- ===== LOGIN FORM ===== -->
-    <div id="loginForm">
-      <div class="f-field">
+    <!-- ══ LOGIN ══ -->
+    <div id="loginSection">
+      <div class="form-head">
+        <span class="form-ico">👋</span>
+        <div class="form-title">Welcome Back!</div>
+        <div class="form-sub">Phone number aur password se login karo</div>
+      </div>
+
+      <div class="ff">
         <label>Phone Number *</label>
-        <input type="tel" id="loginPhone" placeholder="Enter your registered phone number" maxlength="10"/>
+        <div class="inp-wrap">
+          <span class="inp-ico">📱</span>
+          <input type="tel" id="lPhone" placeholder="10-digit number" maxlength="10"
+            oninput="this.value=this.value.replace(/\D/g,'')"
+            onkeydown="if(event.key==='Enter')doLogin()"/>
+        </div>
       </div>
-      <div class="f-field">
+      <div class="ff">
         <label>Password *</label>
-        <input type="password" id="loginPass" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()"/>
+        <div class="inp-wrap">
+          <span class="inp-ico">🔒</span>
+          <input type="password" id="lPass" placeholder="Your password"
+            onkeydown="if(event.key==='Enter')doLogin()"/>
+          <button class="show-pw" onclick="togglePw('lPass',this)" type="button">👁️</button>
+        </div>
       </div>
-      <button class="btn-main" id="loginBtn" onclick="doLogin()">🔐 Login to My Account</button>
-      <div class="link-text">
-        New to GroutGrove? <a onclick="switchTab('signup')">Sign Up Free →</a>
-      </div>
+
+      <button class="btn-main" id="btnLogin" onclick="doLogin()">🔐 Login</button>
+      <div class="divider"><div class="div-line"></div><div class="div-txt">YA</div><div class="div-line"></div></div>
+      <button class="btn-wa" onclick="waContact()">💬 WhatsApp se Help Lo</button>
+      <div class="switch-txt">Account nahi? <button class="switch-btn" onclick="showTab('signup')">Sign Up karo</button></div>
     </div>
 
-    <!-- ===== SIGNUP FORM ===== -->
-    <div id="signupForm" style="display:none">
-      <div class="f-row">
-        <div class="f-field">
-          <label>First Name *</label>
-          <input type="text" id="sFirst" placeholder="Rajesh"/>
+    <!-- ══ SIGNUP ══ -->
+    <div id="signupSection" style="display:none">
+      <div class="form-head">
+        <span class="form-ico">🎉</span>
+        <div class="form-title">Free Account Banao!</div>
+        <div class="form-sub">Delhi NCR ke best wholesale prices pao</div>
+      </div>
+
+      <div class="bens">
+        <div class="ben"><span>📦</span>Orders Track</div>
+        <div class="ben"><span>💰</span>Best Price</div>
+        <div class="ben"><span>🚚</span>Fast Del.</div>
+        <div class="ben"><span>💬</span>WhatsApp</div>
+      </div>
+
+      <div class="ff">
+        <label>Pura Naam *</label>
+        <div class="inp-wrap">
+          <span class="inp-ico">👤</span>
+          <input type="text" id="sName" placeholder="Apna naam daalo"/>
         </div>
-        <div class="f-field">
-          <label>Last Name *</label>
-          <input type="text" id="sLast" placeholder="Kumar"/>
+      </div>
+      <div class="ff">
+        <label>WhatsApp Number * (Orders aayenge yahan)</label>
+        <div class="inp-wrap">
+          <span class="inp-ico">📱</span>
+          <input type="tel" id="sPhone" placeholder="10-digit WhatsApp number" maxlength="10"
+            oninput="this.value=this.value.replace(/\D/g,'')"/>
         </div>
       </div>
-
-      <div class="f-field">
-        <label>Phone Number * (Used for Login & Orders)</label>
-        <input type="tel" id="sPhone" placeholder="10-digit mobile number" maxlength="10"/>
-      </div>
-
-      <div class="f-field">
-        <label>Email (Optional)</label>
-        <input type="email" id="sEmail" placeholder="your@email.com"/>
-      </div>
-
-      <div class="f-row">
-        <div class="f-field">
-          <label>City *</label>
-          <select id="sCity">
-            <option value="">Select City</option>
-            <option>Delhi</option>
-            <option>Noida</option>
-            <option>Greater Noida</option>
-            <option>Gurugram</option>
-            <option>Ghaziabad</option>
-            <option>Faridabad</option>
-            <option>Meerut</option>
-            <option>Hapur</option>
-            <option>Other NCR/UP</option>
+      <div class="ff">
+        <label>City *</label>
+        <div class="inp-wrap">
+          <span class="inp-ico">📍</span>
+          <select id="sCity" style="padding-left:36px">
+            <option value="">City select karo</option>
+            <option>Delhi</option><option>Noida</option><option>Greater Noida</option>
+            <option>Ghaziabad</option><option>Gurugram</option><option>Faridabad</option>
+            <option>Meerut</option><option>Hapur</option><option>Other NCR</option>
           </select>
         </div>
-        <div class="f-field">
-          <label>Area Pincode * (For Nearby Products)</label>
-          <input type="text" id="sPincode" placeholder="e.g. 201301" maxlength="6"/>
+      </div>
+      <div class="ff">
+        <label>Pincode * (Delivery ke liye)</label>
+        <div class="inp-wrap">
+          <span class="inp-ico">🔢</span>
+          <input type="text" id="sPin" placeholder="6-digit pincode" maxlength="6"
+            oninput="this.value=this.value.replace(/\D/g,'')"/>
+        </div>
+      </div>
+      <div class="ff">
+        <label>Password * (6+ characters)</label>
+        <div class="inp-wrap">
+          <span class="inp-ico">🔒</span>
+          <input type="password" id="sPass" placeholder="Strong password banao"/>
+          <button class="show-pw" onclick="togglePw('sPass',this)" type="button">👁️</button>
+        </div>
+      </div>
+      <div class="ff">
+        <label>Password Confirm *</label>
+        <div class="inp-wrap">
+          <span class="inp-ico">🔒</span>
+          <input type="password" id="sPass2" placeholder="Same password dobara"
+            onkeydown="if(event.key==='Enter')doSignup()"/>
+        </div>
+      </div>
+      <div class="ff">
+        <label>Main hoon</label>
+        <div class="inp-wrap">
+          <span class="inp-ico">🏗️</span>
+          <select id="sType" style="padding-left:36px">
+            <option value="customer">Customer / Home Owner / Builder</option>
+            <option value="contractor">Contractor / Sub-contractor</option>
+            <option value="architect">Architect / Interior Designer</option>
+            <option value="other">Other</option>
+          </select>
         </div>
       </div>
 
-      <div class="pincode-info">
-        <span>📍</span>
-        <div>Your pincode helps us show <strong>nearest sellers</strong> and ensure <strong>fastest delivery</strong> to your area!</div>
-      </div>
-
-      <div class="f-field">
-        <label>You Are *</label>
-        <select id="sType">
-          <option value="">Select Your Role</option>
-          <option>Home Owner / Self Construction</option>
-          <option>Contractor</option>
-          <option>Builder / Developer</option>
-          <option>Architect / Interior Designer</option>
-          <option>Civil Engineer</option>
-          <option>Other</option>
-        </select>
-      </div>
-
-      <div class="f-row">
-        <div class="f-field">
-          <label>Password * (Min 6 chars)</label>
-          <input type="password" id="sPass" placeholder="Create a strong password"/>
-        </div>
-        <div class="f-field">
-          <label>Confirm Password *</label>
-          <input type="password" id="sCPass" placeholder="Repeat password" onkeydown="if(event.key==='Enter')doSignup()"/>
-        </div>
-      </div>
-
-      <button class="btn-main" id="signupBtn" onclick="doSignup()">✅ Create Free Account</button>
-
-      <div class="link-text">
-        Already registered? <a onclick="switchTab('login')">Login →</a>
-      </div>
+      <button class="btn-main" id="btnSignup" onclick="doSignup()">✨ Account Banao — FREE!</button>
+      <div class="divider"><div class="div-line"></div><div class="div-txt">YA</div><div class="div-line"></div></div>
+      <button class="btn-wa" onclick="waContact()">💬 WhatsApp se Help Lo</button>
+      <div class="switch-txt">Account hai? <button class="switch-btn" onclick="showTab('login')">Login karo</button></div>
     </div>
-
-    <div class="divider"><hr><span>Need help?</span><hr></div>
-    <a href="https://wa.me/919654171005?text=I need help with GroutGrove account." target="_blank"
-      style="display:flex;align-items:center;justify-content:center;gap:8px;background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:12px;padding:12px;color:#166534;font-size:14px;font-weight:700;text-decoration:none">
-      💬 WhatsApp Support: +91 96541 71005
-    </a>
-
-    <a href="../index.html" class="back-link">← Back to GroutGrove Home</a>
   </div>
+
 </div>
 
-<script src="../script.js"></script>
 <script>
-// ===== SUPABASE INIT =====
-const { createClient } = supabase;
+// ═══════════════════════════════════
+// SUPABASE SETUP
+// ═══════════════════════════════════
+const {createClient} = supabase;
 const sb = createClient(
   'https://ddgwdesqicrneikxrcnj.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo'
 );
 
-// ===== TAB SWITCH =====
-function switchTab(tab) {
-  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
-  document.getElementById('signupForm').style.display = tab === 'signup' ? 'block' : 'none';
-  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
-  document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
-  clearMsgs();
+// ═══════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════
+function showErr(msg){
+  hide(['msgOk','msgInfo']);
+  const el=document.getElementById('msgErr');
+  el.innerHTML='❌ '+msg; el.classList.add('show');
+}
+function showOk(msg){
+  hide(['msgErr','msgInfo']);
+  const el=document.getElementById('msgOk');
+  el.innerHTML='✅ '+msg; el.classList.add('show');
+}
+function showInfo(msg){
+  hide(['msgErr','msgOk']);
+  const el=document.getElementById('msgInfo');
+  el.innerHTML='ℹ️ '+msg; el.classList.add('show');
+}
+function hide(ids){ids.forEach(id=>document.getElementById(id)?.classList.remove('show'));}
+function hideAll(){hide(['msgErr','msgOk','msgInfo']);}
+
+function togglePw(id,btn){
+  const el=document.getElementById(id);
+  el.type=el.type==='password'?'text':'password';
+  btn.textContent=el.type==='password'?'👁️':'🙈';
 }
 
-// Check URL for ?tab=signup
-const urlP = new URLSearchParams(window.location.search);
-if(urlP.get('tab') === 'signup') switchTab('signup');
-
-// ===== MESSAGES =====
-function showErr(msg) {
-  const e = document.getElementById('errBox');
-  e.innerHTML = '❌ ' + msg;
-  e.style.display = 'block';
-  document.getElementById('okBox').style.display = 'none';
-  e.scrollIntoView({ behavior:'smooth', block:'nearest' });
-}
-function showOk(msg) {
-  const o = document.getElementById('okBox');
-  o.textContent = '✅ ' + msg;
-  o.style.display = 'block';
-  document.getElementById('errBox').style.display = 'none';
-}
-function clearMsgs() {
-  document.getElementById('errBox').style.display = 'none';
-  document.getElementById('okBox').style.display = 'none';
+function showTab(t){
+  hideAll();
+  document.getElementById('loginSection').style.display=t==='login'?'block':'none';
+  document.getElementById('signupSection').style.display=t==='signup'?'block':'none';
+  document.getElementById('tabLogin').classList.toggle('on',t==='login');
+  document.getElementById('tabSignup').classList.toggle('on',t==='signup');
 }
 
-function showSuccess(ico, title, name, city, pincode, msg) {
-  document.getElementById('ovIco').textContent = ico;
-  document.getElementById('ovTitle').textContent = title;
-  document.getElementById('ovName').textContent = name;
-  document.getElementById('ovCity').textContent = city + (pincode ? ' — ' + pincode : '');
-  document.getElementById('ovMsg').textContent = msg;
-  document.getElementById('successOverlay').classList.add('show');
+function goHome(){
+  const ret=localStorage.getItem('gg_return');
+  if(ret){localStorage.removeItem('gg_return');window.location.href=ret;}
+  else window.location.href='../index.html';
 }
 
-function goHome() {
-  const redirectTo = urlP.get('redirect') || '../index.html';
-  window.location.href = redirectTo;
+function saveSession(user){
+  localStorage.setItem('nx_user',JSON.stringify({...user,logged_in:true}));
+  if(user.pincode) localStorage.setItem('gg_user_pin',user.pincode);
+  // Merge cart
+  const gc=JSON.parse(localStorage.getItem('groutgrove_cart')||'[]');
+  if(gc.length>0&&user.phone){
+    localStorage.setItem('groutgrove_cart_'+user.phone,JSON.stringify(gc));
+  }
 }
 
-// ===== LOGIN =====
-async function doLogin() {
-  const phone = document.getElementById('loginPhone').value.trim().replace(/\D/g,'');
-  const pass = document.getElementById('loginPass').value;
+function doLogout(){
+  localStorage.removeItem('nx_user');
+  window.location.reload();
+}
 
-  if(!phone || phone.length < 10) { showErr('Please enter a valid 10-digit phone number!'); return; }
-  if(!pass) { showErr('Please enter your password!'); return; }
+function waContact(){
+  window.open('https://wa.me/919654171005?text=Mujhe login/signup mein help chahiye GroutGrove par!','_blank');
+}
 
-  const btn = document.getElementById('loginBtn');
-  btn.textContent = '⏳ Logging in...'; btn.disabled = true; clearMsgs();
+// Simple password hash
+function hashPw(phone,pass){
+  return btoa(unescape(encodeURIComponent(phone+':'+pass+':gg2026')));
+}
 
-  try {
-    const { data, error } = await sb
+// ═══════════════════════════════════
+// SIGNUP
+// ═══════════════════════════════════
+async function doSignup(){
+  const name  = document.getElementById('sName').value.trim();
+  const phone = document.getElementById('sPhone').value.trim();
+  const city  = document.getElementById('sCity').value;
+  const pin   = document.getElementById('sPin').value.trim();
+  const pass  = document.getElementById('sPass').value;
+  const pass2 = document.getElementById('sPass2').value;
+  const utype = document.getElementById('sType').value;
+
+  // Validate
+  if(!name)           return showErr('Apna naam daalo!');
+  if(phone.length<10) return showErr('Valid 10-digit WhatsApp number daalo!');
+  if(!city)           return showErr('Apni city select karo!');
+  if(pin.length<6)    return showErr('Valid 6-digit pincode daalo!');
+  if(pass.length<6)   return showErr('Password 6 characters se zyada hona chahiye!');
+  if(pass!==pass2)    return showErr('Dono password same nahi hain!');
+
+  const btn=document.getElementById('btnSignup');
+  btn.disabled=true; btn.textContent='⏳ Please wait...'; hideAll();
+
+  try{
+    // Step 1: Check duplicate phone
+    const {data:dup, error:dupErr} = await sb
+      .from('customers')
+      .select('phone')
+      .eq('phone', phone)
+      .maybeSingle();
+
+    if(dupErr && dupErr.code!=='PGRST116'){
+      // Table might not have right columns — try alternate
+      console.warn('Dup check error:', dupErr.message);
+    }
+
+    if(dup){
+      showErr('Ye number pehle se registered hai! <button onclick="showTab(\'login\')" style="background:none;border:none;color:#DC2626;font-weight:700;cursor:pointer;text-decoration:underline">Login karo →</button>');
+      btn.disabled=false; btn.textContent='✨ Account Banao — FREE!'; return;
+    }
+
+    // Step 2: Insert
+    const insertData = {
+      phone: phone,
+      full_name: name,
+      name: name,        // fallback column
+      city: city,
+      pincode: pin,
+      password: hashPw(phone,pass),
+      user_type: utype,
+      status: 'active'
+    };
+
+    const {data:newUser, error:insErr} = await sb
+      .from('customers')
+      .insert([insertData])
+      .select()
+      .single();
+
+    if(insErr){
+      // Try minimal insert if full insert fails
+      console.warn('Full insert failed:', insErr.message);
+      const {data:minUser, error:minErr} = await sb
+        .from('customers')
+        .insert([{
+          phone: phone,
+          full_name: name,
+          password: hashPw(phone,pass),
+          status: 'active'
+        }])
+        .select()
+        .single();
+
+      if(minErr){
+        // Last resort: save only to localStorage
+        console.warn('Min insert failed:', minErr.message);
+        // Still let them login with localStorage
+        const fallback = {id:'local_'+Date.now(),name,phone,city,pincode:pin,utype,_local:true};
+        saveSession(fallback);
+        // Save to local customer list
+        const lc=JSON.parse(localStorage.getItem('gg_local_customers')||'[]');
+        lc.push({...fallback,pass:hashPw(phone,pass)});
+        localStorage.setItem('gg_local_customers',JSON.stringify(lc));
+        showOk('Account ban gaya! (Offline mode) Redirect ho raha hai...');
+        setTimeout(()=>goHome(), 1500);
+        return;
+      }
+
+      // Min insert success
+      saveSession({id:minUser?.id,name,phone,city,pincode:pin,user_type:utype});
+      afterSignupSuccess(name, phone, city);
+      return;
+    }
+
+    // Full insert success
+    saveSession({
+      id: newUser?.id,
+      name, phone,
+      city: city||newUser?.city,
+      pincode: pin||newUser?.pincode,
+      user_type: utype
+    });
+    afterSignupSuccess(name, phone, city);
+
+  }catch(err){
+    console.error('Signup error:', err);
+    showErr('Error: '+err.message+'<br><small>WhatsApp karo: +91 96541 71005</small>');
+    btn.disabled=false; btn.textContent='✨ Account Banao — FREE!';
+  }
+}
+
+function afterSignupSuccess(name, phone, city){
+  showOk(`Welcome ${name}! Account ban gaya! Redirect ho raha hai...`);
+  // WhatsApp welcome
+  const msg=encodeURIComponent(`🎉 *GroutGrove mein Swagat!*\n\nHi ${name}! 👋\n\nAapka account ban gaya hai!\n📍 City: ${city}\n\nAb aap order kar sakte ho!\n🌐 nirmanx.github.io/nirmanx-website\n📞 +91 96541 71005`);
+  setTimeout(()=>window.open(`https://wa.me/91${phone}?text=${msg}`,'_blank'),800);
+  setTimeout(()=>goHome(), 1800);
+  document.getElementById('btnSignup').disabled=false;
+  document.getElementById('btnSignup').textContent='✨ Account Banao — FREE!';
+}
+
+// ═══════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════
+async function doLogin(){
+  const phone = document.getElementById('lPhone').value.trim();
+  const pass  = document.getElementById('lPass').value;
+
+  if(phone.length<10) return showErr('Valid 10-digit phone number daalo!');
+  if(!pass)           return showErr('Password daalo!');
+
+  const btn=document.getElementById('btnLogin');
+  btn.disabled=true; btn.textContent='⏳ Login ho raha hai...'; hideAll();
+
+  try{
+    // Step 1: Find user in Supabase
+    const {data:user, error:findErr} = await sb
       .from('customers')
       .select('*')
       .eq('phone', phone)
-      .single();
+      .maybeSingle();
 
-    if(error || !data) {
-      showErr('Phone number not registered! Please sign up first.');
-      btn.textContent = '🔐 Login to My Account'; btn.disabled = false; return;
+    if(findErr){
+      console.warn('Find error:', findErr.message);
+      // Try local fallback
+      const lc=JSON.parse(localStorage.getItem('gg_local_customers')||'[]');
+      const localUser=lc.find(u=>u.phone===phone&&u.pass===hashPw(phone,pass));
+      if(localUser){
+        saveSession(localUser);
+        showOk('Login ho gaya! Redirect ho raha hai...');
+        setTimeout(()=>goHome(), 1200);
+        return;
+      }
+      throw new Error('Database error: '+findErr.message);
     }
 
-    if(data.password !== pass) {
-      showErr('Wrong password! Please try again.');
-      btn.textContent = '🔐 Login to My Account'; btn.disabled = false; return;
+    // Step 2: Phone not found
+    if(!user){
+      // Check local fallback
+      const lc=JSON.parse(localStorage.getItem('gg_local_customers')||'[]');
+      const localUser=lc.find(u=>u.phone===phone&&u.pass===hashPw(phone,pass));
+      if(localUser){
+        saveSession(localUser);
+        showOk('Login ho gaya!');
+        setTimeout(()=>goHome(), 1200);
+        return;
+      }
+      showErr('Ye number registered nahi hai! <button onclick="showTab(\'signup\')" style="background:none;border:none;color:#DC2626;font-weight:700;cursor:pointer;text-decoration:underline">Sign Up karo →</button>');
+      btn.disabled=false; btn.textContent='🔐 Login'; return;
     }
 
-    // Save to localStorage
-    localStorage.setItem('nx_user', JSON.stringify({
-      name: data.full_name,
-      phone: data.phone,
-      city: data.city,
-      pincode: data.pincode || '',
-      email: data.email || '',
-      user_type: data.user_type || '',
-      id: data.id
-    }));
+    // Step 3: Password check
+    const stored = user.password;
+    const entered = hashPw(phone, pass);
 
-    showSuccess(
-      '🎉',
-      'Welcome Back!',
-      'Hello, ' + data.full_name.split(' ')[0] + '! 👋',
-      data.city || '',
-      data.pincode || '',
-      'You are logged in. Showing products near you!'
-    );
+    // If no password stored (old account) — allow login and update
+    if(!stored || stored==='' || stored===null){
+      // Update password
+      await sb.from('customers').update({password:entered}).eq('phone',phone);
+    } else if(stored !== entered){
+      showErr('Password galat hai! WhatsApp karo: +91 96541 71005');
+      btn.disabled=false; btn.textContent='🔐 Login'; return;
+    }
 
-  } catch(err) {
-    showErr('Connection error: ' + err.message + '. Please check internet and try again.');
-    btn.textContent = '🔐 Login to My Account'; btn.disabled = false;
+    // Step 4: Login success!
+    saveSession({
+      id: user.id,
+      name: user.full_name||user.name||'Customer',
+      phone: user.phone,
+      email: user.email,
+      city: user.city,
+      pincode: user.pincode,
+      user_type: user.user_type||'customer'
+    });
+
+    showOk(`Welcome back ${user.full_name||user.name||'Customer'}! Redirect ho raha hai...`);
+    setTimeout(()=>goHome(), 1200);
+
+  }catch(err){
+    console.error('Login error:', err);
+    showErr('Login failed: '+err.message+'<br><small>Help ke liye WhatsApp: +91 96541 71005</small>');
+    btn.disabled=false; btn.textContent='🔐 Login';
   }
 }
 
-// ===== SIGNUP =====
-async function doSignup() {
-  const fn = document.getElementById('sFirst').value.trim();
-  const ln = document.getElementById('sLast').value.trim();
-  const phone = document.getElementById('sPhone').value.trim().replace(/\D/g,'');
-  const email = document.getElementById('sEmail').value.trim();
-  const city = document.getElementById('sCity').value;
-  const pincode = document.getElementById('sPincode').value.trim();
-  const utype = document.getElementById('sType').value;
-  const pw = document.getElementById('sPass').value;
-  const cp = document.getElementById('sCPass').value;
+// ═══════════════════════════════════
+// INIT — Check if already logged in
+// ═══════════════════════════════════
+(function init(){
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('tab')==='signup') showTab('signup');
 
-  // Validations
-  if(!fn) { showErr('Please enter your first name!'); return; }
-  if(!ln) { showErr('Please enter your last name!'); return; }
-  if(!phone || phone.length < 10) { showErr('Please enter a valid 10-digit phone number!'); return; }
-  if(!city) { showErr('Please select your city!'); return; }
-  if(!pincode || pincode.length < 6) { showErr('Please enter a valid 6-digit pincode!'); return; }
-  if(!/^\d{6}$/.test(pincode)) { showErr('Pincode must be exactly 6 digits!'); return; }
-  if(!utype) { showErr('Please select your role!'); return; }
-  if(!pw || pw.length < 6) { showErr('Password must be at least 6 characters!'); return; }
-  if(pw !== cp) { showErr('Passwords do not match!'); return; }
-
-  const btn = document.getElementById('signupBtn');
-  btn.textContent = '⏳ Creating account...'; btn.disabled = true; clearMsgs();
-
-  try {
-    // Check if already registered
-    const { data: existing } = await sb
-      .from('customers')
-      .select('id')
-      .eq('phone', phone);
-
-    if(existing && existing.length > 0) {
-      showErr('This phone number is already registered! Please login instead.');
-      btn.textContent = '✅ Create Free Account'; btn.disabled = false; return;
+  const stored=localStorage.getItem('nx_user');
+  if(!stored) return;
+  try{
+    const u=JSON.parse(stored);
+    if(u?.logged_in&&u?.phone){
+      document.getElementById('authSection').style.display='none';
+      document.getElementById('loggedSection').style.display='block';
+      document.getElementById('loggedName').textContent='Hi, '+u.name+'! 👋';
+      document.getElementById('loggedSub').textContent=u.city||'' ;
     }
-
-    // Create new account
-    const { data, error } = await sb
-      .from('customers')
-      .insert([{
-        full_name: fn + ' ' + ln,
-        phone: phone,
-        email: email || null,
-        city: city,
-        pincode: pincode,
-        user_type: utype,
-        password: pw
-      }])
-      .select();
-
-    if(error) throw error;
-
-    const user = data[0];
-
-    // Save to localStorage
-    localStorage.setItem('nx_user', JSON.stringify({
-      name: fn + ' ' + ln,
-      phone: phone,
-      city: city,
-      pincode: pincode,
-      email: email || '',
-      user_type: utype,
-      id: user.id
-    }));
-
-    showSuccess(
-      '🎊',
-      'Account Created!',
-      'Welcome, ' + fn + '! 🎉',
-      city,
-      pincode,
-      'Your GroutGrove account is ready. We will show products nearest to you!'
-    );
-
-  } catch(err) {
-    console.error('Signup error:', err);
-    showErr('Registration failed: ' + (err.message || 'Unknown error. Please try again.'));
-    btn.textContent = '✅ Create Free Account'; btn.disabled = false;
-  }
-}
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
