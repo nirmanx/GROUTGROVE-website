@@ -1,205 +1,175 @@
+Seller · HTML
+Copy
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sell on GroutGrove – Free Seller Registration</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Seller Registration – GroutGrove</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
-:root{--gold:#F59E0B;--dark:#0F172A;--mid:#1E293B;--green:#22C55E;--red:#EF4444;--border:#E2E8F0;--bg:#F8FAFC;--muted:#64748B}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark)}
-.ticker-wrap{background:var(--mid);overflow:hidden;padding:7px 0}
+body{font-family:'DM Sans',sans-serif;background:#F8FAFC;color:#1E293B}
+.ticker-wrap{background:#1E293B;overflow:hidden;padding:7px 0}
 .ticker{display:inline-flex;animation:tick 30s linear infinite;white-space:nowrap}
 .ticker span{color:rgba(255,255,255,.65);font-size:11px;padding:0 28px;font-weight:500}
-.ticker span::after{content:'•';margin-left:28px;color:var(--gold)}
+.ticker span::after{content:'•';margin-left:28px;color:#F59E0B}
 @keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-nav{background:white;border-bottom:1px solid var(--border);padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+nav{background:white;border-bottom:1px solid #E2E8F0;padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .nav-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:62px}
 .logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:#004225;text-decoration:none}
 .logo span{color:#EF4444}
-.nav-links{display:flex;align-items:center;gap:24px}
-.nav-links a{color:var(--muted);font-size:13px;font-weight:500;text-decoration:none}
-.nav-cta{background:var(--dark)!important;color:white!important;padding:8px 18px;border-radius:50px;font-weight:700!important}
-.hamburger{display:none;background:none;border:none;font-size:22px;cursor:pointer}
-@media(max-width:768px){.nav-links{display:none;position:absolute;top:62px;left:0;right:0;background:white;flex-direction:column;padding:18px;border-bottom:1px solid var(--border);gap:14px;z-index:99}.nav-links.open{display:flex}.hamburger{display:block}}
-
-/* HERO */
-.hero{background:linear-gradient(135deg,var(--dark),var(--mid));padding:50px 24px;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;border-radius:50%;border:1px solid rgba(245,158,11,.08)}
-.hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--gold);font-size:11px;font-weight:700;padding:6px 16px;border-radius:50px;margin-bottom:18px;letter-spacing:1.5px;text-transform:uppercase}
-.hero h1{font-family:'Playfair Display',serif;font-size:42px;font-weight:800;color:white;margin-bottom:10px;line-height:1.15}
-.hero h1 span{color:var(--gold)}
-.hero p{color:rgba(255,255,255,.45);font-size:15px;max-width:520px;margin:0 auto 26px;line-height:1.7}
+.nav-links{display:flex;align-items:center;gap:20px}
+.nav-links a{color:#64748B;font-size:13px;font-weight:500;text-decoration:none}
+.nav-cta{background:#1E293B!important;color:white!important;padding:8px 18px;border-radius:50px;font-weight:700!important}
+ 
+.hero{background:linear-gradient(135deg,#0F172A,#1E293B);padding:48px 24px;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#F59E0B;font-size:11px;font-weight:700;padding:6px 16px;border-radius:50px;margin-bottom:18px;letter-spacing:1.5px;text-transform:uppercase}
+.hero h1{font-family:'Playfair Display',serif;font-size:40px;font-weight:800;color:white;margin-bottom:10px;line-height:1.2}
+.hero h1 span{color:#F59E0B}
+.hero p{color:rgba(255,255,255,.45);font-size:14px;max-width:500px;margin:0 auto 24px;line-height:1.7}
 .ben-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .ben{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.8);font-size:12px;font-weight:600;padding:7px 16px;border-radius:50px}
-@media(max-width:500px){.hero h1{font-size:28px}}
-
-/* PAGE */
-.page{max-width:900px;margin:32px auto 90px;padding:0 18px}
-.err-box{background:#FEF2F2;border:1.5px solid var(--red);border-radius:14px;padding:13px 18px;font-size:13px;color:#DC2626;margin-bottom:18px;display:none;line-height:1.6}
-
-/* STEP CARD */
-.step-card{background:white;border-radius:20px;border:1.5px solid var(--border);overflow:hidden;margin-bottom:18px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
-.step-head{background:linear-gradient(135deg,var(--dark),var(--mid));padding:15px 22px;display:flex;align-items:center;gap:14px}
-.step-num{background:var(--gold);color:var(--dark);width:30px;height:30px;border-radius:50%;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.step-head-text h3{font-size:16px;font-weight:700;color:white;margin:0}
-.step-head-text p{font-size:11px;color:rgba(255,255,255,.4);margin:2px 0 0}
+ 
+.page{max-width:900px;margin:28px auto 80px;padding:0 18px}
+.err-box{background:#FEF2F2;border:1.5px solid #EF4444;border-radius:14px;padding:13px 18px;font-size:13px;color:#DC2626;margin-bottom:18px;display:none;line-height:1.6}
+.err-box.show{display:block}
+ 
+.step-card{background:white;border-radius:20px;border:1.5px solid #E2E8F0;overflow:hidden;margin-bottom:18px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.step-head{background:linear-gradient(135deg,#0F172A,#1E293B);padding:15px 22px;display:flex;align-items:center;gap:14px}
+.step-num{background:#F59E0B;color:#0F172A;width:30px;height:30px;border-radius:50%;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-head h3{font-size:16px;font-weight:700;color:white;margin:0}
+.step-head p{font-size:11px;color:rgba(255,255,255,.4);margin:2px 0 0}
 .step-body{padding:22px}
 .ff{margin-bottom:14px}
-.ff label{display:block;font-size:10px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.6px}
-.ff input,.ff select,.ff textarea{width:100%;border:1.5px solid var(--border);border-radius:11px;padding:12px 14px;font-family:'DM Sans';font-size:14px;outline:none;background:#FAFCFB;color:var(--dark);transition:all .2s}
-.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:var(--dark);background:white;box-shadow:0 0 0 3px rgba(30,41,59,.05)}
+.ff label{display:block;font-size:10px;font-weight:700;color:#64748B;margin-bottom:6px;text-transform:uppercase;letter-spacing:.6px}
+.ff input,.ff select,.ff textarea{width:100%;border:1.5px solid #E2E8F0;border-radius:11px;padding:12px 14px;font-family:'DM Sans';font-size:14px;outline:none;background:#FAFCFB;color:#1E293B;transition:all .2s}
+.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:#1E293B;background:white;box-shadow:0 0 0 3px rgba(30,41,59,.05)}
 .ff textarea{height:78px;resize:vertical}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 .fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
 @media(max-width:600px){.fr,.fr3{grid-template-columns:1fr}}
-
+ 
 /* CATEGORY GRID */
-.cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:14px}
-.cat-opt{background:var(--bg);border:2px solid var(--border);border-radius:14px;padding:13px 6px;text-align:center;cursor:pointer;transition:all .22s;user-select:none}
+.cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:6px}
+.cat-opt{background:#F8FAFC;border:2px solid #E2E8F0;border-radius:14px;padding:13px 6px;text-align:center;cursor:pointer;transition:all .22s}
 .cat-opt:hover{border-color:#94A3B8;transform:translateY(-2px)}
-.cat-opt.sel{border-color:var(--gold);background:#FFFBEB;transform:translateY(-2px);box-shadow:0 4px 16px rgba(245,158,11,.18)}
+.cat-opt.sel{border-color:#F59E0B;background:#FFFBEB;transform:translateY(-2px);box-shadow:0 4px 14px rgba(245,158,11,.18)}
 .co-i{font-size:22px;margin-bottom:5px}
-.co-n{font-size:10px;font-weight:700;color:var(--dark)}
-.cat-opt.sel .co-n{color:#92400E}
+.co-n{font-size:10px;font-weight:700;color:#1E293B}
 @media(max-width:500px){.cat-grid{grid-template-columns:repeat(3,1fr)}}
-
-/* ════════════════════════════════════
-   DYNAMIC CATEGORY SECTIONS
-════════════════════════════════════ */
-.dyn-section{display:none;margin:12px 0 6px}
-.dyn-section.show{display:block;animation:fadeSlide .3s ease}
-@keyframes fadeSlide{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-.dyn-inner{background:var(--bg);border-radius:16px;padding:20px;border:2px solid var(--border)}
-.dyn-title{font-size:14px;font-weight:800;color:var(--dark);margin-bottom:16px;display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1.5px solid var(--border)}
-.dyn-title .cat-badge{background:var(--dark);color:var(--gold);font-size:10px;font-weight:700;padding:3px 10px;border-radius:50px;letter-spacing:.5px}
-
-/* Sub sections inside dynamic */
-.sub-sec{margin-bottom:16px}
-.sub-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px;display:flex;align-items:center;gap:8px}
-.sub-label::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* Checkbox grid */
+ 
+/* DYNAMIC SECTIONS */
+.dyn{display:none}
+.dyn.show{display:block;animation:fs .3s ease}
+@keyframes fs{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.dyn-box{background:#F8FAFC;border-radius:14px;padding:18px;border:2px solid #E2E8F0;margin-top:12px}
+.dyn-title{font-size:13px;font-weight:800;color:#1E293B;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.unit-hint{background:#FFFBEB;border:1.5px solid #F59E0B;border-radius:10px;padding:11px 14px;margin-bottom:14px;font-size:12px;color:#92400E;font-weight:600;display:flex;align-items:flex-start;gap:8px}
+.sec-lbl{font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px;display:flex;align-items:center;gap:8px;margin-top:14px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:#E2E8F0}
 .cb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:6px}
-.cb-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:6px}
-.cb-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:6px}
-.cb-item{display:flex;align-items:center;gap:7px;background:white;border:1.5px solid var(--border);border-radius:10px;padding:9px 11px;cursor:pointer;transition:all .18s;font-size:12px;font-weight:600;color:var(--dark)}
-.cb-item:hover{border-color:var(--dark)}
-.cb-item.checked{border-color:var(--dark);background:#F1F5F9}
-.cb-item input[type=checkbox]{width:14px;height:14px;cursor:pointer;accent-color:var(--dark);flex-shrink:0}
-@media(max-width:500px){.cb-grid,.cb-grid-4{grid-template-columns:repeat(2,1fr)}}
-
-/* Price unit display */
-.price-unit-info{background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1.5px solid var(--gold);border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;font-size:13px;color:#92400E;font-weight:600}
-.price-unit-info .pui-ico{font-size:20px;flex-shrink:0}
-
-/* PRODUCT CARDS */
-.prod-card-form{position:relative;background:white;border:1.5px solid var(--border);border-radius:16px;padding:22px 18px 18px;margin-bottom:13px}
-.prod-num-badge{position:absolute;top:-11px;left:16px;background:var(--dark);color:var(--gold);font-size:11px;font-weight:800;padding:4px 14px;border-radius:50px}
-.rm-prod-btn{position:absolute;top:11px;right:13px;background:#FEF2F2;color:#DC2626;border:none;border-radius:8px;padding:5px 11px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
-.rm-prod-btn:hover{background:var(--red);color:white}
-.add-prod-btn{width:100%;background:var(--bg);border:2px dashed #CBD5E1;border-radius:14px;padding:14px;font-family:'DM Sans';font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;margin-top:5px}
-.add-prod-btn:hover{border-color:var(--dark);color:var(--dark);background:white}
-
-/* PHOTO */
-.photo-box{border:2px dashed var(--border);border-radius:12px;padding:18px;text-align:center;cursor:pointer;transition:all .2s}
-.photo-box:hover{border-color:var(--dark)}
-.ph-prev{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.ph-thumb{position:relative;width:70px;height:70px;border-radius:9px;overflow:hidden;border:2px solid var(--border)}
-.ph-thumb img{width:100%;height:100%;object-fit:cover}
-.ph-rm{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.7);color:white;border:none;border-radius:50%;width:17px;height:17px;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-
-/* NOTICE + SUBMIT */
-.notice-box{background:#FFFBEB;border:1.5px solid var(--gold);border-radius:14px;padding:13px 18px;font-size:13px;color:#92400E;margin:18px 0;line-height:1.7;display:flex;gap:10px;align-items:flex-start}
-.notice-box .n-ico{font-size:18px;flex-shrink:0}
-.btn-submit{width:100%;background:linear-gradient(135deg,var(--dark),#0F172A);color:white;border:none;border-radius:50px;padding:17px;font-family:'DM Sans';font-size:17px;font-weight:800;cursor:pointer;transition:all .3s;box-shadow:0 8px 24px rgba(30,41,59,.3);margin-top:5px}
-.btn-submit:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(30,41,59,.4)}
+.cb-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.cb-item{display:flex;align-items:center;gap:7px;background:white;border:1.5px solid #E2E8F0;border-radius:10px;padding:9px 11px;cursor:pointer;transition:all .18s;font-size:12px;font-weight:600;color:#1E293B}
+.cb-item:hover{border-color:#1E293B}
+.cb-item input[type=checkbox]{width:14px;height:14px;cursor:pointer;accent-color:#1E293B;flex-shrink:0}
+@media(max-width:500px){.cb-grid{grid-template-columns:repeat(2,1fr)}}
+ 
+/* PRODUCT FORM */
+.prod-form{position:relative;background:white;border:1.5px solid #E2E8F0;border-radius:16px;padding:22px 18px 18px;margin-bottom:13px}
+.prod-badge{position:absolute;top:-11px;left:16px;background:#1E293B;color:#F59E0B;font-size:11px;font-weight:800;padding:4px 14px;border-radius:50px}
+.rm-btn{position:absolute;top:11px;right:13px;background:#FEF2F2;color:#DC2626;border:none;border-radius:8px;padding:5px 11px;font-size:11px;font-weight:700;cursor:pointer}
+.rm-btn:hover{background:#EF4444;color:white}
+.add-btn{width:100%;background:#F8FAFC;border:2px dashed #CBD5E1;border-radius:14px;padding:14px;font-family:'DM Sans';font-size:13px;font-weight:700;color:#64748B;cursor:pointer;transition:all .2s;margin-top:5px}
+.add-btn:hover{border-color:#1E293B;color:#1E293B;background:white}
+ 
+.notice{background:#FFFBEB;border:1.5px solid #F59E0B;border-radius:14px;padding:13px 18px;font-size:13px;color:#92400E;margin:18px 0;line-height:1.7;display:flex;gap:10px}
+.btn-submit{width:100%;background:linear-gradient(135deg,#0F172A,#1E293B);color:white;border:none;border-radius:50px;padding:17px;font-family:'DM Sans';font-size:17px;font-weight:800;cursor:pointer;transition:all .3s;box-shadow:0 8px 24px rgba(15,23,42,.3)}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(15,23,42,.4)}
 .btn-submit:disabled{background:#94A3B8;cursor:not-allowed;transform:none;box-shadow:none}
-.wa-help-link{display:flex;align-items:center;justify-content:center;gap:8px;background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:50px;padding:12px;color:#166534;font-size:13px;font-weight:700;text-decoration:none;margin-top:11px;transition:all .2s}
-.wa-help-link:hover{background:#22C55E;color:white}
-
-/* SUCCESS */
+.wa-link{display:flex;align-items:center;justify-content:center;gap:8px;background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:50px;padding:12px;color:#166534;font-size:13px;font-weight:700;text-decoration:none;margin-top:11px;transition:all .2s}
+.wa-link:hover{background:#22C55E;color:white}
+ 
 .success-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)}
 .success-overlay.show{display:flex}
-.success-card{background:white;border-radius:28px;padding:48px 36px;text-align:center;max-width:440px;width:100%;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
-@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.success-card{background:white;border-radius:28px;padding:48px 36px;text-align:center;max-width:440px;width:100%;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
 .s-ico{font-size:72px;margin-bottom:16px;display:block}
-.s-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:var(--dark);margin-bottom:8px}
-.s-id{background:#F0FDF4;border:2px solid var(--green);border-radius:14px;padding:12px 24px;font-family:'Playfair Display',serif;font-size:24px;font-weight:800;color:#166534;margin:14px 0;display:inline-block;letter-spacing:2px}
-.s-msg{color:var(--muted);font-size:14px;line-height:1.8;margin-bottom:24px}
-.s-btn{background:var(--dark);color:white;border:none;border-radius:50px;padding:14px 36px;font-family:'DM Sans';font-size:16px;font-weight:700;cursor:pointer}
+.s-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:#1E293B;margin-bottom:8px}
+.s-id{background:#F0FDF4;border:2px solid #22C55E;border-radius:14px;padding:12px 24px;font-family:'Playfair Display',serif;font-size:24px;font-weight:800;color:#166534;margin:14px 0;display:inline-block;letter-spacing:2px}
+.s-msg{color:#64748B;font-size:14px;line-height:1.8;margin-bottom:24px}
+.s-btn{background:#1E293B;color:white;border:none;border-radius:50px;padding:14px 36px;font-family:'DM Sans';font-size:16px;font-weight:700;cursor:pointer}
 .wa-float{position:fixed;bottom:24px;right:24px;z-index:500}
-.wa-btn{width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;text-decoration:none;box-shadow:0 6px 20px rgba(37,211,102,.4);transition:all .2s}
-.wa-btn:hover{transform:scale(1.1)}
+.wa-btn{width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;text-decoration:none;box-shadow:0 6px 20px rgba(37,211,102,.4)}
 </style>
 </head>
 <body>
-
-<!-- SUCCESS -->
-<div class="success-overlay" id="sOverlay">
+ 
+<div class="success-overlay" id="sOv">
   <div class="success-card">
     <span class="s-ico">🎉</span>
     <div class="s-title">Registration Successful!</div>
     <div class="s-id" id="sId">GG-S-XXXXXX</div>
-    <div class="s-msg">Your products are now <strong>LIVE on GroutGrove!</strong><br>Customers can see them right now.<br>Our team will call within 24 hours.</div>
-    <button class="s-btn" onclick="window.location.href='../index.html'">🏠 Go to Home</button>
+    <div class="s-msg">Aapke products ab <strong>LIVE hain GroutGrove par!</strong><br>Customers abhi dekh sakte hain.<br>Hamare team 24 ghante mein call karegi.</div>
+    <button class="s-btn" onclick="window.location.href='../index.html'">🏠 Home par Jao</button>
   </div>
 </div>
-
-<!-- TICKER -->
+ 
 <div class="ticker-wrap"><div class="ticker">
-  <span>Sell on GroutGrove — 100% Free</span><span>Products Go Live Instantly</span>
-  <span>WhatsApp Direct Orders</span><span>Zero Commission — 3 Months</span>
-  <span>Delhi NCR's Biggest Marketplace</span>
-  <span>Sell on GroutGrove — 100% Free</span><span>Products Go Live Instantly</span>
-  <span>WhatsApp Direct Orders</span><span>Zero Commission — 3 Months</span>
-  <span>Delhi NCR's Biggest Marketplace</span>
+  <span>GroutGrove par Sell karo — 100% Free</span>
+  <span>Products Instant Live</span>
+  <span>WhatsApp Direct Orders</span>
+  <span>Zero Commission 3 Months</span>
+  <span>Delhi NCR ka Sabse Bada Marketplace</span>
+  <span>GroutGrove par Sell karo — 100% Free</span>
+  <span>Products Instant Live</span>
+  <span>WhatsApp Direct Orders</span>
+  <span>Zero Commission 3 Months</span>
+  <span>Delhi NCR ka Sabse Bada Marketplace</span>
 </div></div>
-
-<!-- NAV -->
+ 
 <nav>
   <div class="nav-inner">
     <a href="../index.html" class="logo">Grout<span>Grove</span></a>
-    <div class="nav-links" id="navLinks">
-      <a href="../index.html">Home</a><a href="products.html">Products</a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="products.html">Products</a>
       <a href="contact.html">Contact</a>
       <a href="cart.html" class="nav-cta">🛒 Cart</a>
     </div>
-    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
   </div>
 </nav>
-
-<!-- HERO -->
+ 
 <div class="hero">
-  <div class="hero-badge">🏭 Seller Registration Open</div>
+  <div class="hero-badge">🏭 Seller Registration</div>
   <h1>Sell on <span>GroutGrove</span></h1>
-  <p>Reach thousands of builders in Delhi NCR. Free registration — products go live instantly with correct pricing!</p>
+  <p>Delhi NCR ke hazaaron builders tak pahuncho. Free registration — products turant live!</p>
   <div class="ben-row">
     <div class="ben">✅ 100% Free</div>
-    <div class="ben">🚀 Products Live Instantly</div>
+    <div class="ben">🚀 Instant Live</div>
     <div class="ben">📱 WhatsApp Orders</div>
     <div class="ben">💰 Zero Commission 3 Months</div>
   </div>
 </div>
-
+ 
 <div class="page">
   <div class="err-box" id="errBox"></div>
-
-  <!-- ═══ STEP 1: BUSINESS DETAILS ═══ -->
+ 
+  <!-- STEP 1: BUSINESS DETAILS -->
   <div class="step-card">
     <div class="step-head">
       <div class="step-num">1</div>
-      <div class="step-head-text"><h3>Business Details</h3><p>Your shop / company information</p></div>
+      <div><h3>Business Details</h3><p>Aapki shop / company ki jankari</p></div>
     </div>
     <div class="step-body">
       <div class="fr">
-        <div class="ff"><label>Business / Shop Name *</label><input type="text" id="bizName" placeholder="e.g. Sharma Bricks & Tiles"/></div>
+        <div class="ff"><label>Business / Shop Name *</label><input type="text" id="bizName" placeholder="e.g. Sharma Cement Store"/></div>
         <div class="ff"><label>Owner Name *</label><input type="text" id="ownerName" placeholder="e.g. Ramesh Sharma"/></div>
       </div>
       <div class="fr">
-        <div class="ff"><label>WhatsApp Number * (Orders will come here)</label><input type="tel" id="waPhone" placeholder="10-digit WhatsApp number" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')"/></div>
+        <div class="ff"><label>WhatsApp Number * (Orders yahan aayenge)</label><input type="tel" id="waPhone" placeholder="10-digit WhatsApp number" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')"/></div>
         <div class="ff"><label>Alternate Phone (Optional)</label><input type="tel" id="altPhone" placeholder="Optional" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')"/></div>
       </div>
       <div class="fr">
@@ -210,1117 +180,720 @@ nav{background:white;border-bottom:1px solid var(--border);padding:0 24px;positi
             <option>Wholesale Dealer</option>
             <option>Authorized Distributor</option>
             <option>Retailer / Shop Owner</option>
-            <option>Importer</option>
             <option>Contractor / Supplier</option>
           </select>
         </div>
-        <div class="ff"><label>Years in This Business *</label>
+        <div class="ff"><label>Years in Business *</label>
           <select id="bizYears">
-            <option value="">Select Experience</option>
-            <option>Less than 1 year</option><option>1–3 years</option>
-            <option>3–5 years</option><option>5–10 years</option>
-            <option>10–20 years</option><option>20+ years</option>
+            <option value="">Select</option>
+            <option>Less than 1 year</option>
+            <option>1–3 years</option>
+            <option>3–5 years</option>
+            <option>5–10 years</option>
+            <option>10–20 years</option>
+            <option>20+ years</option>
           </select>
         </div>
       </div>
-      <div class="ff"><label>GST Number (Optional — adds customer trust)</label>
-        <input type="text" id="gstNum" placeholder="22XXXXX0000X1Z5 — leave blank if not available"/></div>
+      <div class="ff"><label>GST Number (Optional)</label><input type="text" id="gstNum" placeholder="GSTIN — optional hai"/></div>
     </div>
   </div>
-
-  <!-- ═══ STEP 2: LOCATION ═══ -->
+ 
+  <!-- STEP 2: LOCATION -->
   <div class="step-card">
     <div class="step-head">
       <div class="step-num">2</div>
-      <div class="step-head-text"><h3>Business Location & Delivery Area</h3><p>Customers will find you by pincode</p></div>
+      <div><h3>Location & Delivery Area</h3><p>Customers aapko pincode se dhundhenge</p></div>
     </div>
     <div class="step-body">
-      <div class="ff"><label>Full Address *</label>
-        <input type="text" id="bizAddr" placeholder="Shop no., Street, Area, Landmark..."/></div>
+      <div class="ff"><label>Full Address *</label><input type="text" id="bizAddr" placeholder="Shop no., Street, Area, Landmark..."/></div>
       <div class="fr3">
         <div class="ff"><label>City *</label>
           <select id="bizCity">
-            <option value="">Select City</option>
+            <option value="">City Select Karo</option>
             <option>Delhi</option><option>Noida</option><option>Greater Noida</option>
             <option>Ghaziabad</option><option>Gurugram</option><option>Faridabad</option>
-            <option>Meerut</option><option>Hapur</option><option>Muradnagar</option><option>Other NCR/UP</option>
+            <option>Meerut</option><option>Hapur</option><option>Muradnagar</option>
+            <option>Other NCR/UP</option>
           </select>
         </div>
         <div class="ff"><label>State *</label>
           <select id="bizState">
             <option value="">Select</option>
-            <option>Delhi</option><option>Uttar Pradesh</option><option>Haryana</option><option>Other</option>
+            <option>Delhi</option><option>Uttar Pradesh</option>
+            <option>Haryana</option><option>Other</option>
           </select>
         </div>
-        <div class="ff"><label>Shop Pincode *</label>
-          <input type="text" id="bizPin" placeholder="e.g. 201301" maxlength="6" oninput="this.value=this.value.replace(/\D/g,'')"/></div>
+        <div class="ff"><label>Shop Pincode *</label><input type="text" id="bizPin" placeholder="6-digit" maxlength="6" oninput="this.value=this.value.replace(/\D/g,'')"/></div>
       </div>
-      <div class="ff"><label>Delivery Pincodes / Areas You Cover</label>
-        <input type="text" id="deliveryArea" placeholder="e.g. 201301, 201304, 110001, Noida Sector 1-62, Ghaziabad..."/>
-        <div style="font-size:11px;color:var(--muted);margin-top:5px">📍 Enter all pincodes or areas where you can deliver — customers nearby will see your products</div>
+      <div class="ff"><label>Delivery Pincodes / Areas</label>
+        <input type="text" id="delivArea" placeholder="e.g. 201301, 201304, Noida Sector 1-62, Delhi..."/>
+        <div style="font-size:11px;color:#64748B;margin-top:4px">📍 Sab pincodes daalo jahan deliver kar sakte ho</div>
       </div>
     </div>
   </div>
-
-  <!-- ═══ STEP 3: CATEGORY SELECTION ═══ -->
+ 
+  <!-- STEP 3: CATEGORY -->
   <div class="step-card">
     <div class="step-head">
       <div class="step-num">3</div>
-      <div class="step-head-text"><h3>Select Your Category</h3><p>Click your category → category-specific questions appear automatically</p></div>
+      <div><h3>Category Select Karo</h3><p>Click karo — category ke hisab se fields aayenge</p></div>
     </div>
     <div class="step-body">
-      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">👇 Select what you sell — correct pricing units aur specific options automatically aayenge</p>
+      <p style="font-size:13px;color:#64748B;margin-bottom:14px">👇 Aap kya bechte ho — category choose karo:</p>
       <div class="cat-grid">
-        <div class="cat-opt" onclick="toggleCat(this,'cement')"><div class="co-i">🏗️</div><div class="co-n">Cement</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'steel')"><div class="co-i">⚙️</div><div class="co-n">Steel/TMT</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'bricks')"><div class="co-i">🧱</div><div class="co-n">Bricks</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'tiles')"><div class="co-i">🪟</div><div class="co-n">Tiles</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'sand')"><div class="co-i">🪣</div><div class="co-n">Sand/Grit</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'paint')"><div class="co-i">🎨</div><div class="co-n">Paint</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'pvc_pipes')"><div class="co-i">🔵</div><div class="co-n">PVC Pipes</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'plumbing')"><div class="co-i">🚿</div><div class="co-n">Plumbing</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'sanitaryware')"><div class="co-i">🚽</div><div class="co-n">Sanitary</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'electrical')"><div class="co-i">⚡</div><div class="co-n">Electrical</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'hardware')"><div class="co-i">🔩</div><div class="co-n">Hardware</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'chemicals')"><div class="co-i">🧪</div><div class="co-n">Chemicals</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'bathware')"><div class="co-i">🛁</div><div class="co-n">Bathware</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'gfrp')"><div class="co-i">🔧</div><div class="co-n">GFRP Rebar</div></div>
-        <div class="cat-opt" onclick="toggleCat(this,'other')"><div class="co-i">📦</div><div class="co-n">Other</div></div>
+        <div class="cat-opt" onclick="selCat(this,'cement')"><div class="co-i">🏗️</div><div class="co-n">Cement</div></div>
+        <div class="cat-opt" onclick="selCat(this,'steel')"><div class="co-i">⚙️</div><div class="co-n">Steel/TMT</div></div>
+        <div class="cat-opt" onclick="selCat(this,'bricks')"><div class="co-i">🧱</div><div class="co-n">Bricks</div></div>
+        <div class="cat-opt" onclick="selCat(this,'tiles')"><div class="co-i">🪟</div><div class="co-n">Tiles</div></div>
+        <div class="cat-opt" onclick="selCat(this,'sand')"><div class="co-i">🪣</div><div class="co-n">Sand/Grit</div></div>
+        <div class="cat-opt" onclick="selCat(this,'paint')"><div class="co-i">🎨</div><div class="co-n">Paint</div></div>
+        <div class="cat-opt" onclick="selCat(this,'pvc_pipes')"><div class="co-i">🔵</div><div class="co-n">PVC Pipes</div></div>
+        <div class="cat-opt" onclick="selCat(this,'plumbing')"><div class="co-i">🚿</div><div class="co-n">Plumbing</div></div>
+        <div class="cat-opt" onclick="selCat(this,'sanitaryware')"><div class="co-i">🚽</div><div class="co-n">Sanitary</div></div>
+        <div class="cat-opt" onclick="selCat(this,'electrical')"><div class="co-i">⚡</div><div class="co-n">Electrical</div></div>
+        <div class="cat-opt" onclick="selCat(this,'hardware')"><div class="co-i">🔩</div><div class="co-n">Hardware</div></div>
+        <div class="cat-opt" onclick="selCat(this,'chemicals')"><div class="co-i">🧪</div><div class="co-n">Chemicals</div></div>
+        <div class="cat-opt" onclick="selCat(this,'bathware')"><div class="co-i">🛁</div><div class="co-n">Bathware</div></div>
+        <div class="cat-opt" onclick="selCat(this,'gfrp')"><div class="co-i">🔧</div><div class="co-n">GFRP</div></div>
+        <div class="cat-opt" onclick="selCat(this,'other')"><div class="co-i">📦</div><div class="co-n">Other</div></div>
       </div>
-
-      <!-- ══════════ CEMENT ══════════ -->
-      <div class="dyn-section" id="dyn-cement">
-        <div class="dyn-inner">
-          <div class="dyn-title">🏗️ Cement Details <span class="cat-badge">PRICE: PER BAG (50kg)</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>Cement ki price <strong>per bag (50kg)</strong> hoti hai — jaise ₹380/bag, ₹420/bag</div>
-          <div class="sub-sec">
-            <div class="sub-label">Cement Types Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="cement_type" value="PPC Cement"> PPC Cement</label>
-              <label class="cb-item"><input type="checkbox" name="cement_type" value="OPC 43 Grade"> OPC 43 Grade</label>
-              <label class="cb-item"><input type="checkbox" name="cement_type" value="OPC 53 Grade"> OPC 53 Grade</label>
-              <label class="cb-item"><input type="checkbox" name="cement_type" value="White Cement"> White Cement</label>
-              <label class="cb-item"><input type="checkbox" name="cement_type" value="Rapid Hardening"> Rapid Hardening</label>
-              <label class="cb-item"><input type="checkbox" name="cement_type" value="Sulphate Resistant"> Sulphate Resistant</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Brands You Deal In</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="cement_brand" value="UltraTech"> UltraTech</label>
-              <label class="cb-item"><input type="checkbox" name="cement_brand" value="ACC"> ACC Cement</label>
-              <label class="cb-item"><input type="checkbox" name="cement_brand" value="Ambuja"> Ambuja</label>
-              <label class="cb-item"><input type="checkbox" name="cement_brand" value="Shree Cement"> Shree Cement</label>
-              <label class="cb-item"><input type="checkbox" name="cement_brand" value="JK Lakshmi"> JK Lakshmi</label>
-              <label class="cb-item"><input type="checkbox" name="cement_brand" value="Bangur"> Bangur</label>
-              <label class="cb-item"><input type="checkbox" name="cement_brand" value="Birla Samrat"> Birla Samrat</label>
-              <label class="cb-item"><input type="checkbox" name="cement_brand" value="Other Brand"> Other Brand</label>
-            </div>
-          </div>
-          <div class="fr">
-            <div class="ff"><label>Min Order (in Bags) *</label><input type="text" id="cement_min_order" placeholder="e.g. 10 bags, 50 bags, 100 bags"/></div>
-            <div class="ff"><label>Stock Availability</label>
-              <select id="cement_stock"><option>Ready Stock — Same Day</option><option>1-2 Days Lead Time</option><option>On Order Basis</option></select>
-            </div>
-          </div>
+ 
+      <!-- CEMENT -->
+      <div class="dyn" id="dyn-cement"><div class="dyn-box">
+        <div class="dyn-title">🏗️ Cement Details</div>
+        <div class="unit-hint">💡 Cement ki price <strong>PER BAG (50kg)</strong> mein hoti hai — jaise ₹380/bag</div>
+        <div class="sec-lbl">Types Available</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="ctype" value="PPC"> PPC Cement</label>
+          <label class="cb-item"><input type="checkbox" name="ctype" value="OPC 43"> OPC 43 Grade</label>
+          <label class="cb-item"><input type="checkbox" name="ctype" value="OPC 53"> OPC 53 Grade</label>
+          <label class="cb-item"><input type="checkbox" name="ctype" value="White"> White Cement</label>
+          <label class="cb-item"><input type="checkbox" name="ctype" value="Rapid"> Rapid Hardening</label>
+          <label class="cb-item"><input type="checkbox" name="ctype" value="SRC"> Sulphate Resistant</label>
         </div>
-      </div>
-
-      <!-- ══════════ STEEL / TMT ══════════ -->
-      <div class="dyn-section" id="dyn-steel">
-        <div class="dyn-inner">
-          <div class="dyn-title">⚙️ Steel / TMT Bar Details <span class="cat-badge">PRICE: PER KG or PER TONNE</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>Steel ki price <strong>per kg</strong> hoti hai — jaise ₹65/kg ya ₹65,000/tonne (1 tonne = 1000kg)</div>
-          <div class="sub-sec">
-            <div class="sub-label">Steel Products Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="steel_type" value="TMT Fe-500D"> TMT Fe-500D</label>
-              <label class="cb-item"><input type="checkbox" name="steel_type" value="TMT Fe-550D"> TMT Fe-550D</label>
-              <label class="cb-item"><input type="checkbox" name="steel_type" value="TMT Fe-415"> TMT Fe-415</label>
-              <label class="cb-item"><input type="checkbox" name="steel_type" value="Mild Steel MS Bars"> Mild Steel (MS)</label>
-              <label class="cb-item"><input type="checkbox" name="steel_type" value="Binding Wire"> Binding Wire</label>
-              <label class="cb-item"><input type="checkbox" name="steel_type" value="Steel Sheets Plates"> Steel Sheets/Plates</label>
-              <label class="cb-item"><input type="checkbox" name="steel_type" value="Angle Iron Channels"> Angle Iron/Channels</label>
-              <label class="cb-item"><input type="checkbox" name="steel_type" value="GI Wire Mesh"> GI Wire/Mesh</label>
-              <label class="cb-item"><input type="checkbox" name="steel_type" value="Square Bars"> Square Bars</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Diameters Available (mm)</div>
-            <div class="cb-grid-4">
-              <label class="cb-item"><input type="checkbox" name="steel_dia" value="6mm"> 6 mm</label>
-              <label class="cb-item"><input type="checkbox" name="steel_dia" value="8mm"> 8 mm</label>
-              <label class="cb-item"><input type="checkbox" name="steel_dia" value="10mm"> 10 mm</label>
-              <label class="cb-item"><input type="checkbox" name="steel_dia" value="12mm"> 12 mm</label>
-              <label class="cb-item"><input type="checkbox" name="steel_dia" value="16mm"> 16 mm</label>
-              <label class="cb-item"><input type="checkbox" name="steel_dia" value="20mm"> 20 mm</label>
-              <label class="cb-item"><input type="checkbox" name="steel_dia" value="25mm"> 25 mm</label>
-              <label class="cb-item"><input type="checkbox" name="steel_dia" value="32mm"> 32 mm</label>
-              <label class="cb-item"><input type="checkbox" name="steel_dia" value="All Sizes"> All Sizes</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Brands</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="steel_brand" value="TATA Tiscon"> TATA Tiscon</label>
-              <label class="cb-item"><input type="checkbox" name="steel_brand" value="JSW Neosteel"> JSW Neosteel</label>
-              <label class="cb-item"><input type="checkbox" name="steel_brand" value="SAIL"> SAIL</label>
-              <label class="cb-item"><input type="checkbox" name="steel_brand" value="Jindal Panther"> Jindal Panther</label>
-              <label class="cb-item"><input type="checkbox" name="steel_brand" value="Kamdhenu"> Kamdhenu</label>
-              <label class="cb-item"><input type="checkbox" name="steel_brand" value="Other Brand"> Other Brand</label>
-            </div>
-          </div>
-          <div class="fr">
-            <div class="ff"><label>Min Order Quantity *</label><input type="text" id="steel_min_order" placeholder="e.g. 100 kg, 1 tonne, 500 kg"/></div>
-            <div class="ff"><label>Price Unit You Use</label>
-              <select id="steel_price_unit"><option value="/kg">Per KG (₹/kg)</option><option value="/tonne">Per Tonne (₹/tonne)</option><option value="/piece">Per Piece/Bundle</option></select>
-            </div>
-          </div>
-          <div class="ff"><label>BIS/ISI Certification</label>
-            <select id="steel_bis"><option>Yes — BIS Certified Stock</option><option>Partial — Some brands BIS certified</option><option>No</option></select>
-          </div>
+        <div class="sec-lbl">Brands</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="cbrand" value="UltraTech"> UltraTech</label>
+          <label class="cb-item"><input type="checkbox" name="cbrand" value="ACC"> ACC</label>
+          <label class="cb-item"><input type="checkbox" name="cbrand" value="Ambuja"> Ambuja</label>
+          <label class="cb-item"><input type="checkbox" name="cbrand" value="Shree"> Shree Cement</label>
+          <label class="cb-item"><input type="checkbox" name="cbrand" value="JK Lakshmi"> JK Lakshmi</label>
+          <label class="cb-item"><input type="checkbox" name="cbrand" value="Bangur"> Bangur</label>
         </div>
-      </div>
-
-      <!-- ══════════ BRICKS ══════════ -->
-      <div class="dyn-section" id="dyn-bricks">
-        <div class="dyn-inner">
-          <div class="dyn-title">🧱 Bricks Details <span class="cat-badge">PRICE: PER 1000 PIECES</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>Bricks ki price <strong>per 1000 pieces</strong> ya <strong>per piece</strong> mein hoti hai — jaise ₹8,000 per 1000 pieces = ₹8 per piece</div>
-          <div class="sub-sec">
-            <div class="sub-label">Brick Types Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="brick_type" value="Burnt Clay Red Bricks"> 🔴 Red Bricks (Burnt Clay)</label>
-              <label class="cb-item"><input type="checkbox" name="brick_type" value="Fly Ash Bricks"> ⚪ Fly Ash Bricks</label>
-              <label class="cb-item"><input type="checkbox" name="brick_type" value="AAC Blocks Autoclaved"> 🟦 AAC Blocks</label>
-              <label class="cb-item"><input type="checkbox" name="brick_type" value="Concrete Hollow Blocks"> ◻️ Concrete Hollow Blocks</label>
-              <label class="cb-item"><input type="checkbox" name="brick_type" value="Sand Lime Bricks"> 🟡 Sand Lime Bricks</label>
-              <label class="cb-item"><input type="checkbox" name="brick_type" value="Fire Bricks Refractory"> 🔥 Fire Bricks</label>
-              <label class="cb-item"><input type="checkbox" name="brick_type" value="Engineering Bricks"> 🏗️ Engineering Bricks</label>
-              <label class="cb-item"><input type="checkbox" name="brick_type" value="Paving Bricks Interlocking"> 🛤️ Paving/Interlocking</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Quality Grade</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="brick_grade" value="First Class"> ⭐⭐⭐ First Class (Premium)</label>
-              <label class="cb-item"><input type="checkbox" name="brick_grade" value="Second Class"> ⭐⭐ Second Class (Standard)</label>
-              <label class="cb-item"><input type="checkbox" name="brick_grade" value="Third Class"> ⭐ Third Class (Economy)</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Standard Sizes Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="brick_size" value="190x90x90mm IS Standard"> 190×90×90 mm (IS Standard)</label>
-              <label class="cb-item"><input type="checkbox" name="brick_size" value="230x110x70mm Modular"> 230×110×70 mm (Modular)</label>
-              <label class="cb-item"><input type="checkbox" name="brick_size" value="9x4x3 inch Traditional"> 9×4×3 inch (Traditional)</label>
-              <label class="cb-item"><input type="checkbox" name="brick_size" value="400x200x200mm AAC"> 400×200×200 mm (AAC)</label>
-              <label class="cb-item"><input type="checkbox" name="brick_size" value="600x200x200mm Large AAC"> 600×200×200 mm (Large AAC)</label>
-              <label class="cb-item"><input type="checkbox" name="brick_size" value="Custom Size Available"> Custom Size</label>
-            </div>
-          </div>
-          <div class="fr">
-            <div class="ff"><label>Min Order Quantity *</label><input type="text" id="brick_min_order" placeholder="e.g. 1000 bricks, 500 pieces, 5000 bricks"/></div>
-            <div class="ff"><label>Price Unit You Use</label>
-              <select id="brick_price_unit">
-                <option value="/1000 pieces">Per 1000 Pieces (₹/1000 pieces)</option>
-                <option value="/piece">Per Piece (₹/piece)</option>
-                <option value="/1000 bricks">Per 1000 Bricks</option>
-              </select>
-            </div>
-          </div>
-          <div class="fr">
-            <div class="ff"><label>Supply Source</label>
-              <select id="brick_source"><option>Direct from Bhatta (Manufacturer)</option><option>Wholesale Dealer</option><option>Both Manufacturer + Dealer</option></select>
-            </div>
-            <div class="ff"><label>Bhatta / Kiln Location (If Manufacturer)</label>
-              <input type="text" id="brick_location" placeholder="e.g. Muradnagar, Ghaziabad — NH-58"/></div>
-          </div>
+        <div class="fr" style="margin-top:12px">
+          <div class="ff"><label>Min Order (Bags)</label><input type="text" id="c_min" placeholder="e.g. 10 bags, 50 bags"/></div>
+          <div class="ff"><label>Stock</label><select id="c_stock"><option>Ready Stock — Same Day</option><option>1-2 Days</option><option>On Order</option></select></div>
         </div>
-      </div>
-
-      <!-- ══════════ TILES ══════════ -->
-      <div class="dyn-section" id="dyn-tiles">
-        <div class="dyn-inner">
-          <div class="dyn-title">🪟 Tiles Details <span class="cat-badge">PRICE: PER SQFT or PER BOX</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>Tiles ki price <strong>per sqft</strong> ya <strong>per box</strong> mein hoti hai — jaise ₹45/sqft ya ₹900/box (1 box = ~20 sqft)</div>
-          <div class="sub-sec">
-            <div class="sub-label">Tile Types</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="tile_type" value="Ceramic Tiles"> Ceramic Tiles</label>
-              <label class="cb-item"><input type="checkbox" name="tile_type" value="Vitrified Tiles"> Vitrified Tiles</label>
-              <label class="cb-item"><input type="checkbox" name="tile_type" value="Porcelain Tiles"> Porcelain Tiles</label>
-              <label class="cb-item"><input type="checkbox" name="tile_type" value="Glass Tiles"> Glass Tiles</label>
-              <label class="cb-item"><input type="checkbox" name="tile_type" value="Terracotta Tiles"> Terracotta Tiles</label>
-              <label class="cb-item"><input type="checkbox" name="tile_type" value="Zellige Moroccan Tiles"> Zellige Tiles</label>
-              <label class="cb-item"><input type="checkbox" name="tile_type" value="Cement Tiles"> Cement Tiles</label>
-              <label class="cb-item"><input type="checkbox" name="tile_type" value="Wooden Look Tiles"> Wooden Look</label>
-              <label class="cb-item"><input type="checkbox" name="tile_type" value="Stone Marble Tiles"> Stone/Marble</label>
-              <label class="cb-item"><input type="checkbox" name="tile_type" value="Mosaic Tiles"> Mosaic Tiles</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Usage Area</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="tile_area" value="Floor Tiles"> 🏠 Floor Tiles</label>
-              <label class="cb-item"><input type="checkbox" name="tile_area" value="Wall Tiles"> 🧱 Wall Tiles</label>
-              <label class="cb-item"><input type="checkbox" name="tile_area" value="Bathroom Tiles"> 🚿 Bathroom</label>
-              <label class="cb-item"><input type="checkbox" name="tile_area" value="Kitchen Tiles"> 🍳 Kitchen</label>
-              <label class="cb-item"><input type="checkbox" name="tile_area" value="Outdoor Parking Tiles"> 🚗 Outdoor/Parking</label>
-              <label class="cb-item"><input type="checkbox" name="tile_area" value="Elevation Facade Tiles"> 🏢 Elevation/Facade</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Sizes Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="tile_size" value="300x300mm"> 300×300 mm</label>
-              <label class="cb-item"><input type="checkbox" name="tile_size" value="300x600mm"> 300×600 mm</label>
-              <label class="cb-item"><input type="checkbox" name="tile_size" value="600x600mm"> 600×600 mm</label>
-              <label class="cb-item"><input type="checkbox" name="tile_size" value="800x800mm"> 800×800 mm</label>
-              <label class="cb-item"><input type="checkbox" name="tile_size" value="600x1200mm"> 600×1200 mm</label>
-              <label class="cb-item"><input type="checkbox" name="tile_size" value="800x1600mm"> 800×1600 mm</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Finish Type</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="tile_finish" value="Glossy"> Glossy</label>
-              <label class="cb-item"><input type="checkbox" name="tile_finish" value="Matte Satin"> Matte/Satin</label>
-              <label class="cb-item"><input type="checkbox" name="tile_finish" value="Anti-Skid"> Anti-Skid</label>
-              <label class="cb-item"><input type="checkbox" name="tile_finish" value="Polished"> Polished</label>
-              <label class="cb-item"><input type="checkbox" name="tile_finish" value="Rustic Textured"> Rustic/Textured</label>
-              <label class="cb-item"><input type="checkbox" name="tile_finish" value="High Gloss Mirror"> High Gloss</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Brands</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="tile_brand" value="Kajaria"> Kajaria</label>
-              <label class="cb-item"><input type="checkbox" name="tile_brand" value="Somany"> Somany</label>
-              <label class="cb-item"><input type="checkbox" name="tile_brand" value="Orientbell"> Orientbell</label>
-              <label class="cb-item"><input type="checkbox" name="tile_brand" value="Johnson Tiles"> Johnson</label>
-              <label class="cb-item"><input type="checkbox" name="tile_brand" value="Nitco"> Nitco</label>
-              <label class="cb-item"><input type="checkbox" name="tile_brand" value="Other Brand"> Other Brand</label>
-            </div>
-          </div>
-          <div class="fr">
-            <div class="ff"><label>Min Order *</label><input type="text" id="tile_min_order" placeholder="e.g. 50 sqft, 5 boxes, 100 sqft"/></div>
-            <div class="ff"><label>Price Unit You Use</label>
-              <select id="tile_price_unit">
-                <option value="/sqft">Per SQFT (₹/sqft)</option>
-                <option value="/box">Per Box (₹/box)</option>
-                <option value="/sqm">Per SQM (₹/sqm)</option>
-              </select>
-            </div>
-          </div>
+      </div></div>
+ 
+      <!-- STEEL -->
+      <div class="dyn" id="dyn-steel"><div class="dyn-box">
+        <div class="dyn-title">⚙️ Steel / TMT Details</div>
+        <div class="unit-hint">💡 Steel ki price <strong>PER KG</strong> mein hoti hai — jaise ₹65/kg</div>
+        <div class="sec-lbl">Products</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="stype" value="TMT Fe-500D"> TMT Fe-500D</label>
+          <label class="cb-item"><input type="checkbox" name="stype" value="TMT Fe-550D"> TMT Fe-550D</label>
+          <label class="cb-item"><input type="checkbox" name="stype" value="MS Bars"> Mild Steel</label>
+          <label class="cb-item"><input type="checkbox" name="stype" value="Binding Wire"> Binding Wire</label>
+          <label class="cb-item"><input type="checkbox" name="stype" value="Angle Iron"> Angle Iron</label>
+          <label class="cb-item"><input type="checkbox" name="stype" value="GI Wire"> GI Wire/Mesh</label>
         </div>
-      </div>
-
-      <!-- ══════════ SAND/GRIT ══════════ -->
-      <div class="dyn-section" id="dyn-sand">
-        <div class="dyn-inner">
-          <div class="dyn-title">🪣 Sand / Grit Details <span class="cat-badge">PRICE: PER CFT or PER LOAD</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>Sand ki price <strong>per CFT</strong> ya <strong>per Tractor/Truck Load</strong> mein hoti hai — jaise ₹35/CFT ya ₹4,500/tractor load (1 tractor ≈ 100-120 CFT)</div>
-          <div class="sub-sec">
-            <div class="sub-label">Sand / Grit Types</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="sand_type" value="River Sand Baalu"> 🏖️ River Sand (Baalu)</label>
-              <label class="cb-item"><input type="checkbox" name="sand_type" value="M-Sand Manufactured Sand"> 🏭 M-Sand (Manufactured)</label>
-              <label class="cb-item"><input type="checkbox" name="sand_type" value="Plaster Sand Fine"> 🎨 Plaster Sand (Fine)</label>
-              <label class="cb-item"><input type="checkbox" name="sand_type" value="Coarse Sand"> 🪨 Coarse Sand</label>
-              <label class="cb-item"><input type="checkbox" name="sand_type" value="Stone Grit 6mm"> ⬡ Stone Grit 6mm</label>
-              <label class="cb-item"><input type="checkbox" name="sand_type" value="Stone Grit 12mm"> ⬡ Stone Grit 12mm</label>
-              <label class="cb-item"><input type="checkbox" name="sand_type" value="Stone Grit 20mm"> ⬡ Stone Grit 20mm</label>
-              <label class="cb-item"><input type="checkbox" name="sand_type" value="Bajri Crushed Stone"> 🪨 Bajri/Crushed Stone</label>
-              <label class="cb-item"><input type="checkbox" name="sand_type" value="Filling Sand"> 🏗️ Filling Sand</label>
-            </div>
-          </div>
-          <div class="fr">
-            <div class="ff"><label>Min Order Quantity *</label><input type="text" id="sand_min_order" placeholder="e.g. 1 tractor load, 50 CFT, 1 truck"/></div>
-            <div class="ff"><label>Price Unit You Use</label>
-              <select id="sand_price_unit">
-                <option value="/CFT">Per CFT (₹/CFT)</option>
-                <option value="/Tractor Load">Per Tractor Load (₹/tractor)</option>
-                <option value="/Truck Load">Per Truck Load (₹/truck)</option>
-                <option value="/Cubic Meter">Per Cubic Meter (₹/m³)</option>
-                <option value="/Ton">Per Ton (₹/ton)</option>
-              </select>
-            </div>
-          </div>
-          <div class="ff"><label>Vehicle Type Available for Delivery</label>
-            <select id="sand_vehicle">
-              <option>Tractor (Small — 100-120 CFT)</option>
-              <option>Mini Truck (200-250 CFT)</option>
-              <option>Full Truck (400-500 CFT)</option>
-              <option>All sizes available</option>
-            </select>
-          </div>
-          <div class="ff"><label>Source/Origin of Sand</label>
-            <input type="text" id="sand_source" placeholder="e.g. Yamuna River, Ganga, Local quarry, Rajasthan..."/></div>
+        <div class="sec-lbl">Diameters (mm)</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="sdia" value="8mm"> 8mm</label>
+          <label class="cb-item"><input type="checkbox" name="sdia" value="10mm"> 10mm</label>
+          <label class="cb-item"><input type="checkbox" name="sdia" value="12mm"> 12mm</label>
+          <label class="cb-item"><input type="checkbox" name="sdia" value="16mm"> 16mm</label>
+          <label class="cb-item"><input type="checkbox" name="sdia" value="20mm"> 20mm</label>
+          <label class="cb-item"><input type="checkbox" name="sdia" value="25mm+"> 25mm+</label>
         </div>
-      </div>
-
-      <!-- ══════════ PAINT ══════════ -->
-      <div class="dyn-section" id="dyn-paint">
-        <div class="dyn-inner">
-          <div class="dyn-title">🎨 Paint Details <span class="cat-badge">PRICE: PER LITRE or PER TIN</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>Paint ki price <strong>per litre</strong> hoti hai — jaise ₹220/litre. Pack sizes: 1L, 4L, 10L, 20L tins mein aati hai</div>
-          <div class="sub-sec">
-            <div class="sub-label">Paint Types Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="paint_type" value="Exterior Emulsion"> Exterior Emulsion</label>
-              <label class="cb-item"><input type="checkbox" name="paint_type" value="Interior Emulsion"> Interior Emulsion</label>
-              <label class="cb-item"><input type="checkbox" name="paint_type" value="Distemper Wall Coating"> Distemper</label>
-              <label class="cb-item"><input type="checkbox" name="paint_type" value="Primer Wall Putty"> Primer/Wall Putty</label>
-              <label class="cb-item"><input type="checkbox" name="paint_type" value="Waterproof Paint"> Waterproof Paint</label>
-              <label class="cb-item"><input type="checkbox" name="paint_type" value="Texture Designer Paint"> Texture/Designer Paint</label>
-              <label class="cb-item"><input type="checkbox" name="paint_type" value="Wood Polish Varnish"> Wood Polish/Varnish</label>
-              <label class="cb-item"><input type="checkbox" name="paint_type" value="Enamel Paint"> Enamel Paint</label>
-              <label class="cb-item"><input type="checkbox" name="paint_type" value="Epoxy Floor Paint"> Epoxy/Floor Paint</label>
-              <label class="cb-item"><input type="checkbox" name="paint_type" value="Anti Corrosion Coating"> Anti-Corrosion Coat</label>
-              <label class="cb-item"><input type="checkbox" name="paint_type" value="Roof Heat Resistant Paint"> Roof/Heat Resistant</label>
-              <label class="cb-item"><input type="checkbox" name="paint_type" value="Road Marking Paint"> Road Marking Paint</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Brands You Stock</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="paint_brand" value="Asian Paints"> Asian Paints</label>
-              <label class="cb-item"><input type="checkbox" name="paint_brand" value="Berger Paints"> Berger Paints</label>
-              <label class="cb-item"><input type="checkbox" name="paint_brand" value="Nerolac Kansai"> Nerolac (Kansai)</label>
-              <label class="cb-item"><input type="checkbox" name="paint_brand" value="Indigo Paints"> Indigo Paints</label>
-              <label class="cb-item"><input type="checkbox" name="paint_brand" value="Dulux AkzoNobel"> Dulux (AkzoNobel)</label>
-              <label class="cb-item"><input type="checkbox" name="paint_brand" value="Shalimar Paints"> Shalimar Paints</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Pack Sizes You Sell</div>
-            <div class="cb-grid-4">
-              <label class="cb-item"><input type="checkbox" name="paint_pack" value="1 Litre"> 1 Litre</label>
-              <label class="cb-item"><input type="checkbox" name="paint_pack" value="4 Litre"> 4 Litre</label>
-              <label class="cb-item"><input type="checkbox" name="paint_pack" value="10 Litre"> 10 Litre</label>
-              <label class="cb-item"><input type="checkbox" name="paint_pack" value="20 Litre"> 20 Litre</label>
-            </div>
-          </div>
-          <div class="fr">
-            <div class="ff"><label>Min Order *</label><input type="text" id="paint_min_order" placeholder="e.g. 5 litres, 1 tin (4L), 20 litres"/></div>
-            <div class="ff"><label>Price Unit You Use</label>
-              <select id="paint_price_unit">
-                <option value="/litre">Per Litre (₹/litre)</option>
-                <option value="/tin 4L">Per Tin 4L (₹/tin)</option>
-                <option value="/tin 10L">Per Tin 10L (₹/tin)</option>
-                <option value="/tin 20L">Per Tin 20L (₹/tin)</option>
-              </select>
-            </div>
-          </div>
+        <div class="sec-lbl">Brands</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="sbrand" value="TATA"> TATA Tiscon</label>
+          <label class="cb-item"><input type="checkbox" name="sbrand" value="JSW"> JSW Neosteel</label>
+          <label class="cb-item"><input type="checkbox" name="sbrand" value="SAIL"> SAIL</label>
+          <label class="cb-item"><input type="checkbox" name="sbrand" value="Jindal"> Jindal Panther</label>
+          <label class="cb-item"><input type="checkbox" name="sbrand" value="Kamdhenu"> Kamdhenu</label>
+          <label class="cb-item"><input type="checkbox" name="sbrand" value="Other"> Other Brand</label>
         </div>
-      </div>
-
-      <!-- ══════════ PVC PIPES ══════════ -->
-      <div class="dyn-section" id="dyn-pvc_pipes">
-        <div class="dyn-inner">
-          <div class="dyn-title">🔵 PVC / CPVC Pipe Details <span class="cat-badge">PRICE: PER METRE or PER PIECE</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>Pipes ki price <strong>per metre</strong> ya <strong>per piece</strong> hoti hai — jaise ₹85/metre ya ₹250/piece (1 standard pipe = 3 metres)</div>
-          <div class="sub-sec">
-            <div class="sub-label">Pipe Types Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="pipe_type" value="UPVC Pressure Pipes"> UPVC Pressure</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_type" value="CPVC Hot Water Pipes"> CPVC (Hot Water)</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_type" value="SWR Drainage Pipes"> SWR Drainage</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_type" value="Column Casing Pipes"> Column/Casing</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_type" value="Agriculture Irrigation"> Agriculture/Irrigation</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_type" value="Electrical Conduit PVC"> Electrical Conduit</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_type" value="PPR Pipes Polypropylene"> PPR Pipes</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_type" value="HDPE Pipes"> HDPE Pipes</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_type" value="GI Galvanized Iron Pipes"> GI Pipes</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_type" value="Fittings Joints Bends"> Fittings/Joints</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Diameter Range Available</div>
-            <div class="cb-grid-4">
-              <label class="cb-item"><input type="checkbox" name="pipe_dia" value="0.5 inch 15mm"> ½ inch</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_dia" value="0.75 inch 20mm"> ¾ inch</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_dia" value="1 inch 25mm"> 1 inch</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_dia" value="1.5 inch 40mm"> 1.5 inch</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_dia" value="2 inch 50mm"> 2 inch</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_dia" value="3 inch 75mm"> 3 inch</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_dia" value="4 inch 100mm"> 4 inch</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_dia" value="6 inch plus"> 6 inch+</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Brands</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="pipe_brand" value="Ajay Pipes"> Ajay Pipes</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_brand" value="Supreme Industries"> Supreme</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_brand" value="Finolex Pipes"> Finolex</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_brand" value="Astral Pipes"> Astral</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_brand" value="Prince Pipes"> Prince</label>
-              <label class="cb-item"><input type="checkbox" name="pipe_brand" value="Other Brand"> Other Brand</label>
-            </div>
-          </div>
-          <div class="fr">
-            <div class="ff"><label>Min Order *</label><input type="text" id="pipe_min_order" placeholder="e.g. 10 pieces, 30 metres, 1 bundle"/></div>
-            <div class="ff"><label>Price Unit You Use</label>
-              <select id="pipe_price_unit">
-                <option value="/metre">Per Metre (₹/metre)</option>
-                <option value="/piece">Per Piece (₹/piece — 3m pipe)</option>
-                <option value="/bundle">Per Bundle (₹/bundle)</option>
-                <option value="/kg">Per KG (₹/kg)</option>
-              </select>
-            </div>
-          </div>
+        <div class="fr" style="margin-top:12px">
+          <div class="ff"><label>Min Order</label><input type="text" id="s_min" placeholder="e.g. 100 kg, 1 tonne"/></div>
+          <div class="ff"><label>Price Unit</label><select id="s_unit"><option>/kg</option><option>/tonne</option></select></div>
         </div>
-      </div>
-
-      <!-- ══════════ PLUMBING ══════════ -->
-      <div class="dyn-section" id="dyn-plumbing">
-        <div class="dyn-inner">
-          <div class="dyn-title">🚿 Plumbing Details <span class="cat-badge">PRICE: PER PIECE or PER SET</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>Plumbing items ki price <strong>per piece</strong> ya <strong>per set</strong> mein hoti hai — jaise ₹450/piece (ball valve) ya ₹2,500/set</div>
-          <div class="sub-sec">
-            <div class="sub-label">Plumbing Products Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="plumb_type" value="CP Chrome Fittings"> CP/Chrome Fittings</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_type" value="Ball Valves"> Ball Valves</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_type" value="Gate Valves"> Gate Valves</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_type" value="Taps Faucets"> Taps & Faucets</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_type" value="Water Tanks Plastic"> Water Tanks</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_type" value="Water Pumps Motor"> Water Pumps</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_type" value="Shower Heads Sets"> Shower Heads</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_type" value="Floor Traps Drains"> Floor Traps/Drains</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_type" value="Check NRV Valves"> Check/NRV Valves</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_type" value="Water Meters"> Water Meters</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_type" value="PPR CPVC Fittings"> PPR/CPVC Fittings</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_type" value="GI Pipe Fittings"> GI Pipe Fittings</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Brands</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="plumb_brand" value="Jaquar"> Jaquar</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_brand" value="Grohe"> Grohe</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_brand" value="Cera"> Cera</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_brand" value="Sintex Tanks"> Sintex (Tanks)</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_brand" value="Zoloto Valves"> Zoloto</label>
-              <label class="cb-item"><input type="checkbox" name="plumb_brand" value="Other Brand"> Other Brand</label>
-            </div>
-          </div>
-          <div class="fr">
-            <div class="ff"><label>Min Order *</label><input type="text" id="plumb_min_order" placeholder="e.g. 1 piece, 5 pieces, 1 set"/></div>
-            <div class="ff"><label>Price Unit</label>
-              <select id="plumb_price_unit">
-                <option value="/piece">Per Piece (₹/piece)</option>
-                <option value="/set">Per Set (₹/set)</option>
-                <option value="/unit">Per Unit</option>
-              </select>
-            </div>
-          </div>
+      </div></div>
+ 
+      <!-- BRICKS -->
+      <div class="dyn" id="dyn-bricks"><div class="dyn-box">
+        <div class="dyn-title">🧱 Bricks Details</div>
+        <div class="unit-hint">💡 Bricks ki price <strong>PER 1000 PIECES</strong> mein hoti hai — jaise ₹8,000 per 1000 bricks (= ₹8 per piece)</div>
+        <div class="sec-lbl">Brick Types</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="btype" value="Red Bricks"> 🔴 Red Bricks</label>
+          <label class="cb-item"><input type="checkbox" name="btype" value="Fly Ash"> ⚪ Fly Ash Bricks</label>
+          <label class="cb-item"><input type="checkbox" name="btype" value="AAC Blocks"> 🟦 AAC Blocks</label>
+          <label class="cb-item"><input type="checkbox" name="btype" value="Hollow Blocks"> ◻️ Hollow Blocks</label>
+          <label class="cb-item"><input type="checkbox" name="btype" value="Fire Bricks"> 🔥 Fire Bricks</label>
+          <label class="cb-item"><input type="checkbox" name="btype" value="Paving"> 🛤️ Paving Bricks</label>
         </div>
-      </div>
-
-      <!-- ══════════ SANITARYWARE ══════════ -->
-      <div class="dyn-section" id="dyn-sanitaryware">
-        <div class="dyn-inner">
-          <div class="dyn-title">🚽 Sanitaryware Details <span class="cat-badge">PRICE: PER PIECE</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>Sanitaryware ki price <strong>per piece</strong> mein hoti hai — jaise ₹4,500/piece (WC toilet) ya ₹2,200/piece (wash basin)</div>
-          <div class="sub-sec">
-            <div class="sub-label">Sanitaryware Products Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="san_type" value="Western Toilets WC"> Western Toilets (WC)</label>
-              <label class="cb-item"><input type="checkbox" name="san_type" value="Indian Squat Toilets"> Indian Toilets (Squat)</label>
-              <label class="cb-item"><input type="checkbox" name="san_type" value="Wash Basins Sinks"> Wash Basins</label>
-              <label class="cb-item"><input type="checkbox" name="san_type" value="Urinals"> Urinals</label>
-              <label class="cb-item"><input type="checkbox" name="san_type" value="Cisterns Flush Tanks"> Cisterns/Flush Tanks</label>
-              <label class="cb-item"><input type="checkbox" name="san_type" value="Health Faucets"> Health Faucets</label>
-              <label class="cb-item"><input type="checkbox" name="san_type" value="Shower Panels Cubicles"> Shower Panels</label>
-              <label class="cb-item"><input type="checkbox" name="san_type" value="Bathroom Accessories Set"> Bathroom Accessories</label>
-              <label class="cb-item"><input type="checkbox" name="san_type" value="Bathtubs"> Bathtubs</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Brands</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="san_brand" value="Hindware"> Hindware</label>
-              <label class="cb-item"><input type="checkbox" name="san_brand" value="Parryware"> Parryware</label>
-              <label class="cb-item"><input type="checkbox" name="san_brand" value="Cera"> Cera</label>
-              <label class="cb-item"><input type="checkbox" name="san_brand" value="Jaquar"> Jaquar</label>
-              <label class="cb-item"><input type="checkbox" name="san_brand" value="Kohler"> Kohler</label>
-              <label class="cb-item"><input type="checkbox" name="san_brand" value="Kerovit Kajaria"> Kerovit (Kajaria)</label>
-              <label class="cb-item"><input type="checkbox" name="san_brand" value="Roca"> Roca</label>
-              <label class="cb-item"><input type="checkbox" name="san_brand" value="Other Brand"> Other Brand</label>
-            </div>
-          </div>
+        <div class="sec-lbl">Grade</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="bgrade" value="First Class"> ⭐⭐⭐ First Class</label>
+          <label class="cb-item"><input type="checkbox" name="bgrade" value="Second Class"> ⭐⭐ Second Class</label>
+          <label class="cb-item"><input type="checkbox" name="bgrade" value="Third Class"> ⭐ Third Class</label>
         </div>
-      </div>
-
-      <!-- ══════════ ELECTRICAL ══════════ -->
-      <div class="dyn-section" id="dyn-electrical">
-        <div class="dyn-inner">
-          <div class="dyn-title">⚡ Electrical Details <span class="cat-badge">PRICE: PER METRE (Wire) / PER PIECE (Switches)</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>Electrical items alag alag unit mein aate hain — Wire: <strong>per metre</strong>, Switches: <strong>per piece</strong>, MCB: <strong>per piece</strong>, Cable reel: <strong>per roll</strong></div>
-          <div class="sub-sec">
-            <div class="sub-label">Electrical Products Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="elec_type" value="Electrical Wires Cables"> Wires & Cables</label>
-              <label class="cb-item"><input type="checkbox" name="elec_type" value="Modular Switches Sockets"> Switches & Sockets</label>
-              <label class="cb-item"><input type="checkbox" name="elec_type" value="MCB RCCB ELCB"> MCB/RCCB/ELCB</label>
-              <label class="cb-item"><input type="checkbox" name="elec_type" value="Distribution Boards DB"> DB Boxes</label>
-              <label class="cb-item"><input type="checkbox" name="elec_type" value="Conduit Pipes PVC Fittings"> Conduit Pipes</label>
-              <label class="cb-item"><input type="checkbox" name="elec_type" value="LED Lights Bulbs Panels"> LED Lights/Bulbs</label>
-              <label class="cb-item"><input type="checkbox" name="elec_type" value="Ceiling Exhaust Fans"> Ceiling/Exhaust Fans</label>
-              <label class="cb-item"><input type="checkbox" name="elec_type" value="Earthing Material GI Rods"> Earthing Material</label>
-              <label class="cb-item"><input type="checkbox" name="elec_type" value="Inverter UPS Battery"> Inverter/UPS/Battery</label>
-              <label class="cb-item"><input type="checkbox" name="elec_type" value="Solar Panels Equipment"> Solar Equipment</label>
-              <label class="cb-item"><input type="checkbox" name="elec_type" value="Cable Trays Trunking"> Cable Trays</label>
-              <label class="cb-item"><input type="checkbox" name="elec_type" value="Meters Energy Sensors"> Meters & Sensors</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Brands</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="elec_brand" value="Havells"> Havells</label>
-              <label class="cb-item"><input type="checkbox" name="elec_brand" value="Polycab"> Polycab</label>
-              <label class="cb-item"><input type="checkbox" name="elec_brand" value="Finolex Cables"> Finolex</label>
-              <label class="cb-item"><input type="checkbox" name="elec_brand" value="Anchor Panasonic"> Anchor</label>
-              <label class="cb-item"><input type="checkbox" name="elec_brand" value="Legrand"> Legrand</label>
-              <label class="cb-item"><input type="checkbox" name="elec_brand" value="Schneider Electric"> Schneider</label>
-              <label class="cb-item"><input type="checkbox" name="elec_brand" value="ABB"> ABB</label>
-              <label class="cb-item"><input type="checkbox" name="elec_brand" value="Syska LED"> Syska LED</label>
-              <label class="cb-item"><input type="checkbox" name="elec_brand" value="Other Brand"> Other Brand</label>
-            </div>
-          </div>
+        <div class="fr" style="margin-top:12px">
+          <div class="ff"><label>Min Order</label><input type="text" id="b_min" placeholder="e.g. 1000 bricks, 5000 pieces"/></div>
+          <div class="ff"><label>Price Unit</label><select id="b_unit"><option>/1000 pieces</option><option>/piece</option></select></div>
         </div>
-      </div>
-
-      <!-- ══════════ CHEMICALS ══════════ -->
-      <div class="dyn-section" id="dyn-chemicals">
-        <div class="dyn-inner">
-          <div class="dyn-title">🧪 Construction Chemicals <span class="cat-badge">PRICE: PER KG / PER LITRE / PER BAG</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>Chemicals alag units mein aate hain — Waterproofing: <strong>per litre/kg</strong>, Tile Adhesive: <strong>per bag (20kg)</strong>, Grout: <strong>per kg</strong></div>
-          <div class="sub-sec">
-            <div class="sub-label">Chemical Products Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="chem_type" value="Waterproofing Compounds Coating"> Waterproofing</label>
-              <label class="cb-item"><input type="checkbox" name="chem_type" value="Tile Adhesive 20kg bag"> Tile Adhesive (bag)</label>
-              <label class="cb-item"><input type="checkbox" name="chem_type" value="Tile Grout Joint Filler"> Tile Grout/Filler</label>
-              <label class="cb-item"><input type="checkbox" name="chem_type" value="Concrete Admixtures Plasticizer"> Concrete Admixtures</label>
-              <label class="cb-item"><input type="checkbox" name="chem_type" value="Epoxy Grout Adhesive"> Epoxy Grout/Adhesive</label>
-              <label class="cb-item"><input type="checkbox" name="chem_type" value="Bonding Agent PVA"> Bonding Agent</label>
-              <label class="cb-item"><input type="checkbox" name="chem_type" value="Floor Hardener Compound"> Floor Hardener</label>
-              <label class="cb-item"><input type="checkbox" name="chem_type" value="Anti Corrosion Rust Coating"> Anti-Corrosion Coat</label>
-              <label class="cb-item"><input type="checkbox" name="chem_type" value="Repair Mortar Compound"> Repair Mortar</label>
-              <label class="cb-item"><input type="checkbox" name="chem_type" value="White Cement Putty Wall Putty"> Wall Putty</label>
-              <label class="cb-item"><input type="checkbox" name="chem_type" value="Curing Compound Membrane"> Curing Compound</label>
-              <label class="cb-item"><input type="checkbox" name="chem_type" value="Silicone Sealant Neutral"> Silicone Sealant</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Brands</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="chem_brand" value="Pidilite DrFixit"> Pidilite (Dr. Fixit)</label>
-              <label class="cb-item"><input type="checkbox" name="chem_brand" value="Fosroc"> Fosroc</label>
-              <label class="cb-item"><input type="checkbox" name="chem_brand" value="BASF Construction"> BASF</label>
-              <label class="cb-item"><input type="checkbox" name="chem_brand" value="Sika India"> Sika</label>
-              <label class="cb-item"><input type="checkbox" name="chem_brand" value="Asian Paints SmartCare"> Asian SmartCare</label>
-              <label class="cb-item"><input type="checkbox" name="chem_brand" value="STP Limited"> STP Ltd</label>
-            </div>
-          </div>
-          <div class="fr">
-            <div class="ff"><label>Min Order *</label><input type="text" id="chem_min_order" placeholder="e.g. 5 kg, 10 litres, 1 bag (20kg)"/></div>
-            <div class="ff"><label>Price Unit</label>
-              <select id="chem_price_unit">
-                <option value="/kg">Per KG (₹/kg)</option>
-                <option value="/litre">Per Litre (₹/litre)</option>
-                <option value="/bag">Per Bag 20kg (₹/bag)</option>
-                <option value="/piece">Per Piece (₹/piece)</option>
-              </select>
-            </div>
-          </div>
+        <div class="ff" style="margin-top:12px"><label>Bhatta Location (If Manufacturer)</label><input type="text" id="b_loc" placeholder="e.g. Muradnagar, Ghaziabad NH-58"/></div>
+      </div></div>
+ 
+      <!-- TILES -->
+      <div class="dyn" id="dyn-tiles"><div class="dyn-box">
+        <div class="dyn-title">🪟 Tiles Details</div>
+        <div class="unit-hint">💡 Tiles ki price <strong>PER SQFT</strong> ya <strong>PER BOX</strong> mein hoti hai — jaise ₹45/sqft</div>
+        <div class="sec-lbl">Tile Types</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="ttype" value="Ceramic"> Ceramic</label>
+          <label class="cb-item"><input type="checkbox" name="ttype" value="Vitrified"> Vitrified</label>
+          <label class="cb-item"><input type="checkbox" name="ttype" value="Porcelain"> Porcelain</label>
+          <label class="cb-item"><input type="checkbox" name="ttype" value="Stone"> Stone/Marble</label>
+          <label class="cb-item"><input type="checkbox" name="ttype" value="Wooden"> Wooden Look</label>
+          <label class="cb-item"><input type="checkbox" name="ttype" value="Mosaic"> Mosaic</label>
         </div>
-      </div>
-
-      <!-- ══════════ HARDWARE ══════════ -->
-      <div class="dyn-section" id="dyn-hardware">
-        <div class="dyn-inner">
-          <div class="dyn-title">🔩 Hardware Details <span class="cat-badge">PRICE: PER PIECE / PER KG / PER BUNDLE</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>Hardware items ke alag units hote hain — Nails/Wire: <strong>per kg</strong>, Bolts/Screws: <strong>per piece/bundle</strong>, Door fittings: <strong>per set</strong></div>
-          <div class="sub-sec">
-            <div class="sub-label">Hardware Products Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="hw_type" value="Nuts Bolts Screws Fasteners"> Nuts, Bolts & Screws</label>
-              <label class="cb-item"><input type="checkbox" name="hw_type" value="Door Fittings Locks Handles"> Door Fittings & Locks</label>
-              <label class="cb-item"><input type="checkbox" name="hw_type" value="Window Fittings Grills Safety"> Window Fittings/Grills</label>
-              <label class="cb-item"><input type="checkbox" name="hw_type" value="Wire Mesh Jali GI Welded"> Wire Mesh/Jali</label>
-              <label class="cb-item"><input type="checkbox" name="hw_type" value="Safety Nets Helmets PPE"> Safety Equipment</label>
-              <label class="cb-item"><input type="checkbox" name="hw_type" value="Hand Tools Hammer Drill Saw"> Hand Tools</label>
-              <label class="cb-item"><input type="checkbox" name="hw_type" value="Power Tools Electric"> Power Tools</label>
-              <label class="cb-item"><input type="checkbox" name="hw_type" value="Nails Wire Cut GI Roofing"> Nails & Wire</label>
-              <label class="cb-item"><input type="checkbox" name="hw_type" value="Hinges Brackets Tower Bolts"> Hinges & Brackets</label>
-              <label class="cb-item"><input type="checkbox" name="hw_type" value="Scaffolding Pipes Clamps"> Scaffolding</label>
-              <label class="cb-item"><input type="checkbox" name="hw_type" value="GI Sheets Roofing Corrugated"> GI Sheets/Roofing</label>
-              <label class="cb-item"><input type="checkbox" name="hw_type" value="Adhesives Sealants Putty"> Adhesives (Fevicol)</label>
-            </div>
-          </div>
+        <div class="sec-lbl">Usage Area</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="tarea" value="Floor"> Floor Tiles</label>
+          <label class="cb-item"><input type="checkbox" name="tarea" value="Wall"> Wall Tiles</label>
+          <label class="cb-item"><input type="checkbox" name="tarea" value="Bathroom"> Bathroom</label>
+          <label class="cb-item"><input type="checkbox" name="tarea" value="Kitchen"> Kitchen</label>
+          <label class="cb-item"><input type="checkbox" name="tarea" value="Outdoor"> Outdoor</label>
+          <label class="cb-item"><input type="checkbox" name="tarea" value="Elevation"> Elevation</label>
         </div>
-      </div>
-
-      <!-- ══════════ BATHWARE ══════════ -->
-      <div class="dyn-section" id="dyn-bathware">
-        <div class="dyn-inner">
-          <div class="dyn-title">🛁 Bathware Details <span class="cat-badge">PRICE: PER PIECE or PER SET</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>Bathware ki price <strong>per piece</strong> ya <strong>per set</strong> mein hoti hai — jaise ₹18,000/piece (bathtub) ya ₹35,000/set (shower enclosure)</div>
-          <div class="sub-sec">
-            <div class="sub-label">Bathware Products Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="bath_type" value="Bathtubs Acrylic Steel"> Bathtubs</label>
-              <label class="cb-item"><input type="checkbox" name="bath_type" value="Shower Enclosures Cubicles"> Shower Enclosures</label>
-              <label class="cb-item"><input type="checkbox" name="bath_type" value="Jacuzzi Whirlpool Bath"> Jacuzzi/Whirlpool</label>
-              <label class="cb-item"><input type="checkbox" name="bath_type" value="Steam Showers"> Steam Showers</label>
-              <label class="cb-item"><input type="checkbox" name="bath_type" value="Bathroom Mirrors LED"> Bathroom Mirrors</label>
-              <label class="cb-item"><input type="checkbox" name="bath_type" value="Vanity Units Cabinet Basin"> Vanity Units</label>
-              <label class="cb-item"><input type="checkbox" name="bath_type" value="Shower Columns Multifunction"> Shower Columns</label>
-              <label class="cb-item"><input type="checkbox" name="bath_type" value="Bathroom Wall Cabinets"> Bathroom Cabinets</label>
-            </div>
-          </div>
-          <div class="ff"><label>Brands You Deal In</label>
-            <input type="text" id="bath_brands" placeholder="e.g. Jaquar, Kohler, TOTO, Hindware, Roca..."/></div>
+        <div class="sec-lbl">Brands</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="tbrand" value="Kajaria"> Kajaria</label>
+          <label class="cb-item"><input type="checkbox" name="tbrand" value="Somany"> Somany</label>
+          <label class="cb-item"><input type="checkbox" name="tbrand" value="Orientbell"> Orientbell</label>
+          <label class="cb-item"><input type="checkbox" name="tbrand" value="Johnson"> Johnson</label>
+          <label class="cb-item"><input type="checkbox" name="tbrand" value="Nitco"> Nitco</label>
+          <label class="cb-item"><input type="checkbox" name="tbrand" value="Other"> Other</label>
         </div>
-      </div>
-
-      <!-- ══════════ GFRP ══════════ -->
-      <div class="dyn-section" id="dyn-gfrp">
-        <div class="dyn-inner">
-          <div class="dyn-title">🔧 GFRP Rebar Details <span class="cat-badge">PRICE: PER METRE or PER KG</span></div>
-          <div class="price-unit-info"><span class="pui-ico">💡</span>GFRP Rebars ki price <strong>per metre</strong> ya <strong>per kg</strong> mein hoti hai — jaise ₹120/metre ya ₹280/kg. Weight: 6mm = ~0.2kg/m, 12mm = ~0.8kg/m</div>
-          <div class="sub-sec">
-            <div class="sub-label">GFRP Products Available</div>
-            <div class="cb-grid">
-              <label class="cb-item"><input type="checkbox" name="gfrp_type" value="GFRP Rebars Round Deformed"> GFRP Rebars</label>
-              <label class="cb-item"><input type="checkbox" name="gfrp_type" value="GFRP Flat Bars Strips"> GFRP Flat Bars</label>
-              <label class="cb-item"><input type="checkbox" name="gfrp_type" value="GFRP Mesh Grid Reinforcement"> GFRP Mesh/Grid</label>
-              <label class="cb-item"><input type="checkbox" name="gfrp_type" value="Basalt Fiber Rebar"> Basalt Fiber Rebar</label>
-              <label class="cb-item"><input type="checkbox" name="gfrp_type" value="Carbon Fiber Rebar"> Carbon Fiber Rebar</label>
-            </div>
-          </div>
-          <div class="sub-sec">
-            <div class="sub-label">Diameters Available (mm)</div>
-            <div class="cb-grid-4">
-              <label class="cb-item"><input type="checkbox" name="gfrp_dia" value="6mm GFRP"> 6 mm</label>
-              <label class="cb-item"><input type="checkbox" name="gfrp_dia" value="8mm GFRP"> 8 mm</label>
-              <label class="cb-item"><input type="checkbox" name="gfrp_dia" value="10mm GFRP"> 10 mm</label>
-              <label class="cb-item"><input type="checkbox" name="gfrp_dia" value="12mm GFRP"> 12 mm</label>
-              <label class="cb-item"><input type="checkbox" name="gfrp_dia" value="16mm GFRP"> 16 mm</label>
-              <label class="cb-item"><input type="checkbox" name="gfrp_dia" value="20mm GFRP"> 20 mm</label>
-            </div>
-          </div>
-          <div class="fr">
-            <div class="ff"><label>Min Order *</label><input type="text" id="gfrp_min_order" placeholder="e.g. 100 metres, 50 kg, 1 coil"/></div>
-            <div class="ff"><label>Price Unit</label>
-              <select id="gfrp_price_unit">
-                <option value="/metre">Per Metre (₹/metre)</option>
-                <option value="/kg">Per KG (₹/kg)</option>
-                <option value="/coil">Per Coil</option>
-              </select>
-            </div>
-          </div>
-          <div class="ff"><label>BIS IS:18256:2023 Certification</label>
-            <select id="gfrp_bis"><option>Yes — BIS Certified</option><option>Not yet certified</option></select>
-          </div>
+        <div class="fr" style="margin-top:12px">
+          <div class="ff"><label>Min Order</label><input type="text" id="t_min" placeholder="e.g. 50 sqft, 5 boxes"/></div>
+          <div class="ff"><label>Price Unit</label><select id="t_unit"><option>/sqft</option><option>/box</option><option>/sqm</option></select></div>
         </div>
-      </div>
-
-      <!-- ══════════ OTHER ══════════ -->
-      <div class="dyn-section" id="dyn-other">
-        <div class="dyn-inner">
-          <div class="dyn-title">📦 Other Products <span class="cat-badge">DESCRIBE YOUR PRODUCTS</span></div>
-          <div class="ff"><label>Describe Your Products in Detail *</label>
-            <textarea id="other_desc" placeholder="Product name, type, specifications, brands, pricing unit (per piece/kg/metre/etc.)..."></textarea>
-          </div>
-          <div class="fr">
-            <div class="ff"><label>Price Unit You Use</label>
-              <select id="other_price_unit">
-                <option value="/piece">Per Piece</option><option value="/kg">Per KG</option>
-                <option value="/metre">Per Metre</option><option value="/bag">Per Bag</option>
-                <option value="/sqft">Per SQFT</option><option value="/litre">Per Litre</option>
-              </select>
-            </div>
-            <div class="ff"><label>Min Order</label><input type="text" id="other_min_order" placeholder="e.g. 1 piece, 10 kg"/></div>
-          </div>
+      </div></div>
+ 
+      <!-- SAND -->
+      <div class="dyn" id="dyn-sand"><div class="dyn-box">
+        <div class="dyn-title">🪣 Sand / Grit Details</div>
+        <div class="unit-hint">💡 Sand ki price <strong>PER CFT</strong> ya <strong>PER TRACTOR LOAD</strong> mein hoti hai — jaise ₹35/CFT ya ₹4500/tractor</div>
+        <div class="sec-lbl">Types</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="santype" value="River Sand"> River Sand (Baalu)</label>
+          <label class="cb-item"><input type="checkbox" name="santype" value="M-Sand"> M-Sand</label>
+          <label class="cb-item"><input type="checkbox" name="santype" value="Plaster Sand"> Plaster Sand</label>
+          <label class="cb-item"><input type="checkbox" name="santype" value="Grit 6mm"> Grit 6mm</label>
+          <label class="cb-item"><input type="checkbox" name="santype" value="Grit 12mm"> Grit 12mm</label>
+          <label class="cb-item"><input type="checkbox" name="santype" value="Grit 20mm"> Grit 20mm</label>
         </div>
-      </div>
-
-    </div><!-- end step-body -->
-  </div><!-- end step-card -->
-
-  <!-- ═══ STEP 4: PRODUCTS ═══ -->
+        <div class="fr" style="margin-top:12px">
+          <div class="ff"><label>Min Order</label><input type="text" id="san_min" placeholder="e.g. 1 tractor, 50 CFT"/></div>
+          <div class="ff"><label>Price Unit</label><select id="san_unit"><option>/CFT</option><option>/Tractor Load</option><option>/Truck Load</option></select></div>
+        </div>
+      </div></div>
+ 
+      <!-- PAINT -->
+      <div class="dyn" id="dyn-paint"><div class="dyn-box">
+        <div class="dyn-title">🎨 Paint Details</div>
+        <div class="unit-hint">💡 Paint ki price <strong>PER LITRE</strong> mein hoti hai — jaise ₹220/litre</div>
+        <div class="sec-lbl">Types</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="pntype" value="Exterior"> Exterior Emulsion</label>
+          <label class="cb-item"><input type="checkbox" name="pntype" value="Interior"> Interior Emulsion</label>
+          <label class="cb-item"><input type="checkbox" name="pntype" value="Distemper"> Distemper</label>
+          <label class="cb-item"><input type="checkbox" name="pntype" value="Primer"> Primer/Putty</label>
+          <label class="cb-item"><input type="checkbox" name="pntype" value="Waterproof"> Waterproof</label>
+          <label class="cb-item"><input type="checkbox" name="pntype" value="Enamel"> Enamel Paint</label>
+        </div>
+        <div class="sec-lbl">Brands</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="pnbrand" value="Asian Paints"> Asian Paints</label>
+          <label class="cb-item"><input type="checkbox" name="pnbrand" value="Berger"> Berger</label>
+          <label class="cb-item"><input type="checkbox" name="pnbrand" value="Nerolac"> Nerolac</label>
+          <label class="cb-item"><input type="checkbox" name="pnbrand" value="Indigo"> Indigo Paints</label>
+          <label class="cb-item"><input type="checkbox" name="pnbrand" value="Dulux"> Dulux</label>
+          <label class="cb-item"><input type="checkbox" name="pnbrand" value="Other"> Other</label>
+        </div>
+        <div class="fr" style="margin-top:12px">
+          <div class="ff"><label>Min Order</label><input type="text" id="pn_min" placeholder="e.g. 5 litres, 1 tin"/></div>
+          <div class="ff"><label>Price Unit</label><select id="pn_unit"><option>/litre</option><option>/tin 4L</option><option>/tin 10L</option><option>/tin 20L</option></select></div>
+        </div>
+      </div></div>
+ 
+      <!-- PVC PIPES -->
+      <div class="dyn" id="dyn-pvc_pipes"><div class="dyn-box">
+        <div class="dyn-title">🔵 PVC Pipe Details</div>
+        <div class="unit-hint">💡 Pipes ki price <strong>PER METRE</strong> ya <strong>PER PIECE</strong> mein hoti hai</div>
+        <div class="sec-lbl">Types</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="pptype" value="UPVC"> UPVC Pressure</label>
+          <label class="cb-item"><input type="checkbox" name="pptype" value="CPVC"> CPVC Hot Water</label>
+          <label class="cb-item"><input type="checkbox" name="pptype" value="SWR"> SWR Drainage</label>
+          <label class="cb-item"><input type="checkbox" name="pptype" value="PPR"> PPR Pipes</label>
+          <label class="cb-item"><input type="checkbox" name="pptype" value="HDPE"> HDPE Pipes</label>
+          <label class="cb-item"><input type="checkbox" name="pptype" value="Conduit"> Electrical Conduit</label>
+        </div>
+        <div class="sec-lbl">Brands</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="ppbrand" value="Ajay"> Ajay Pipes</label>
+          <label class="cb-item"><input type="checkbox" name="ppbrand" value="Supreme"> Supreme</label>
+          <label class="cb-item"><input type="checkbox" name="ppbrand" value="Finolex"> Finolex</label>
+          <label class="cb-item"><input type="checkbox" name="ppbrand" value="Astral"> Astral</label>
+          <label class="cb-item"><input type="checkbox" name="ppbrand" value="Prince"> Prince</label>
+          <label class="cb-item"><input type="checkbox" name="ppbrand" value="Other"> Other</label>
+        </div>
+        <div class="fr" style="margin-top:12px">
+          <div class="ff"><label>Min Order</label><input type="text" id="pp_min" placeholder="e.g. 10 pieces, 30 metres"/></div>
+          <div class="ff"><label>Price Unit</label><select id="pp_unit"><option>/metre</option><option>/piece</option><option>/bundle</option></select></div>
+        </div>
+      </div></div>
+ 
+      <!-- PLUMBING -->
+      <div class="dyn" id="dyn-plumbing"><div class="dyn-box">
+        <div class="dyn-title">🚿 Plumbing Details</div>
+        <div class="unit-hint">💡 Plumbing items ki price <strong>PER PIECE</strong> ya <strong>PER SET</strong> mein hoti hai</div>
+        <div class="sec-lbl">Products</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="pltype" value="Ball Valves"> Ball Valves</label>
+          <label class="cb-item"><input type="checkbox" name="pltype" value="Taps"> Taps & Faucets</label>
+          <label class="cb-item"><input type="checkbox" name="pltype" value="Water Tanks"> Water Tanks</label>
+          <label class="cb-item"><input type="checkbox" name="pltype" value="Pumps"> Water Pumps</label>
+          <label class="cb-item"><input type="checkbox" name="pltype" value="Shower"> Shower Heads</label>
+          <label class="cb-item"><input type="checkbox" name="pltype" value="CP Fittings"> CP/Chrome Fittings</label>
+        </div>
+      </div></div>
+ 
+      <!-- SANITARYWARE -->
+      <div class="dyn" id="dyn-sanitaryware"><div class="dyn-box">
+        <div class="dyn-title">🚽 Sanitaryware Details</div>
+        <div class="unit-hint">💡 Sanitaryware ki price <strong>PER PIECE</strong> mein hoti hai — jaise ₹4500/piece (toilet)</div>
+        <div class="sec-lbl">Products</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="swtype" value="Western WC"> Western Toilet (WC)</label>
+          <label class="cb-item"><input type="checkbox" name="swtype" value="Indian WC"> Indian Toilet</label>
+          <label class="cb-item"><input type="checkbox" name="swtype" value="Wash Basin"> Wash Basin</label>
+          <label class="cb-item"><input type="checkbox" name="swtype" value="Urinals"> Urinals</label>
+          <label class="cb-item"><input type="checkbox" name="swtype" value="Cisterns"> Cisterns/Flush</label>
+          <label class="cb-item"><input type="checkbox" name="swtype" value="Accessories"> Bathroom Accessories</label>
+        </div>
+        <div class="sec-lbl">Brands</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="swbrand" value="Hindware"> Hindware</label>
+          <label class="cb-item"><input type="checkbox" name="swbrand" value="Parryware"> Parryware</label>
+          <label class="cb-item"><input type="checkbox" name="swbrand" value="Cera"> Cera</label>
+          <label class="cb-item"><input type="checkbox" name="swbrand" value="Jaquar"> Jaquar</label>
+          <label class="cb-item"><input type="checkbox" name="swbrand" value="Kohler"> Kohler</label>
+          <label class="cb-item"><input type="checkbox" name="swbrand" value="Other"> Other</label>
+        </div>
+      </div></div>
+ 
+      <!-- ELECTRICAL -->
+      <div class="dyn" id="dyn-electrical"><div class="dyn-box">
+        <div class="dyn-title">⚡ Electrical Details</div>
+        <div class="unit-hint">💡 Wire = per metre | Switch/MCB = per piece | Cable = per roll</div>
+        <div class="sec-lbl">Products</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="eltype" value="Wires Cables"> Wires & Cables</label>
+          <label class="cb-item"><input type="checkbox" name="eltype" value="Switches"> Switches & Sockets</label>
+          <label class="cb-item"><input type="checkbox" name="eltype" value="MCB RCCB"> MCB/RCCB</label>
+          <label class="cb-item"><input type="checkbox" name="eltype" value="DB Box"> DB Boxes</label>
+          <label class="cb-item"><input type="checkbox" name="eltype" value="LED Lights"> LED Lights</label>
+          <label class="cb-item"><input type="checkbox" name="eltype" value="Fans"> Ceiling Fans</label>
+        </div>
+        <div class="sec-lbl">Brands</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="elbrand" value="Havells"> Havells</label>
+          <label class="cb-item"><input type="checkbox" name="elbrand" value="Polycab"> Polycab</label>
+          <label class="cb-item"><input type="checkbox" name="elbrand" value="Finolex"> Finolex</label>
+          <label class="cb-item"><input type="checkbox" name="elbrand" value="Anchor"> Anchor</label>
+          <label class="cb-item"><input type="checkbox" name="elbrand" value="Legrand"> Legrand</label>
+          <label class="cb-item"><input type="checkbox" name="elbrand" value="Other"> Other</label>
+        </div>
+      </div></div>
+ 
+      <!-- HARDWARE -->
+      <div class="dyn" id="dyn-hardware"><div class="dyn-box">
+        <div class="dyn-title">🔩 Hardware Details</div>
+        <div class="unit-hint">💡 Nails/Wire = per kg | Fittings = per piece/set | Sheets = per sqft</div>
+        <div class="sec-lbl">Products</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="hwtype" value="Nuts Bolts"> Nuts, Bolts & Screws</label>
+          <label class="cb-item"><input type="checkbox" name="hwtype" value="Door Fittings"> Door Fittings</label>
+          <label class="cb-item"><input type="checkbox" name="hwtype" value="Wire Mesh"> Wire Mesh/Jali</label>
+          <label class="cb-item"><input type="checkbox" name="hwtype" value="Nails"> Nails & Wire</label>
+          <label class="cb-item"><input type="checkbox" name="hwtype" value="Tools"> Hand/Power Tools</label>
+          <label class="cb-item"><input type="checkbox" name="hwtype" value="GI Sheets"> GI Sheets/Roofing</label>
+        </div>
+      </div></div>
+ 
+      <!-- CHEMICALS -->
+      <div class="dyn" id="dyn-chemicals"><div class="dyn-box">
+        <div class="dyn-title">🧪 Construction Chemicals</div>
+        <div class="unit-hint">💡 Waterproofing = per litre/kg | Tile Adhesive = per bag (20kg) | Grout = per kg</div>
+        <div class="sec-lbl">Products</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="chtype" value="Waterproofing"> Waterproofing</label>
+          <label class="cb-item"><input type="checkbox" name="chtype" value="Tile Adhesive"> Tile Adhesive</label>
+          <label class="cb-item"><input type="checkbox" name="chtype" value="Grout"> Tile Grout</label>
+          <label class="cb-item"><input type="checkbox" name="chtype" value="Admixtures"> Concrete Admixtures</label>
+          <label class="cb-item"><input type="checkbox" name="chtype" value="Wall Putty"> Wall Putty</label>
+          <label class="cb-item"><input type="checkbox" name="chtype" value="Epoxy"> Epoxy Adhesive</label>
+        </div>
+        <div class="sec-lbl">Brands</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="chbrand" value="Pidilite"> Pidilite (Dr.Fixit)</label>
+          <label class="cb-item"><input type="checkbox" name="chbrand" value="Fosroc"> Fosroc</label>
+          <label class="cb-item"><input type="checkbox" name="chbrand" value="BASF"> BASF</label>
+          <label class="cb-item"><input type="checkbox" name="chbrand" value="Sika"> Sika</label>
+          <label class="cb-item"><input type="checkbox" name="chbrand" value="Asian SmartCare"> Asian SmartCare</label>
+          <label class="cb-item"><input type="checkbox" name="chbrand" value="Other"> Other</label>
+        </div>
+        <div class="fr" style="margin-top:12px">
+          <div class="ff"><label>Min Order</label><input type="text" id="ch_min" placeholder="e.g. 5 kg, 10 litres, 1 bag"/></div>
+          <div class="ff"><label>Price Unit</label><select id="ch_unit"><option>/kg</option><option>/litre</option><option>/bag 20kg</option></select></div>
+        </div>
+      </div></div>
+ 
+      <!-- BATHWARE -->
+      <div class="dyn" id="dyn-bathware"><div class="dyn-box">
+        <div class="dyn-title">🛁 Bathware Details</div>
+        <div class="unit-hint">💡 Bathware ki price <strong>PER PIECE</strong> ya <strong>PER SET</strong> mein hoti hai</div>
+        <div class="sec-lbl">Products</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="bwtype" value="Bathtubs"> Bathtubs</label>
+          <label class="cb-item"><input type="checkbox" name="bwtype" value="Shower Enclosures"> Shower Enclosures</label>
+          <label class="cb-item"><input type="checkbox" name="bwtype" value="Jacuzzi"> Jacuzzi/Whirlpool</label>
+          <label class="cb-item"><input type="checkbox" name="bwtype" value="Mirrors"> Bathroom Mirrors</label>
+          <label class="cb-item"><input type="checkbox" name="bwtype" value="Vanity"> Vanity Units</label>
+          <label class="cb-item"><input type="checkbox" name="bwtype" value="Cabinets"> Bathroom Cabinets</label>
+        </div>
+        <div class="ff" style="margin-top:12px"><label>Brands</label><input type="text" id="bw_brands" placeholder="e.g. Jaquar, Kohler, TOTO, Hindware..."/></div>
+      </div></div>
+ 
+      <!-- GFRP -->
+      <div class="dyn" id="dyn-gfrp"><div class="dyn-box">
+        <div class="dyn-title">🔧 GFRP Rebar Details</div>
+        <div class="unit-hint">💡 GFRP ki price <strong>PER METRE</strong> ya <strong>PER KG</strong> mein hoti hai — jaise ₹120/metre</div>
+        <div class="sec-lbl">Products</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="gftype" value="GFRP Rebars"> GFRP Rebars</label>
+          <label class="cb-item"><input type="checkbox" name="gftype" value="GFRP Mesh"> GFRP Mesh</label>
+          <label class="cb-item"><input type="checkbox" name="gftype" value="Basalt Fiber"> Basalt Fiber</label>
+        </div>
+        <div class="sec-lbl">Diameters (mm)</div>
+        <div class="cb-grid">
+          <label class="cb-item"><input type="checkbox" name="gfdia" value="6mm"> 6mm</label>
+          <label class="cb-item"><input type="checkbox" name="gfdia" value="8mm"> 8mm</label>
+          <label class="cb-item"><input type="checkbox" name="gfdia" value="10mm"> 10mm</label>
+          <label class="cb-item"><input type="checkbox" name="gfdia" value="12mm"> 12mm</label>
+          <label class="cb-item"><input type="checkbox" name="gfdia" value="16mm"> 16mm</label>
+          <label class="cb-item"><input type="checkbox" name="gfdia" value="20mm"> 20mm</label>
+        </div>
+        <div class="fr" style="margin-top:12px">
+          <div class="ff"><label>Min Order</label><input type="text" id="gf_min" placeholder="e.g. 100 metres, 50 kg"/></div>
+          <div class="ff"><label>Price Unit</label><select id="gf_unit"><option>/metre</option><option>/kg</option></select></div>
+        </div>
+      </div></div>
+ 
+      <!-- OTHER -->
+      <div class="dyn" id="dyn-other"><div class="dyn-box">
+        <div class="dyn-title">📦 Other Products</div>
+        <div class="ff"><label>Products Describe Karo *</label><textarea id="oth_desc" placeholder="Product name, type, specs, brands, pricing unit..."></textarea></div>
+        <div class="fr">
+          <div class="ff"><label>Price Unit</label><select id="oth_unit"><option>/piece</option><option>/kg</option><option>/metre</option><option>/sqft</option><option>/bag</option></select></div>
+          <div class="ff"><label>Min Order</label><input type="text" id="oth_min" placeholder="e.g. 1 piece, 10 kg"/></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+ 
+  <!-- STEP 4: PRODUCTS -->
   <div class="step-card">
     <div class="step-head">
       <div class="step-num">4</div>
-      <div class="step-head-text"><h3>Add Your Products</h3><p>Up to 10 products — each will show separately on website</p></div>
+      <div><h3>Apne Products Add Karo</h3><p>Max 10 products — har product website par alag dikhe ga</p></div>
     </div>
     <div class="step-body">
-      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Category ke hisab se sahi unit automatically set hogi. Aap change bhi kar sakte ho.</p>
-      <div id="prodsSection"></div>
-      <button class="add-prod-btn" onclick="addProd()" id="addProdBtn">➕ Add Another Product (Max 10)</button>
+      <div id="prodsWrap"></div>
+      <button class="add-btn" onclick="addProd()" id="addBtn">➕ Aur Product Add Karo (Max 10)</button>
     </div>
   </div>
-
-  <!-- ═══ STEP 5: PREFERENCES ═══ -->
+ 
+  <!-- STEP 5: ORDER PREFERENCE -->
   <div class="step-card">
     <div class="step-head">
       <div class="step-num">5</div>
-      <div class="step-head-text"><h3>Order Preferences</h3><p>How you want to receive orders</p></div>
+      <div><h3>Order Preference</h3><p>Orders kaise receive karna chahte ho</p></div>
     </div>
     <div class="step-body">
       <div class="fr">
-        <div class="ff"><label>How to Receive Orders *</label>
+        <div class="ff"><label>Orders Kaise Chahiye *</label>
           <select id="orderPref">
-            <option value="">Select Preference</option>
-            <option>WhatsApp Only</option><option>Call Only</option>
-            <option>WhatsApp + Call</option><option>Through GroutGrove Website</option>
+            <option value="">Select</option>
+            <option>WhatsApp Only</option>
+            <option>Call Only</option>
+            <option>WhatsApp + Call</option>
+            <option>GroutGrove Website se</option>
           </select>
         </div>
-        <div class="ff"><label>Payment Methods You Accept</label>
+        <div class="ff"><label>Payment Methods</label>
           <select id="payMethod">
-            <option>UPI + Cash</option><option>UPI Only (GPay/PhonePe)</option>
-            <option>Cash Only</option><option>All Methods (UPI/Card/Cash/Cheque)</option>
+            <option>UPI + Cash</option>
+            <option>UPI Only</option>
+            <option>Cash Only</option>
+            <option>All Methods</option>
           </select>
         </div>
       </div>
     </div>
   </div>
-
-  <div class="notice-box">
-    <span class="n-ico">🔒</span>
-    <div><strong>Your privacy is fully protected.</strong> Your WhatsApp number will NOT be shown to customers. All orders come through GroutGrove — we forward details to you securely.</div>
-  </div>
-
-  <button class="btn-submit" id="submitBtn" onclick="submitSeller()">🚀 Register & Go LIVE — 100% FREE!</button>
-  <a href="https://wa.me/919654171005?text=I want to register as seller on GroutGrove" target="_blank" class="wa-help-link">💬 Need Help? WhatsApp: +91 96541 71005</a>
+ 
+  <div class="notice"><span>🔒</span><div><strong>Aapki privacy 100% safe hai.</strong> Aapka WhatsApp number customers ko nahi dikhega. Sab orders GroutGrove ke through aayenge.</div></div>
+ 
+  <button class="btn-submit" id="submitBtn" onclick="submitForm()">🚀 Register Karo — 100% FREE!</button>
+  <a href="https://wa.me/919654171005?text=Mujhe GroutGrove par seller registration mein help chahiye" target="_blank" class="wa-link">💬 Help Chahiye? WhatsApp: +91 96541 71005</a>
 </div>
-
+ 
 <div class="wa-float"><a href="https://wa.me/919654171005" target="_blank" class="wa-btn">💬</a></div>
-
+ 
 <script>
-const {createClient}=supabase;
+const{createClient}=supabase;
 const sb=createClient(
   'https://ddgwdesqicrneikxrcnj.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3dkZXNxaWNybmVpa3hyY25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Mzc1MTksImV4cCI6MjA4OTMxMzUxOX0.AFH7Sfat5XnYFYocdbjZlYhL5iLG1dO6wXm_FHycAqo'
 );
-
-// ═══ CATEGORY → DEFAULT UNIT MAPPING ═══
-const CAT_UNITS={
-  cement:   ['/bag','/bag (50kg)','/50kg bag'],
-  steel:    ['/kg','/tonne','/piece','/bundle'],
-  bricks:   ['/1000 pieces','/piece','/1000 bricks'],
-  tiles:    ['/sqft','/box','/sqm'],
-  sand:     ['/CFT','/Tractor Load','/Truck Load','/Cubic Meter','/Ton'],
-  paint:    ['/litre','/tin 4L','/tin 10L','/tin 20L'],
-  pvc_pipes:['/metre','/piece','/bundle','/kg'],
-  plumbing: ['/piece','/set','/unit'],
-  sanitaryware:['/piece','/set'],
-  electrical:['/piece','/metre','/roll','/set'],
-  hardware: ['/piece','/kg','/bundle','/set'],
-  chemicals:['/kg','/litre','/bag','/piece'],
-  bathware: ['/piece','/set'],
-  gfrp:     ['/metre','/kg','/coil'],
-  other:    ['/piece','/kg','/metre','/bag','/sqft','/litre'],
-};
-
-const CAT_NAMES={cement:'Cement',steel:'Steel/TMT',bricks:'Bricks',tiles:'Tiles',sand:'Sand/Grit',paint:'Paint',pvc_pipes:'PVC Pipes',plumbing:'Plumbing',sanitaryware:'Sanitaryware',electrical:'Electrical',hardware:'Hardware',chemicals:'Chemicals',bathware:'Bathware',gfrp:'GFRP Rebars',other:'Other'};
-
-let selCats=[], prodCount=0;
-
-// ═══ CATEGORY TOGGLE ═══
-function toggleCat(el, cat){
+ 
+const UNITS={cement:'/bag',steel:'/kg',bricks:'/1000 pieces',tiles:'/sqft',sand:'/CFT',paint:'/litre',pvc_pipes:'/metre',plumbing:'/piece',sanitaryware:'/piece',electrical:'/piece',hardware:'/piece',chemicals:'/kg',bathware:'/piece',gfrp:'/metre',other:'/piece'};
+const HINTS={cement:'jaise ₹380/bag',steel:'jaise ₹65/kg',bricks:'jaise ₹8000/1000 pieces',tiles:'jaise ₹45/sqft',sand:'jaise ₹35/CFT',paint:'jaise ₹220/litre',pvc_pipes:'jaise ₹85/metre',plumbing:'jaise ₹450/piece',sanitaryware:'jaise ₹4500/piece',electrical:'jaise ₹200/piece',hardware:'jaise ₹50/piece',chemicals:'jaise ₹350/kg',bathware:'jaise ₹18000/piece',gfrp:'jaise ₹120/metre',other:'apna unit daalo'};
+const CATS={cement:'Cement',steel:'Steel/TMT',bricks:'Bricks',tiles:'Tiles',sand:'Sand/Grit',paint:'Paint',pvc_pipes:'PVC Pipes',plumbing:'Plumbing',sanitaryware:'Sanitaryware',electrical:'Electrical',hardware:'Hardware',chemicals:'Chemicals',bathware:'Bathware',gfrp:'GFRP Rebar',other:'Other'};
+ 
+let selCats=[],pCount=0;
+ 
+function selCat(el,cat){
   el.classList.toggle('sel');
-  const box=document.getElementById('dyn-'+cat);
+  const d=document.getElementById('dyn-'+cat);
   if(el.classList.contains('sel')){
-    if(!selCats.includes(cat)) selCats.push(cat);
-    if(box){box.classList.add('show');setTimeout(()=>box.scrollIntoView({behavior:'smooth',block:'nearest'}),100);}
-    if(prodCount===0) addProd();
-  } else {
+    if(!selCats.includes(cat))selCats.push(cat);
+    if(d){d.classList.add('show');setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'nearest'}),100);}
+    if(pCount===0)addProd();
+  }else{
     selCats=selCats.filter(c=>c!==cat);
-    if(box) box.classList.remove('show');
-  }
-  updateProdUnitDropdowns();
-}
-
-// Update unit dropdowns in product forms based on selected categories
-function updateProdUnitDropdowns(){
-  for(let i=1;i<=prodCount;i++){
-    const catSel=document.getElementById('pcat-'+i);
-    const unitSel=document.getElementById('punit-'+i);
-    if(!catSel||!unitSel) continue;
-    const selectedCat=catSel.value;
-    const units=CAT_UNITS[selectedCat]||['/piece','/kg','/metre','/bag'];
-    const current=unitSel.value;
-    unitSel.innerHTML=units.map(u=>`<option value="${u}" ${u===current?'selected':''}>${u}</option>`).join('');
+    if(d)d.classList.remove('show');
   }
 }
-
-// ═══ ADD PRODUCT FORM ═══
+ 
 function addProd(){
-  if(prodCount>=10){showErr('Max 10 products!');return;}
-  prodCount++;
-  const i=prodCount;
-
-  const cats=selCats.length>0?selCats:Object.keys(CAT_NAMES);
-  const catOpts=cats.map(c=>`<option value="${c}">${CAT_NAMES[c]||c}</option>`).join('');
-
-  // Get default unit for first selected category
-  const defaultCat=selCats[0]||'other';
-  const defaultUnits=CAT_UNITS[defaultCat]||['/piece'];
-  const unitOpts=defaultUnits.map(u=>`<option value="${u}">${u}</option>`).join('');
-
+  if(pCount>=10){alert('Max 10 products!');return;}
+  pCount++;
+  const i=pCount;
+  const defCat=selCats[0]||'other';
+  const catOpts=Object.entries(CATS).map(([k,v])=>`<option value="${k}" ${k===defCat?'selected':''}>${v}</option>`).join('');
+ 
   const div=document.createElement('div');
-  div.className='prod-card-form'; div.id='pf-'+i;
+  div.className='prod-form';div.id='pf'+i;
   div.innerHTML=`
-    <div class="prod-num-badge">Product #${i}</div>
-    ${i>1?`<button class="rm-prod-btn" onclick="rmProd(${i})">× Remove</button>`:''}
+    <div class="prod-badge">Product #${i}</div>
+    ${i>1?`<button class="rm-btn" onclick="rmProd(${i})" type="button">× Hatao</button>`:''}
     <div style="margin-top:14px">
       <div class="fr">
-        <div class="ff"><label>Product Name *</label>
-          <input type="text" id="pn-${i}" placeholder="e.g. ${defaultCat==='cement'?'UltraTech PPC Cement 50kg':defaultCat==='bricks'?'First Class Red Bricks':defaultCat==='steel'?'TATA TMT Fe-500D 12mm':defaultCat==='tiles'?'Kajaria Vitrified 600x600mm':defaultCat==='sand'?'River Sand (Yamuna Baalu)':defaultCat==='paint'?'Asian Paints Exterior 20L':'Product name'}"/></div>
-        <div class="ff"><label>Category *</label>
-          <select id="pcat-${i}" class="prod-cat-sel" onchange="onCatChange(${i})">${catOpts}</select>
+        <div class="ff"><label>Product Name *</label><input type="text" id="pn${i}" placeholder="e.g. UltraTech PPC Cement 50kg"/></div>
+        <div class="ff"><label>Category *</label><select id="pc${i}" onchange="catChange(${i})">${catOpts}</select></div>
+      </div>
+      <div class="ff" id="phint${i}" style="background:#FFFBEB;border:1px solid #F59E0B;border-radius:9px;padding:10px 12px;font-size:12px;color:#92400E;font-weight:600">
+        💡 Price unit: <strong>${UNITS[defCat]||'/piece'}</strong> — ${HINTS[defCat]||''}
+      </div>
+      <div class="fr">
+        <div class="ff"><label>Brand *</label><input type="text" id="pb${i}" placeholder="e.g. UltraTech, TATA, Kajaria"/></div>
+        <div class="ff"><label>Specifications</label><input type="text" id="ps${i}" placeholder="e.g. Fe-500D, ISI Certified"/></div>
+      </div>
+      <div class="fr">
+        <div class="ff"><label>Price (₹) *</label><input type="number" id="pp${i}" placeholder="e.g. 380" min="1" style="font-size:18px;font-weight:700"/></div>
+        <div class="ff"><label>Unit *</label>
+          <select id="pu${i}">
+            ${(()=>{const u=UNITS[defCat]||'/piece';return[u,'/piece','/kg','/metre','/bag','/sqft','/litre','/1000 pieces','/CFT','/Tractor Load','/tonne','/box','/set'].filter((v,i,a)=>a.indexOf(v)===i).map(x=>`<option value="${x}" ${x===u?'selected':''}>${x}</option>`).join('')})()}
+          </select>
         </div>
       </div>
       <div class="fr">
-        <div class="ff"><label>Brand Name *</label>
-          <input type="text" id="pbrand-${i}" placeholder="e.g. UltraTech, TATA, Kajaria"/></div>
-        <div class="ff"><label>Specifications / Grade</label>
-          <input type="text" id="pspec-${i}" placeholder="e.g. Fe-500D, ISI Certified, First Class"/></div>
+        <div class="ff"><label>MRP / Market Price (Discount ke liye)</label><input type="number" id="pm${i}" placeholder="Market price (optional)"/></div>
+        <div class="ff"><label>Min Order</label><input type="text" id="pmo${i}" placeholder="e.g. 10 bags, 100 kg, 1000 bricks"/></div>
       </div>
       <div class="fr">
-        <div class="ff"><label>Your Selling Price (₹) *</label>
-          <input type="number" id="pprice-${i}" placeholder="${defaultCat==='cement'?'380':defaultCat==='steel'?'65':defaultCat==='bricks'?'8000':defaultCat==='tiles'?'45':defaultCat==='sand'?'35':defaultCat==='paint'?'220':'100'}" min="1"
-          style="font-size:18px;font-weight:700;"/></div>
-        <div class="ff"><label>Unit of Pricing *</label>
-          <select id="punit-${i}" class="prod-unit-sel">${unitOpts}</select>
-        </div>
+        <div class="ff"><label>Delivery Time</label><select id="pd${i}"><option>Same Day</option><option>Next Day</option><option>2-3 Days</option><option>3-5 Days</option></select></div>
+        <div class="ff"><label>Special Tag</label><input type="text" id="pt${i}" placeholder="e.g. Best Seller, ISI Certified"/></div>
       </div>
-      <div class="ff" id="price-hint-${i}" style="background:#FFFBEB;border:1px solid var(--gold);border-radius:9px;padding:10px 12px;font-size:12px;color:#92400E;margin-bottom:12px">
-        ${getPriceHint(defaultCat)}
-      </div>
-      <div class="fr">
-        <div class="ff"><label>MRP / Market Price (₹) — For showing discount</label>
-          <input type="number" id="pmrp-${i}" placeholder="Market price — optional"/></div>
-        <div class="ff"><label>Minimum Order Quantity</label>
-          <input type="text" id="pminqty-${i}" placeholder="${defaultCat==='cement'?'10 bags':defaultCat==='steel'?'100 kg':defaultCat==='bricks'?'1000 bricks':defaultCat==='tiles'?'50 sqft':defaultCat==='sand'?'1 tractor load':defaultCat==='paint'?'5 litres':'Min quantity'}"/></div>
-      </div>
-      <div class="fr">
-        <div class="ff"><label>Delivery Time</label>
-          <select id="pdel-${i}"><option>Same Day</option><option>Next Day</option><option>2-3 Days</option><option>3-5 Days</option></select>
-        </div>
-        <div class="ff"><label>Special Tag (Optional)</label>
-          <input type="text" id="ptag-${i}" placeholder="e.g. Best Seller, ISI Certified, New Stock"/></div>
-      </div>
-      <div class="ff"><label>Product Photo (Gets 3× more orders!)</label>
-        <div class="photo-box" onclick="document.getElementById('pphoto-${i}').click()">
-          <div style="font-size:26px;margin-bottom:5px">📷</div>
-          <div style="font-size:12px;color:var(--muted)"><strong>Click to upload</strong> — JPG/PNG</div>
-          <input type="file" id="pphoto-${i}" accept="image/*" style="display:none" onchange="prevPhoto(this,${i})"/>
-        </div>
-        <div class="ph-prev" id="pprev-${i}"></div>
-      </div>
-      <div class="ff"><label>Product Description (Optional)</label>
-        <textarea id="pdesc-${i}" placeholder="Quality, features, certifications, special offers..."></textarea>
-      </div>
+      <div class="ff"><label>Product Description (Optional)</label><textarea id="pdesc${i}" placeholder="Quality, features, certifications..." style="height:60px"></textarea></div>
     </div>`;
-  document.getElementById('prodsSection').appendChild(div);
-  if(prodCount>=10) document.getElementById('addProdBtn').style.display='none';
+  document.getElementById('prodsWrap').appendChild(div);
+  if(pCount>=10)document.getElementById('addBtn').style.display='none';
 }
-
-function getPriceHint(cat){
-  const hints={
-    cement:'💡 Cement: Price PER BAG (50kg) daalo — jaise ₹380 per bag',
-    steel:'💡 Steel: Price PER KG daalo — jaise ₹65 per kg',
-    bricks:'💡 Bricks: Price PER 1000 PIECES daalo — jaise ₹8000 per 1000 pieces (= ₹8/piece)',
-    tiles:'💡 Tiles: Price PER SQFT daalo — jaise ₹45 per sqft',
-    sand:'💡 Sand: Price PER CFT daalo — jaise ₹35 per CFT (ya per tractor load mein)',
-    paint:'💡 Paint: Price PER LITRE daalo — jaise ₹220 per litre',
-    pvc_pipes:'💡 Pipes: Price PER METRE daalo — jaise ₹85 per metre',
-    plumbing:'💡 Plumbing: Price PER PIECE daalo — jaise ₹450 per piece',
-    sanitaryware:'💡 Sanitaryware: Price PER PIECE daalo — jaise ₹4500 per piece (toilet)',
-    electrical:'💡 Electrical: Wire=per metre, Switch/MCB=per piece',
-    hardware:'💡 Hardware: Nails/Wire=per kg, Fittings=per piece/set',
-    chemicals:'💡 Chemicals: Waterproofing=per litre/kg, Tile Adhesive=per bag (20kg)',
-    bathware:'💡 Bathware: Price PER PIECE daalo — jaise ₹18000 per piece (bathtub)',
-    gfrp:'💡 GFRP: Price PER METRE daalo — jaise ₹120 per metre',
-    other:'💡 Apne hisab se sahi unit choose karo',
-  };
-  return hints[cat]||'💡 Correct unit choose karo';
+ 
+function catChange(i){
+  const cat=document.getElementById('pc'+i)?.value||'other';
+  const hint=document.getElementById('phint'+i);
+  if(hint)hint.innerHTML=`💡 Price unit: <strong>${UNITS[cat]||'/piece'}</strong> — ${HINTS[cat]||''}`;
+  const pu=document.getElementById('pu'+i);
+  if(pu){
+    const u=UNITS[cat]||'/piece';
+    const all=[u,'/piece','/kg','/metre','/bag','/sqft','/litre','/1000 pieces','/CFT','/Tractor Load','/tonne','/box','/set'].filter((v,idx,a)=>a.indexOf(v)===idx);
+    pu.innerHTML=all.map(x=>`<option value="${x}" ${x===u?'selected':''}>${x}</option>`).join('');
+  }
 }
-
-function onCatChange(i){
-  const cat=document.getElementById('pcat-'+i)?.value||'other';
-  const unitSel=document.getElementById('punit-'+i);
-  const units=CAT_UNITS[cat]||['/piece'];
-  if(unitSel) unitSel.innerHTML=units.map(u=>`<option value="${u}">${u}</option>`).join('');
-  const hint=document.getElementById('price-hint-'+i);
-  if(hint) hint.innerHTML=getPriceHint(cat);
-  // Update placeholder
-  const priceInput=document.getElementById('pprice-'+i);
-  const placeholders={cement:'380',steel:'65',bricks:'8000',tiles:'45',sand:'35',paint:'220',pvc_pipes:'85',plumbing:'450',sanitaryware:'4500',electrical:'200',hardware:'50',chemicals:'350',bathware:'18000',gfrp:'120',other:'100'};
-  if(priceInput) priceInput.placeholder=placeholders[cat]||'100';
-  const minQtyInput=document.getElementById('pminqty-'+i);
-  const minQtyPH={cement:'10 bags',steel:'100 kg',bricks:'1000 bricks',tiles:'50 sqft',sand:'1 tractor load',paint:'5 litres',pvc_pipes:'10 metres',plumbing:'1 piece',sanitaryware:'1 piece',electrical:'10 metres / 5 pieces',hardware:'1 kg / 5 pieces',chemicals:'5 kg / 10 litres',bathware:'1 piece',gfrp:'100 metres',other:'Min quantity'};
-  if(minQtyInput) minQtyInput.placeholder=minQtyPH[cat]||'Min quantity';
-}
-
+ 
 function rmProd(i){
-  const el=document.getElementById('pf-'+i);
-  if(el){el.remove();prodCount--;document.getElementById('addProdBtn').style.display='block';}
+  document.getElementById('pf'+i)?.remove();
+  pCount--;
+  document.getElementById('addBtn').style.display='block';
 }
-
-function prevPhoto(input,i){
-  const file=input.files[0];if(!file)return;
-  const r=new FileReader();
-  r.onload=e=>{
-    document.getElementById('pprev-'+i).innerHTML=`<div class="ph-thumb"><img src="${e.target.result}"/><button class="ph-rm" onclick="this.parentNode.parentNode.innerHTML=''">×</button></div>`;
-  };r.readAsDataURL(file);
-}
-
-function showErr(msg){
-  const e=document.getElementById('errBox');
-  e.innerHTML='❌ '+msg;e.style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
+ 
 function getChecked(name){
   return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(x=>x.value).join(', ');
 }
-
-// ═══ SUBMIT ═══
-async function submitSeller(){
-  const bizName=document.getElementById('bizName').value.trim();
-  const ownerName=document.getElementById('ownerName').value.trim();
-  const waPhone=document.getElementById('waPhone').value.trim().replace(/\D/g,'');
-  const bizType=document.getElementById('bizType').value;
-  const bizYears=document.getElementById('bizYears').value;
+ 
+function showErr(m){
+  const e=document.getElementById('errBox');
+  e.innerHTML='❌ '+m;e.classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+ 
+async function submitForm(){
+  const biz=document.getElementById('bizName').value.trim();
+  const own=document.getElementById('ownerName').value.trim();
+  const ph=document.getElementById('waPhone').value.trim().replace(/\D/g,'');
+  const btype=document.getElementById('bizType').value;
+  const byrs=document.getElementById('bizYears').value;
   const addr=document.getElementById('bizAddr').value.trim();
   const city=document.getElementById('bizCity').value;
   const state=document.getElementById('bizState').value;
   const pin=document.getElementById('bizPin').value.trim();
-  const orderPref=document.getElementById('orderPref').value;
-
-  if(!bizName){showErr('Enter business/shop name!');return;}
-  if(!ownerName){showErr('Enter owner name!');return;}
-  if(!waPhone||waPhone.length<10){showErr('Enter valid 10-digit WhatsApp number!');return;}
-  if(!bizType){showErr('Select business type!');return;}
-  if(!bizYears){showErr('Select years in business!');return;}
-  if(!addr){showErr('Enter business address!');return;}
-  if(!city){showErr('Select city!');return;}
-  if(!state){showErr('Select state!');return;}
-  if(!pin||pin.length<6){showErr('Enter valid 6-digit pincode!');return;}
-  if(selCats.length===0){showErr('Select at least one category (Step 3)!');return;}
-  if(!orderPref){showErr('Select order preference (Step 5)!');return;}
-  if(prodCount===0){showErr('Add at least one product (Step 4)!');return;}
-  const p1name=document.getElementById('pn-1')?.value.trim();
-  const p1price=parseFloat(document.getElementById('pprice-1')?.value||0);
-  if(!p1name){showErr('Enter product name for Product #1!');return;}
-  if(!p1price||p1price<=0){showErr('Enter valid price for Product #1!');return;}
-
+  const opref=document.getElementById('orderPref').value;
+ 
+  if(!biz)return showErr('Business name daalo!');
+  if(!own)return showErr('Owner name daalo!');
+  if(!ph||ph.length<10)return showErr('Valid WhatsApp number daalo!');
+  if(!btype)return showErr('Business type select karo!');
+  if(!byrs)return showErr('Years in business select karo!');
+  if(!addr)return showErr('Address daalo!');
+  if(!city)return showErr('City select karo!');
+  if(!state)return showErr('State select karo!');
+  if(!pin||pin.length<6)return showErr('Valid pincode daalo!');
+  if(selCats.length===0)return showErr('Koi category select karo (Step 3)!');
+  if(!opref)return showErr('Order preference select karo (Step 5)!');
+  if(pCount===0)return showErr('Koi product add karo (Step 4)!');
+  const pname=document.getElementById('pn1')?.value.trim();
+  const pprice=parseFloat(document.getElementById('pp1')?.value||0);
+  if(!pname)return showErr('Product #1 ka naam daalo!');
+  if(!pprice||pprice<=0)return showErr('Product #1 ki valid price daalo!');
+ 
   const btn=document.getElementById('submitBtn');
-  btn.textContent='⏳ Registering...';btn.disabled=true;
-  document.getElementById('errBox').style.display='none';
-
-  const sellerId='GG-S-'+Date.now().toString().slice(-6);
-
-  // Collect all specialization data
+  btn.disabled=true;btn.textContent='⏳ Register ho raha hai...';
+  document.getElementById('errBox').classList.remove('show');
+ 
+  const sid='GG-S-'+Date.now().toString().slice(-6);
+ 
   const spec=[
-    getChecked('cement_type'),getChecked('cement_brand'),
-    getChecked('steel_type'),getChecked('steel_dia'),getChecked('steel_brand'),
-    getChecked('brick_type'),getChecked('brick_grade'),getChecked('brick_size'),
-    getChecked('tile_type'),getChecked('tile_area'),getChecked('tile_size'),getChecked('tile_finish'),getChecked('tile_brand'),
-    getChecked('sand_type'),
-    getChecked('paint_type'),getChecked('paint_brand'),getChecked('paint_pack'),
-    getChecked('pipe_type'),getChecked('pipe_dia'),getChecked('pipe_brand'),
-    getChecked('plumb_type'),getChecked('plumb_brand'),
-    getChecked('san_type'),getChecked('san_brand'),
-    getChecked('elec_type'),getChecked('elec_brand'),
-    getChecked('chem_type'),getChecked('chem_brand'),
-    getChecked('hw_type'),
-    getChecked('bath_type'),
-    getChecked('gfrp_type'),getChecked('gfrp_dia'),
+    getChecked('ctype'),getChecked('cbrand'),
+    getChecked('stype'),getChecked('sdia'),getChecked('sbrand'),
+    getChecked('btype'),getChecked('bgrade'),
+    getChecked('ttype'),getChecked('tarea'),getChecked('tbrand'),
+    getChecked('santype'),
+    getChecked('pntype'),getChecked('pnbrand'),
+    getChecked('pptype'),getChecked('ppbrand'),
+    getChecked('pltype'),
+    getChecked('swtype'),getChecked('swbrand'),
+    getChecked('eltype'),getChecked('elbrand'),
+    getChecked('chtype'),getChecked('chbrand'),
+    getChecked('hwtype'),getChecked('bwtype'),
+    getChecked('gftype'),getChecked('gfdia'),
   ].filter(Boolean).join(' | ');
-
+ 
   try{
-    // Save seller
     const{error:se}=await sb.from('sellers').insert([{
-      seller_id:sellerId,business_name:bizName,owner_name:ownerName,
-      phone:waPhone,whatsapp:waPhone,
+      seller_id:sid,
+      business_name:biz,
+      owner_name:own,
+      phone:ph,
+      whatsapp:ph,
       alt_phone:document.getElementById('altPhone').value.trim()||null,
-      business_type:bizType,years_in_business:bizYears,
+      business_type:btype,
+      years_in_business:byrs,
       gst_number:document.getElementById('gstNum').value.trim()||null,
-      address:addr,city,state,
+      address:addr,
+      city:city,
+      state:state,
       pincode:pin,
-      delivery_area:document.getElementById('deliveryArea').value.trim()||city,
+      delivery_area:document.getElementById('delivArea').value.trim()||city,
       categories:selCats.join(', '),
       product_specialization:spec||null,
-      order_preference:orderPref,
+      order_preference:opref,
       payment_methods:document.getElementById('payMethod').value,
       status:'active'
     }]);
-    if(se) throw new Error(se.message);
-
-    // Save products
-    const inserts=[];
-    for(let i=1;i<=prodCount;i++){
-      const el=document.getElementById('pf-'+i);
-      if(!el) continue;
-      const name=document.getElementById('pn-'+i)?.value.trim();
-      if(!name) continue;
-      const price=parseFloat(document.getElementById('pprice-'+i)?.value||0);
-      if(!price) continue;
-      const mrp=parseFloat(document.getElementById('pmrp-'+i)?.value||0);
-      const disc=mrp>price?Math.round((mrp-price)/mrp*100):0;
-      const unit=document.getElementById('punit-'+i)?.value||'/piece';
-      let photo=null;
-      const phInput=document.getElementById('pphoto-'+i);
-      if(phInput?.files?.[0]){
-        try{photo=await new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=()=>res(null);r.readAsDataURL(phInput.files[0]);});}catch(e){photo=null;}
-      }
-      inserts.push(sb.from('products').insert([{
-        product_name:name,
-        category:document.getElementById('pcat-'+i)?.value||selCats[0]||'other',
-        brand_name:document.getElementById('pbrand-'+i)?.value.trim()||bizName,
-        specs:document.getElementById('pspec-'+i)?.value.trim()||null,
-        price,unit,discount:disc,
-        min_order:document.getElementById('pminqty-'+i)?.value.trim()||null,
-        delivery_time:document.getElementById('pdel-'+i)?.value||'Next Day',
-        offer_text:document.getElementById('ptag-'+i)?.value.trim()||null,
-        description:document.getElementById('pdesc-'+i)?.value.trim()||null,
-        photo_url:photo,
-        seller_phone:waPhone,seller_name:bizName,
-        seller_years:bizYears,seller_pincode:pin,
-        rating:4.5,reviews_count:0,status:'active'
+ 
+    if(se)throw new Error(se.message);
+ 
+    // Products save karo
+    const proms=[];
+    for(let i=1;i<=pCount;i++){
+      const el=document.getElementById('pf'+i);
+      if(!el)continue;
+      const nm=document.getElementById('pn'+i)?.value.trim();
+      if(!nm)continue;
+      const pr=parseFloat(document.getElementById('pp'+i)?.value||0);
+      if(!pr)continue;
+      const mrp=parseFloat(document.getElementById('pm'+i)?.value||0);
+      const disc=mrp>pr?Math.round((mrp-pr)/mrp*100):0;
+      proms.push(sb.from('products').insert([{
+        product_name:nm,
+        category:document.getElementById('pc'+i)?.value||selCats[0],
+        brand_name:document.getElementById('pb'+i)?.value.trim()||biz,
+        specs:document.getElementById('ps'+i)?.value.trim()||null,
+        price:pr,
+        unit:document.getElementById('pu'+i)?.value||'/piece',
+        discount:disc,
+        min_order:document.getElementById('pmo'+i)?.value.trim()||null,
+        delivery_time:document.getElementById('pd'+i)?.value||'Next Day',
+        offer_text:document.getElementById('pt'+i)?.value.trim()||null,
+        description:document.getElementById('pdesc'+i)?.value.trim()||null,
+        seller_phone:ph,
+        seller_name:biz,
+        seller_years:byrs,
+        seller_pincode:pin,
+        seller_city:city,
+        rating:4.5,
+        reviews_count:0,
+        status:'active'
       }]));
     }
-    await Promise.all(inserts);
-
-    // Save to local dashboard
-    try{
-      const rec={seller_id:sellerId,business_name:bizName,owner_name:ownerName,phone:waPhone,city,state,pincode:pin,categories:selCats.join(', '),business_type:bizType,years_in_business:bizYears,status:'Active',registered_at:new Date().toLocaleString('en-IN')};
-      const ex=JSON.parse(localStorage.getItem('groutgrove_sellers')||'[]');
-      ex.unshift(rec);localStorage.setItem('groutgrove_sellers',JSON.stringify(ex));
-    }catch(e){}
-
-    // WhatsApp admin
-    const msg=encodeURIComponent(`🏭 *NEW SELLER — GROUTGROVE!*\n\n*ID:* ${sellerId}\n*Business:* ${bizName}\n*Owner:* ${ownerName}\n*WhatsApp:* ${waPhone}\n*City:* ${city}, ${state} — ${pin}\n*Categories:* ${selCats.join(', ')}\n*Products:* ${inserts.length}\n\n✅ Products are LIVE!`);
+    await Promise.all(proms);
+ 
+    // WhatsApp notification
+    const msg=encodeURIComponent(`🏭 *NAYA SELLER — GROUTGROVE!*\n\n*ID:* ${sid}\n*Business:* ${biz}\n*Owner:* ${own}\n*WhatsApp:* ${ph}\n*City:* ${city}, ${state} — ${pin}\n*Categories:* ${selCats.join(', ')}\n*Products:* ${proms.length}\n\n✅ Products LIVE hain!`);
     setTimeout(()=>window.open(`https://wa.me/919654171005?text=${msg}`,'_blank'),800);
-    document.getElementById('sId').textContent=sellerId;
-    document.getElementById('sOverlay').classList.add('show');
+ 
+    document.getElementById('sId').textContent=sid;
+    document.getElementById('sOv').classList.add('show');
+ 
   }catch(err){
-    showErr('Registration failed: '+err.message+'<br>WhatsApp: <a href="https://wa.me/919654171005" style="color:var(--red);font-weight:700">+91 96541 71005</a>');
-    btn.textContent='🚀 Register & Go LIVE — 100% FREE!';
-    btn.disabled=false;
+    showErr(err.message+'<br><a href="https://wa.me/919654171005" style="color:#DC2626;font-weight:700">WhatsApp: +91 96541 71005</a>');
+    btn.disabled=false;btn.textContent='🚀 Register Karo — 100% FREE!';
   }
 }
-
+ 
 addProd();
 </script>
 </body>
